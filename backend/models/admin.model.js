@@ -14,15 +14,9 @@ const adminSchema = new mongoose.Schema(
     { timestamps: true },
 );
 
-adminSchema.pre("save", async function (next) {
-    if (!this.isModified("password")) return next();
-
-    try {
-        this.password = await hashPassword(this.password);
-        next();
-    } catch (error) {
-        next(error);
-    }
+adminSchema.pre("save", async function () {
+    if (!this.isModified("password")) return;
+    this.password = await hashPassword(this.password);
 });
 
 adminSchema.methods.comparePassword = async function (candidatePassword) {

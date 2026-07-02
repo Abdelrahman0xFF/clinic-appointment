@@ -3,10 +3,41 @@ import { verifyPassword } from "../utils/encryption.js";
 import { generateToken } from "../utils/jwt.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
-export const login = asyncHandler(async (req, res, next) => {
-    const { email, password } = req.body;
+export const createAdmin = asyncHandler(async (req, res, next) => {
+    const { username, password } = req.body;
+    const existingAdmin = await Admin.findOne({ username });
 
-    const admin = await Admin.findOne({ email });
+    if (existingAdmin) {
+        return res.status(400).json({
+            success: false,
+            message: "Admin with this username already exists",
+        });
+    }
+
+    const admin = new Admin({ username, password });
+    await admin.save();
+    const token = generateToken({ id: admin._id });
+
+    res.cookie("token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 24 * 60 * 60 * 1000,
+    });
+
+    return res.status(201).json({
+        success: true,
+        message: "Admin created successfully",
+        data: {
+            admin: { username: admin.username },
+        },
+    });
+});
+
+export const login = asyncHandler(async (req, res, next) => {
+    const { username, password } = req.body;
+
+    const admin = await Admin.findOne({ username });
     if (!admin) {
         return res
             .status(401)
@@ -33,7 +64,7 @@ export const login = asyncHandler(async (req, res, next) => {
         success: true,
         message: "Login successful",
         data: {
-            admin: { email: admin.email },
+            admin: { username: admin.username },
         },
     });
 });

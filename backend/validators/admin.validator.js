@@ -16,7 +16,7 @@ export const validateAdminCreation = (data) => {
 
 export const validateAdminLogin = (data) => {
     const schema = Joi.object({
-        email: Joi.string().email().required(),
+        username: Joi.string().required().trim().min(3).max(30),
         password: Joi.string().required(),
     });
     return schema.validate(data);
