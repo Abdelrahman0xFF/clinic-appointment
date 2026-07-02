@@ -1,0 +1,53 @@
+import mongoose from "mongoose";
+
+const workingHoursSchema = new mongoose.Schema(
+    {
+        start: { type: String, required: true },
+        end: { type: String, required: true },
+    },
+    { _id: false },
+);
+
+const socialMediaSchema = new mongoose.Schema(
+    {
+        platform: { type: String, required: true },
+        link: { type: String, required: true },
+    },
+    { _id: false },
+);
+
+const clinicSchema = new mongoose.Schema(
+    {
+        tenantId: {
+            type: String,
+            default: "main_clinic",
+            unique: true,
+            required: true,
+        },
+
+        name: { type: String, required: true },
+        specialization: { type: String, required: true },
+        address: { type: String, required: true },
+        phone: { type: String, required: true, trim: true },
+
+        socialMedia: {
+            type: Map,
+            of: socialMediaSchema,
+            default: {},
+        },
+
+        workingHours: {
+            type: Map,
+            of: workingHoursSchema,
+            default: {},
+        },
+
+        consultationFee: { type: Number, required: true },
+        instapayLink: { type: String, required: true },
+        vodafoneLink: { type: String, required: true },
+        credentials: [{ type: String }],
+    },
+    { timestamps: true },
+);
+
+export const Clinic = mongoose.model("Clinic", clinicSchema);
