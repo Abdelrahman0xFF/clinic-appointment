@@ -7,11 +7,12 @@ import {
     createAdmin,
     edit,
 } from "../controllers/admin.controller.js";
-import { protectAdminRoute } from "../middlewares/auth.middleware.js";
 import {
     validateAdminLogin,
     validateAdminCreation,
 } from "../validators/admin.validator.js";
+
+import { protectAdminRoute } from "../middlewares/auth.middleware.js";
 import { validateRequest } from "../middlewares/validate.middleware.js";
 
 export const router = Router();

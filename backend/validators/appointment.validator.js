@@ -1,6 +1,6 @@
 import Joi from "joi";
 
-export const validateBookingForm = (data) => {
+export const validateAppointmentForm = (data) => {
     const schema = Joi.object({
         fullName: Joi.string().min(3).max(100).required(),
         phone: Joi.string()
@@ -18,10 +18,10 @@ export const validateBookingForm = (data) => {
     return schema.validate(data);
 };
 
-export const validateQueueUpdate = (data) => {
+export const validateUpdateAppintment = (data) => {
     const schema = Joi.object({
-        stage: Joi.string()
-            .valid("waiting", "in_consultation", "completed")
+        status: Joi.string()
+            .valid("pending", "approved", "rejected")
             .required(),
     });
     return schema.validate(data);

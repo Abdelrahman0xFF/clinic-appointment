@@ -5,6 +5,7 @@ import {
     updateClinicInfo,
 } from "../controllers/clinic.controller.js";
 import { validateClinicUpdate } from "../validators/clinic.validator.js";
+
 import { protectAdminRoute } from "../middlewares/auth.middleware.js";
 import { validateRequest } from "../middlewares/validate.middleware.js";
 

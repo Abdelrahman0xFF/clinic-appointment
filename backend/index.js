@@ -3,11 +3,13 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import router from "./routes/router.js";
 import { connectDB } from "./config/db.config.js";
+import { cloudinaryConfig } from "./config/cloudinary.config.js";
 import { morganMiddleware } from "./middlewares/logger.middleware.js";
 
 dotenv.config();
 
 await connectDB();
+cloudinaryConfig();
 
 const app = express();
 
