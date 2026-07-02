@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
 import { connectDB } from "./config/db.config.js";
 
 dotenv.config();
@@ -7,6 +8,9 @@ dotenv.config();
 await connectDB();
 
 const app = express();
+
+app.use(express.json());
+app.use(cookieParser());
 
 app.get("/", (req, res) => {
     res.send("Hello, World!");
