@@ -5,6 +5,7 @@ import {
     getAdminProfile,
     logout,
     createAdmin,
+    edit,
 } from "../controllers/admin.controller.js";
 import { protectAdminRoute } from "../middlewares/auth.middleware.js";
 import {
@@ -15,14 +16,20 @@ import { validateRequest } from "../middlewares/validate.middleware.js";
 
 export const router = Router();
 
+router.get("/", protectAdminRoute, getAdminProfile);
 router.post(
-    "/create",
+    "/",
     protectAdminRoute,
     validateRequest(validateAdminCreation),
     createAdmin,
 );
+router.put(
+    "/",
+    protectAdminRoute,
+    validateRequest(validateAdminCreation),
+    edit,
+);
 router.post("/login", validateRequest(validateAdminLogin), login);
-router.get("/profile", protectAdminRoute, getAdminProfile);
 router.post("/logout", protectAdminRoute, logout);
 
 export default router;

@@ -69,6 +69,28 @@ export const login = asyncHandler(async (req, res, next) => {
     });
 });
 
+export const edit = asyncHandler(async (req, res, next) => {
+    const { username, password } = req.body;
+    const admin = await Admin.findById(req.adminId);
+    if (!admin) {
+        return res
+            .status(404)
+            .json({ success: false, message: "Admin not found" });
+    }
+
+    admin.username = username;
+    admin.password = password;
+    await admin.save();
+
+    return res.status(200).json({
+        success: true,
+        message: "Admin updated successfully",
+        data: {
+            admin: { username: admin.username },
+        },
+    });
+});
+
 export const getAdminProfile = asyncHandler(async (req, res, next) => {
     const admin = await Admin.findById(req.adminId).select("-password");
 
