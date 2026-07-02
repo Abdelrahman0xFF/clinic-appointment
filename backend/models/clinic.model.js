@@ -44,7 +44,7 @@ const clinicSchema = new mongoose.Schema(
 
         consultationFee: { type: Number, required: true },
         instapayLink: { type: String, required: true },
-        vodafoneLink: { type: String, required: true },
+        walletNumber: { type: String, required: true, trim: true },
         credentials: [{ type: String }],
     },
     { timestamps: true },

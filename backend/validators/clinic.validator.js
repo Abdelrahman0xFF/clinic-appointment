@@ -48,7 +48,10 @@ export const validateClinicUpdate = (data) => {
 
         consultationFee: Joi.number().min(0).required(),
         instapayLink: Joi.string().required(),
-        vodafoneLink: Joi.string().required(),
+        walletNumber: Joi.string()
+            .pattern(/^01[0125][0-9]{8}$/)
+            .trim()
+            .required(),
         credentials: Joi.array().items(Joi.string().max(200)).optional(),
     });
 
