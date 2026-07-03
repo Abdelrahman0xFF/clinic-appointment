@@ -11,7 +11,7 @@ export const createAppointment = asyncHandler(async (req, res, next) => {
     const existingAppointment = await Appointment.findOne({
         date,
         time,
-        status: { $ne: "rejected" }
+        status: { $ne: "rejected" },
     });
 
     if (existingAppointment) {

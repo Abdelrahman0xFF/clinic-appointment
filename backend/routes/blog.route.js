@@ -6,7 +6,10 @@ import {
     updateBlogPost,
     deleteBlogPost,
 } from "../controllers/blog.controller.js";
-import { protectAdminRoute } from "../middlewares/auth.middleware.js";
+import {
+    protectAdminRoute,
+    optionalAuth,
+} from "../middlewares/auth.middleware.js";
 import { validateRequest } from "../middlewares/validate.middleware.js";
 import {
     validateBlogPost,
@@ -15,8 +18,8 @@ import {
 
 const router = Router();
 
-router.get("/", getBlogPosts);
-router.get("/:slug", getBlogPostBySlug);
+router.get("/", optionalAuth, getBlogPosts);
+router.get("/:slug", optionalAuth, getBlogPostBySlug);
 
 router.post(
     "/",

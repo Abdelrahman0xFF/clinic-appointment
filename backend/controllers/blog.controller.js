@@ -12,13 +12,27 @@ export const createBlogPost = asyncHandler(async (req, res, next) => {
 });
 
 export const getBlogPosts = asyncHandler(async (req, res, next) => {
-    const filter = req.query.status ? { status: req.query.status } : {};
+    let filter = {};
+
+    if (req.adminId) {
+        if (req.query.status) {
+            filter.status = req.query.status;
+        }
+    } else {
+        filter.status = "published";
+    }
+
     const posts = await BlogPost.find(filter).sort({ createdAt: -1 });
     return res.status(200).json({ success: true, data: posts });
 });
 
 export const getBlogPostBySlug = asyncHandler(async (req, res, next) => {
-    const post = await BlogPost.findOne({ slug: req.params.slug });
+    const filter = { slug: req.params.slug };
+    if (!req.adminId) {
+        filter.status = "published";
+    }
+    const post = await BlogPost.findOne(filter);
+
     if (!post) {
         return next(new AppError("Blog post not found", 404));
     }

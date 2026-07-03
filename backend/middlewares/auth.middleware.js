@@ -16,3 +16,14 @@ export const protectAdminRoute = asyncHandler(async (req, res, next) => {
     req.adminId = decoded.id;
     next();
 });
+
+export const optionalAuth = asyncHandler(async (req, res, next) => {
+    const token = req.cookies.token;
+    if (token) {
+        try {
+            const decoded = verifyToken(token);
+            req.adminId = decoded.id;
+        } catch (error) {}
+    }
+    next();
+});
