@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import router from "./routes/router.js";
 import { connectDB } from "./config/db.config.js";
 import { cloudinaryConfig } from "./config/cloudinary.config.js";
+import { limiter } from "./utils/rateLimiter.js";
 import { morganMiddleware } from "./middlewares/logger.middleware.js";
 import { errorHandler } from "./utils/errorHandler.js";
 
@@ -17,6 +18,7 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 app.use(morganMiddleware);
+app.use(limiter);
 
 app.get("/", (req, res) => {
     res.send("Hello, World!");
