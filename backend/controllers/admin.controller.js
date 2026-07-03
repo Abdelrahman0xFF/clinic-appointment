@@ -2,16 +2,14 @@ import { Admin } from "../models/admin.model.js";
 import { verifyPassword } from "../utils/encryption.js";
 import { generateToken } from "../utils/jwt.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import { AppError } from "../utils/AppError.js";
 
 export const createAdmin = asyncHandler(async (req, res, next) => {
     const { username, password } = req.body;
     const existingAdmin = await Admin.findOne({ username });
 
     if (existingAdmin) {
-        return res.status(400).json({
-            success: false,
-            message: "Admin with this username already exists",
-        });
+        return next(new AppError("Admin with this username already exists", 400));
     }
 
     const admin = new Admin({ username, password });
@@ -39,16 +37,12 @@ export const login = asyncHandler(async (req, res, next) => {
 
     const admin = await Admin.findOne({ username });
     if (!admin) {
-        return res
-            .status(401)
-            .json({ success: false, message: "Invalid credentials" });
+        return next(new AppError("Invalid credentials", 401));
     }
 
     const isMatch = await verifyPassword(password, admin.password);
     if (!isMatch) {
-        return res
-            .status(401)
-            .json({ success: false, message: "Invalid credentials" });
+        return next(new AppError("Invalid credentials", 401));
     }
 
     const token = generateToken({ id: admin._id });
@@ -73,9 +67,7 @@ export const edit = asyncHandler(async (req, res, next) => {
     const { username, password } = req.body;
     const admin = await Admin.findById(req.adminId);
     if (!admin) {
-        return res
-            .status(404)
-            .json({ success: false, message: "Admin not found" });
+        return next(new AppError("Admin not found", 404));
     }
 
     admin.username = username;
@@ -95,9 +87,7 @@ export const getAdminProfile = asyncHandler(async (req, res, next) => {
     const admin = await Admin.findById(req.adminId).select("-password");
 
     if (!admin) {
-        return res
-            .status(404)
-            .json({ success: false, message: "Admin not found" });
+        return next(new AppError("Admin not found", 404));
     }
 
     return res.status(200).json({ success: true, data: admin });

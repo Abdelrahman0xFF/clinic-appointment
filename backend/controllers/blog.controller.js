@@ -1,5 +1,6 @@
 import { BlogPost } from "../models/blog.model.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import { AppError } from "../utils/AppError.js";
 
 export const createBlogPost = asyncHandler(async (req, res, next) => {
     const newPost = await BlogPost.create(req.body);
@@ -19,9 +20,7 @@ export const getBlogPosts = asyncHandler(async (req, res, next) => {
 export const getBlogPostBySlug = asyncHandler(async (req, res, next) => {
     const post = await BlogPost.findOne({ slug: req.params.slug });
     if (!post) {
-        return res
-            .status(404)
-            .json({ success: false, message: "Blog post not found" });
+        return next(new AppError("Blog post not found", 404));
     }
     return res.status(200).json({ success: true, data: post });
 });
@@ -31,9 +30,7 @@ export const updateBlogPost = asyncHandler(async (req, res, next) => {
         new: true,
     });
     if (!post) {
-        return res
-            .status(404)
-            .json({ success: false, message: "Blog post not found" });
+        return next(new AppError("Blog post not found", 404));
     }
     return res
         .status(200)
@@ -43,9 +40,7 @@ export const updateBlogPost = asyncHandler(async (req, res, next) => {
 export const deleteBlogPost = asyncHandler(async (req, res, next) => {
     const post = await BlogPost.findByIdAndDelete(req.params.id);
     if (!post) {
-        return res
-            .status(404)
-            .json({ success: false, message: "Blog post not found" });
+        return next(new AppError("Blog post not found", 404));
     }
     return res
         .status(200)

@@ -1,5 +1,6 @@
 import { QueueEntry } from "../models/queue.model.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import { AppError } from "../utils/AppError.js";
 
 export const getLiveQueue = asyncHandler(async (req, res, next) => {
     const queue = await QueueEntry.find({ stage: { $ne: "completed" } })
@@ -21,9 +22,7 @@ export const updateQueueStage = asyncHandler(async (req, res, next) => {
     );
 
     if (!entry) {
-        return res
-            .status(404)
-            .json({ success: false, message: "Queue entry not found" });
+        return next(new AppError("Queue entry not found", 404));
     }
 
     return res.status(200).json({

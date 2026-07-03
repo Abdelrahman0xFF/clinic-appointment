@@ -8,7 +8,10 @@ import {
 } from "../controllers/blog.controller.js";
 import { protectAdminRoute } from "../middlewares/auth.middleware.js";
 import { validateRequest } from "../middlewares/validate.middleware.js";
-import { validateBlogPost } from "../validators/blog.validator.js";
+import {
+    validateBlogPost,
+    validateBlogPostUpdate,
+} from "../validators/blog.validator.js";
 
 const router = Router();
 
@@ -21,7 +24,12 @@ router.post(
     validateRequest(validateBlogPost),
     createBlogPost,
 );
-router.put("/:id", protectAdminRoute, updateBlogPost);
+router.put(
+    "/:id",
+    protectAdminRoute,
+    validateRequest(validateBlogPostUpdate),
+    updateBlogPost,
+);
 router.delete("/:id", protectAdminRoute, deleteBlogPost);
 
 export default router;

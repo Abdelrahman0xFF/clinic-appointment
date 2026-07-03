@@ -1,13 +1,12 @@
 import { Clinic } from "../models/clinic.model.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import { AppError } from "../utils/AppError.js";
 
 export const getClinicInfo = asyncHandler(async (req, res, next) => {
     const clinic = await Clinic.findOne({ tenantId: "main_clinic" });
 
     if (!clinic) {
-        return res
-            .status(404)
-            .json({ success: false, message: "Clinic not configured yet" });
+        return next(new AppError("Clinic not configured yet", 404));
     }
 
     return res.status(200).json({ success: true, data: clinic });

@@ -2,6 +2,7 @@ import { Appointment } from "../models/appointment.model.js";
 import { Patient } from "../models/patient.model.js";
 import { QueueEntry } from "../models/queue.model.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import { AppError } from "../utils/AppError.js";
 
 export const createAppointment = asyncHandler(async (req, res, next) => {
     const { fullName, phone, reason, date, time } = req.body;
@@ -46,9 +47,7 @@ export const getPatientAppointments = asyncHandler(async (req, res, next) => {
     const { phone, fullName } = req.params;
     const patient = await Patient.findOne({ phone, fullName: fullName.trim() });
     if (!patient) {
-        return res
-            .status(404)
-            .json({ success: false, message: "Patient not found" });
+        return next(new AppError("Patient not found", 404));
     }
 
     const appointments = await Appointment.find({
@@ -66,9 +65,7 @@ export const updateAppointmentStatus = asyncHandler(async (req, res, next) => {
     );
 
     if (!appointment) {
-        return res
-            .status(404)
-            .json({ success: false, message: "Appointment not found" });
+        return next(new AppError("Appointment not found", 404));
     }
 
     return res.status(200).json({
@@ -86,9 +83,7 @@ export const checkInAppointment = asyncHandler(async (req, res, next) => {
     );
 
     if (!appointment) {
-        return res
-            .status(404)
-            .json({ success: false, message: "Appointment not found" });
+        return next(new AppError("Appointment not found", 404));
     }
 
     const queueEntry = await QueueEntry.create({

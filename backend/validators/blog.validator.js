@@ -29,3 +29,31 @@ export const validateBlogPost = (data) => {
     });
     return schema.validate(data);
 };
+
+export const validateBlogPostUpdate = (data) => {
+    const schema = Joi.object({
+        slug: Joi.string(),
+        title: Joi.string(),
+        excerpt: Joi.string(),
+        category: Joi.string(),
+        coverImageUrl: Joi.string().uri(),
+        authorId: Joi.string().hex().length(24),
+        date: Joi.string().pattern(/^\d{4}-\d{2}-\d{2}$/),
+        readTimeMinutes: Joi.number().integer().min(1),
+        tableOfContents: Joi.array().items(
+            Joi.object({
+                id: Joi.string(),
+                label: Joi.string(),
+                level: Joi.number().integer().min(1).max(6),
+            }),
+        ),
+        faqs: Joi.array().items(
+            Joi.object({
+                question: Joi.string(),
+                answer: Joi.string(),
+            }),
+        ),
+        status: Joi.string().valid("published", "draft"),
+    });
+    return schema.validate(data);
+};

@@ -5,6 +5,7 @@ import router from "./routes/router.js";
 import { connectDB } from "./config/db.config.js";
 import { cloudinaryConfig } from "./config/cloudinary.config.js";
 import { morganMiddleware } from "./middlewares/logger.middleware.js";
+import { errorHandler } from "./utils/errorHandler.js";
 
 dotenv.config();
 
@@ -22,6 +23,8 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api", router);
+
+app.use(errorHandler);
 
 app.listen(3000, () => {
     console.log("running on http://localhost:3000");
