@@ -7,6 +7,7 @@ import {
     getPatientAppointments,
     updateAppointmentStatus,
     checkInAppointment,
+    getAvailableTimeSlots,
 } from "../controllers/appointment.controller.js";
 import {
     validateAppointmentForm,
@@ -19,6 +20,7 @@ import { validateRequest } from "../middlewares/validate.middleware.js";
 export const router = Router();
 
 router.get("/", protectAdminRoute, getAppointments);
+router.get("/slots", getAvailableTimeSlots);
 router.get("/:phone/:fullName", getPatientAppointments);
 router.post(
     "/",
