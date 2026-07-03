@@ -13,6 +13,7 @@ export const validateClinicUpdate = (data) => {
         socialMedia: Joi.object()
             .pattern(
                 Joi.string().valid(
+                    "whatsapp",
                     "facebook",
                     "twitter",
                     "instagram",
