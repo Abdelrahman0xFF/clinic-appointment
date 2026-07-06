@@ -3,9 +3,17 @@ import mongoose from "mongoose";
 const patientSchema = new mongoose.Schema(
     {
         fullName: { type: String, required: true, trim: true },
-        phone: { type: String, required: true, trim: true, unique: true },
+        phone: {
+            type: String,
+            required: true,
+            trim: true,
+            unique: true,
+            match: [/^01[0125][0-9]{8}$/, "Invalid Egyptian phone number"],
+        },
     },
     { timestamps: true },
 );
+
+patientSchema.index({ createdAt: -1 });
 
 export const Patient = mongoose.model("Patient", patientSchema);

@@ -12,7 +12,7 @@ import {
 } from "../controllers/appointment.controller.js";
 import {
     validateAppointmentForm,
-    validateUpdateAppintment,
+    validateUpdateAppointment,
     validateRescheduleAppointment,
 } from "../validators/appointment.validator.js";
 
@@ -33,7 +33,7 @@ router.post(
 router.put(
     "/:id",
     protectAdminRoute,
-    validateRequest(validateUpdateAppintment),
+    validateRequest(validateUpdateAppointment),
     updateAppointmentStatus,
 );
 router.put("/:id/checkin", protectAdminRoute, checkInAppointment);

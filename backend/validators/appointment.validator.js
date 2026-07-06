@@ -56,7 +56,7 @@ export const validateRescheduleAppointment = (data) => {
     return schema.validate(data);
 };
 
-export const validateUpdateAppintment = (data) => {
+export const validateUpdateAppointment = (data) => {
     const schema = Joi.object({
         status: Joi.string()
             .valid("pending", "approved", "rejected")
