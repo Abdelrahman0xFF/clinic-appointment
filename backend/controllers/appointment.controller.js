@@ -2,8 +2,10 @@ import { Appointment } from "../models/appointment.model.js";
 import { Patient } from "../models/patient.model.js";
 import { QueueEntry } from "../models/queue.model.js";
 import { Clinic } from "../models/clinic.model.js";
+import { v2 as cloudinary } from "cloudinary";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { AppError } from "../utils/AppError.js";
+import { sendSMS } from "../utils/sms.js";
 
 export const createAppointment = asyncHandler(async (req, res, next) => {
     const { fullName, phone, reason, date, time } = req.body;
@@ -155,6 +157,27 @@ export const updateAppointmentStatus = asyncHandler(async (req, res, next) => {
         return next(new AppError("Appointment not found", 404));
     }
 
+    if (req.body.status === "rejected" && appointment.receiptImageUrl) {
+        try {
+            const parts = appointment.receiptImageUrl.split("/");
+            const filenameWithExt = parts[parts.length - 1];
+            const folder = parts[parts.length - 2];
+            const filename = filenameWithExt.split(".")[0];
+            const publicId = `${folder}/${filename}`;
+            await cloudinary.uploader.destroy(publicId);
+        } catch (err) {
+            console.error("Failed to delete image from Cloudinary:", err);
+        }
+    }
+
+    if (req.body.status === "approved") {
+        const patient = await Patient.findById(appointment.patientId);
+        if (patient && patient.phone) {
+            const message = `Hello ${patient.fullName}, your appointment at MediCare Clinic for ${appointment.date} at ${appointment.time} is confirmed!\n\nمرحباً ${patient.fullName}، تم تأكيد موعدك في عيادة ميديكير بتاريخ ${appointment.date} الساعة ${appointment.time}!`;
+            sendSMS(patient.phone, message);
+        }
+    }
+
     return res.status(200).json({
         success: true,
         message: `Appointment ${req.body.status}`,
@@ -163,6 +186,15 @@ export const updateAppointmentStatus = asyncHandler(async (req, res, next) => {
 });
 
 export const checkInAppointment = asyncHandler(async (req, res, next) => {
+    const existingQueue = await QueueEntry.findOne({
+        appointmentId: req.params.id,
+    });
+    if (existingQueue) {
+        return next(
+            new AppError("Patient is already checked in to the queue", 400),
+        );
+    }
+
     const appointment = await Appointment.findByIdAndUpdate(
         req.params.id,
         { checkedIn: true },

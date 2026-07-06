@@ -6,6 +6,7 @@ import {
     logout,
     createAdmin,
     edit,
+    getDashboardStats,
 } from "../controllers/admin.controller.js";
 import {
     validateAdminLogin,
@@ -18,6 +19,7 @@ import { validateRequest } from "../middlewares/validate.middleware.js";
 export const router = Router();
 
 router.get("/", protectAdminRoute, getAdminProfile);
+router.get("/dashboard", protectAdminRoute, getDashboardStats);
 router.post(
     "/",
     protectAdminRoute,

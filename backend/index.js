@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import router from "./routes/router.js";
 import { connectDB } from "./config/db.config.js";
 import { cloudinaryConfig } from "./config/cloudinary.config.js";
+import { twilioConfig } from "./config/twilio.config.js";
 import { limiter } from "./utils/rateLimiter.js";
 import { morganMiddleware } from "./middlewares/logger.middleware.js";
 import { errorHandler } from "./utils/errorHandler.js";
@@ -12,6 +13,7 @@ dotenv.config();
 
 await connectDB();
 cloudinaryConfig();
+twilioConfig();
 
 const app = express();
 

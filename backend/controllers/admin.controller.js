@@ -1,4 +1,6 @@
 import { Admin } from "../models/admin.model.js";
+import { Appointment } from "../models/appointment.model.js";
+import { QueueEntry } from "../models/queue.model.js";
 import { verifyPassword } from "../utils/encryption.js";
 import { generateToken } from "../utils/jwt.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
@@ -102,5 +104,26 @@ export const logout = asyncHandler(async (req, res, next) => {
     return res.status(200).json({
         success: true,
         message: "Logged out successfully",
+    });
+});
+
+export const getDashboardStats = asyncHandler(async (req, res, next) => {
+    const todayStr = new Date().toISOString().split("T")[0];
+
+    const [pendingRequests, todayAppointments, activeQueue, completedToday] = await Promise.all([
+        Appointment.countDocuments({ status: "pending" }),
+        Appointment.countDocuments({ date: todayStr }),
+        QueueEntry.countDocuments({ stage: { $ne: "completed" } }),
+        Appointment.countDocuments({ status: "completed", date: todayStr })
+    ]);
+
+    return res.status(200).json({
+        success: true,
+        data: {
+            pendingRequests,
+            todayAppointments,
+            activeQueue,
+            completedToday
+        }
     });
 });

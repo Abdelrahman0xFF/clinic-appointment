@@ -1,4 +1,5 @@
 import { QueueEntry } from "../models/queue.model.js";
+import { Appointment } from "../models/appointment.model.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { AppError } from "../utils/AppError.js";
 
@@ -23,6 +24,10 @@ export const updateQueueStage = asyncHandler(async (req, res, next) => {
 
     if (!entry) {
         return next(new AppError("Queue entry not found", 404));
+    }
+
+    if (req.body.stage === "completed" && entry.appointmentId) {
+        await Appointment.findByIdAndUpdate(entry.appointmentId, { status: "completed" });
     }
 
     return res.status(200).json({
