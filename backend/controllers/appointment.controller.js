@@ -124,12 +124,26 @@ export const getAvailableTimeSlots = asyncHandler(async (req, res, next) => {
 
 export const getAppointments = asyncHandler(async (req, res, next) => {
     const filter = req.query.date ? { date: req.query.date } : {};
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 20));
+    const skip = (page - 1) * limit;
 
-    const appointments = await Appointment.find(filter)
-        .populate("patientId", "fullName phone")
-        .sort({ date: 1, time: 1 });
+    const [appointments, total] = await Promise.all([
+        Appointment.find(filter)
+            .skip(skip)
+            .limit(limit)
+            .populate("patientId", "fullName phone")
+            .sort({ date: 1, time: 1 }),
+        Appointment.countDocuments(filter),
+    ]);
 
-    return res.status(200).json({ success: true, data: appointments });
+    return res.status(200).json({
+        success: true,
+        data: appointments,
+        total,
+        page,
+        totalPages: Math.ceil(total / limit),
+    });
 });
 
 export const getPatientAppointments = asyncHandler(async (req, res, next) => {

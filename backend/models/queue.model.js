@@ -17,4 +17,6 @@ const queueEntrySchema = new mongoose.Schema(
     { timestamps: true },
 );
 
+queueEntrySchema.index({ stage: 1, createdAt: 1 });
+
 export const QueueEntry = mongoose.model("QueueEntry", queueEntrySchema);

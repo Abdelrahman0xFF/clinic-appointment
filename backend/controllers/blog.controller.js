@@ -22,8 +22,22 @@ export const getBlogPosts = asyncHandler(async (req, res, next) => {
         filter.status = "published";
     }
 
-    const posts = await BlogPost.find(filter).sort({ createdAt: -1 });
-    return res.status(200).json({ success: true, data: posts });
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 20));
+    const skip = (page - 1) * limit;
+
+    const [posts, total] = await Promise.all([
+        BlogPost.find(filter).skip(skip).limit(limit).sort({ createdAt: -1 }),
+        BlogPost.countDocuments(filter),
+    ]);
+
+    return res.status(200).json({
+        success: true,
+        data: posts,
+        total,
+        page,
+        totalPages: Math.ceil(total / limit),
+    });
 });
 
 export const getBlogPostBySlug = asyncHandler(async (req, res, next) => {

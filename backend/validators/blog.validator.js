@@ -7,6 +7,7 @@ export const validateBlogPost = (data) => {
         excerpt: Joi.string().required(),
         category: Joi.string().required(),
         coverImageUrl: Joi.string().uri().required(),
+        content: Joi.string().required(),
         authorId: Joi.string().hex().length(24).required(),
         date: Joi.string()
             .pattern(/^\d{4}-\d{2}-\d{2}$/)
@@ -37,20 +38,21 @@ export const validateBlogPostUpdate = (data) => {
         excerpt: Joi.string(),
         category: Joi.string(),
         coverImageUrl: Joi.string().uri(),
+        content: Joi.string(),
         authorId: Joi.string().hex().length(24),
         date: Joi.string().pattern(/^\d{4}-\d{2}-\d{2}$/),
         readTimeMinutes: Joi.number().integer().min(1),
         tableOfContents: Joi.array().items(
             Joi.object({
-                id: Joi.string(),
-                label: Joi.string(),
-                level: Joi.number().integer().min(1).max(6),
+                id: Joi.string().required(),
+                label: Joi.string().required(),
+                level: Joi.number().integer().min(1).max(6).required(),
             }),
         ),
         faqs: Joi.array().items(
             Joi.object({
-                question: Joi.string(),
-                answer: Joi.string(),
+                question: Joi.string().required(),
+                answer: Joi.string().required(),
             }),
         ),
         status: Joi.string().valid("published", "draft"),

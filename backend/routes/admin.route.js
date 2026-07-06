@@ -11,6 +11,7 @@ import {
 import {
     validateAdminLogin,
     validateAdminCreation,
+    validateAdminUpdate,
 } from "../validators/admin.validator.js";
 
 import { protectAdminRoute } from "../middlewares/auth.middleware.js";
@@ -29,7 +30,7 @@ router.post(
 router.put(
     "/",
     protectAdminRoute,
-    validateRequest(validateAdminCreation),
+    validateRequest(validateAdminUpdate),
     edit,
 );
 router.post("/login", validateRequest(validateAdminLogin), login);

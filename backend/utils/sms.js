@@ -1,4 +1,5 @@
 import { client } from "../config/twilio.config.js";
+import { logger } from "./logger.js";
 
 export const sendSMS = async (to, body) => {
     try {
@@ -17,6 +18,6 @@ export const sendSMS = async (to, body) => {
 
         return message;
     } catch (error) {
-        console.error(`Failed to send SMS to ${to}:`, error.message);
+        logger.error(`Failed to send SMS to ${to}: ${error.message}`);
     }
 };

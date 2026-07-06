@@ -24,6 +24,7 @@ const blogPostSchema = new mongoose.Schema(
         excerpt: { type: String, required: true },
         category: { type: String, required: true },
         coverImageUrl: { type: String, required: true },
+        content: { type: String, required: true },
         authorId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Author",
@@ -41,5 +42,7 @@ const blogPostSchema = new mongoose.Schema(
     },
     { timestamps: true },
 );
+
+blogPostSchema.index({ status: 1, createdAt: -1 });
 
 export const BlogPost = mongoose.model("BlogPost", blogPostSchema);

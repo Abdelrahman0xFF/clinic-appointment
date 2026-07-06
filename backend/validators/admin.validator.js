@@ -14,6 +14,19 @@ export const validateAdminCreation = (data) => {
     return schema.validate(data);
 };
 
+export const validateAdminUpdate = (data) => {
+    const schema = Joi.object({
+        username: Joi.string().trim().min(3).max(30),
+        password: Joi.string()
+            .pattern(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/)
+            .messages({
+                "string.pattern.base":
+                    "Password must be at least 8 characters long and contain at least one letter and one number.",
+            }),
+    }).min(1);
+    return schema.validate(data);
+};
+
 export const validateAdminLogin = (data) => {
     const schema = Joi.object({
         username: Joi.string().required().trim().min(3).max(30),

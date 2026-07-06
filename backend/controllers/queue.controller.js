@@ -4,15 +4,32 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { AppError } from "../utils/AppError.js";
 
 export const getLiveQueue = asyncHandler(async (req, res, next) => {
-    const queue = await QueueEntry.find({ stage: { $ne: "completed" } })
-        .populate({
-            path: "appointmentId",
-            select: "time patientId",
-            populate: { path: "patientId", select: "fullName" },
-        })
-        .sort({ createdAt: 1 });
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 20));
+    const skip = (page - 1) * limit;
 
-    return res.status(200).json({ success: true, data: queue });
+    const filter = { stage: { $ne: "completed" } };
+
+    const [queue, total] = await Promise.all([
+        QueueEntry.find(filter)
+            .skip(skip)
+            .limit(limit)
+            .populate({
+                path: "appointmentId",
+                select: "time patientId",
+                populate: { path: "patientId", select: "fullName" },
+            })
+            .sort({ createdAt: 1 }),
+        QueueEntry.countDocuments(filter),
+    ]);
+
+    return res.status(200).json({
+        success: true,
+        data: queue,
+        total,
+        page,
+        totalPages: Math.ceil(total / limit),
+    });
 });
 
 export const updateQueueStage = asyncHandler(async (req, res, next) => {

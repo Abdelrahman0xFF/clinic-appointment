@@ -1,3 +1,4 @@
+import { Admin } from "../models/admin.model.js";
 import { verifyToken } from "../utils/jwt.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
@@ -12,6 +13,14 @@ export const protectAdminRoute = asyncHandler(async (req, res, next) => {
     }
 
     const decoded = verifyToken(token);
+
+    const admin = await Admin.findById(decoded.id);
+    if (!admin) {
+        return res.status(401).json({
+            success: false,
+            message: "Not authorized, admin no longer exists",
+        });
+    }
 
     req.adminId = decoded.id;
     next();
