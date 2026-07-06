@@ -2,7 +2,26 @@ import { BlogPost } from "../models/blog.model.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { AppError } from "../utils/AppError.js";
 
+const parseJsonFields = (body) => {
+    for (const field of ["tableOfContents", "faqs"]) {
+        if (typeof body[field] === "string") {
+            try {
+                body[field] = JSON.parse(body[field]);
+            } catch {
+                delete body[field];
+            }
+        }
+    }
+};
+
 export const createBlogPost = asyncHandler(async (req, res, next) => {
+    if (req.file) {
+        req.body.coverImageUrl = req.file.path;
+    }
+    parseJsonFields(req.body);
+    if (!req.body.coverImageUrl) {
+        return next(new AppError("Cover image is required", 400));
+    }
     const newPost = await BlogPost.create(req.body);
     return res.status(201).json({
         success: true,
@@ -40,8 +59,8 @@ export const getBlogPosts = asyncHandler(async (req, res, next) => {
     });
 });
 
-export const getBlogPostBySlug = asyncHandler(async (req, res, next) => {
-    const filter = { slug: req.params.slug };
+export const getBlogPostById = asyncHandler(async (req, res, next) => {
+    const filter = { _id: req.params.id };
     if (!req.adminId) {
         filter.status = "published";
     }
@@ -54,12 +73,16 @@ export const getBlogPostBySlug = asyncHandler(async (req, res, next) => {
 });
 
 export const updateBlogPost = asyncHandler(async (req, res, next) => {
-    const post = await BlogPost.findByIdAndUpdate(req.params.id, req.body, {
-        new: true,
-    });
+    const post = await BlogPost.findById(req.params.id);
     if (!post) {
         return next(new AppError("Blog post not found", 404));
     }
+    if (req.file) {
+        req.body.coverImageUrl = req.file.path;
+    }
+    parseJsonFields(req.body);
+    Object.assign(post, req.body);
+    await post.save();
     return res
         .status(200)
         .json({ success: true, message: "Blog post updated", data: post });

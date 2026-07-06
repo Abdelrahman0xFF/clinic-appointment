@@ -21,3 +21,12 @@ export const storage = new CloudinaryStorage({
         transformation: [{ width: 800, crop: "limit" }],
     },
 });
+
+export const blogStorage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+        folder: "blog_covers",
+        allowed_formats: ["jpg", "jpeg", "png", "webp"],
+        transformation: [{ width: 1200, crop: "limit" }],
+    },
+});

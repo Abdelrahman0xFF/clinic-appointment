@@ -8,10 +8,12 @@ import {
     updateAppointmentStatus,
     checkInAppointment,
     getAvailableTimeSlots,
+    rescheduleAppointment,
 } from "../controllers/appointment.controller.js";
 import {
     validateAppointmentForm,
     validateUpdateAppintment,
+    validateRescheduleAppointment,
 } from "../validators/appointment.validator.js";
 
 import { protectAdminRoute } from "../middlewares/auth.middleware.js";
@@ -35,5 +37,10 @@ router.put(
     updateAppointmentStatus,
 );
 router.put("/:id/checkin", protectAdminRoute, checkInAppointment);
+router.put(
+    "/:id/reschedule",
+    validateRequest(validateRescheduleAppointment),
+    rescheduleAppointment,
+);
 
 export default router;

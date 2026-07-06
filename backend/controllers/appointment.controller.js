@@ -199,6 +199,52 @@ export const updateAppointmentStatus = asyncHandler(async (req, res, next) => {
     });
 });
 
+export const rescheduleAppointment = asyncHandler(async (req, res, next) => {
+    const { date, time, phone, fullName } = req.body;
+
+    const patient = await Patient.findOne({ phone, fullName });
+    if (!patient) {
+        return next(new AppError("Patient not found", 404));
+    }
+
+    const appointment = await Appointment.findById(req.params.id);
+    if (!appointment) {
+        return next(new AppError("Appointment not found", 404));
+    }
+    if (appointment.patientId.toString() !== patient._id.toString()) {
+        return next(
+            new AppError("This appointment does not belong to you", 403),
+        );
+    }
+    if (appointment.status === "rejected") {
+        return next(
+            new AppError("Cannot reschedule a rejected appointment", 400),
+        );
+    }
+
+    const slotTaken = await Appointment.findOne({
+        _id: { $ne: appointment._id },
+        date,
+        time,
+        status: { $ne: "rejected" },
+    });
+    if (slotTaken) {
+        return next(new AppError("This time slot is already booked", 400));
+    }
+
+    appointment.date = date;
+    appointment.time = time;
+    appointment.status = "pending";
+    appointment.checkedIn = false;
+    await appointment.save();
+
+    return res.status(200).json({
+        success: true,
+        message: "Appointment rescheduled successfully",
+        data: appointment,
+    });
+});
+
 export const checkInAppointment = asyncHandler(async (req, res, next) => {
     const existingQueue = await QueueEntry.findOne({
         appointmentId: req.params.id,

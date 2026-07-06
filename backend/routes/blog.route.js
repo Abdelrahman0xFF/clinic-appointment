@@ -2,7 +2,7 @@ import { Router } from "express";
 import {
     createBlogPost,
     getBlogPosts,
-    getBlogPostBySlug,
+    getBlogPostById,
     updateBlogPost,
     deleteBlogPost,
 } from "../controllers/blog.controller.js";
@@ -11,6 +11,7 @@ import {
     optionalAuth,
 } from "../middlewares/auth.middleware.js";
 import { validateRequest } from "../middlewares/validate.middleware.js";
+import { blogUpload } from "../middlewares/upload.middleware.js";
 import {
     validateBlogPost,
     validateBlogPostUpdate,
@@ -19,17 +20,19 @@ import {
 const router = Router();
 
 router.get("/", optionalAuth, getBlogPosts);
-router.get("/:slug", optionalAuth, getBlogPostBySlug);
+router.get("/:id", optionalAuth, getBlogPostById);
 
 router.post(
     "/",
     protectAdminRoute,
+    blogUpload.single("coverImage"),
     validateRequest(validateBlogPost),
     createBlogPost,
 );
 router.put(
     "/:id",
     protectAdminRoute,
+    blogUpload.single("coverImage"),
     validateRequest(validateBlogPostUpdate),
     updateBlogPost,
 );
