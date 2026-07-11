@@ -57,11 +57,11 @@ const buttonVariants = cva(
 );
 
 @Component({
-    selector: 'app-ui-button',
+    selector: 'app-button',
     standalone: true,
     template: `
         <button data-slot="button" type="button" [class]="classes">
-            <ng-content></ng-content>
+            <ng-content />
         </button>
     `,
 })
@@ -72,7 +72,10 @@ export class UiButton {
     @Input() size?: 'default' | 'xs' | 'sm' | 'lg' | 'icon' | 'icon-xs' | 'icon-sm' | 'icon-lg' =
         'default';
 
+    @Input() class?: string;
+
     get classes(): string {
-        return buttonVariants({ variant: this.variant, size: this.size });
+        const base = buttonVariants({ variant: this.variant, size: this.size });
+        return this.class ? `${base} ${this.class}` : base;
     }
 }

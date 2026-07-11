@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { KeyValuePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { UiButton } from '../../components/ui/ui.button/ui.button';
+import { UiButton } from '../../components/ui/button';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import {
     faBrandWhatsapp,
@@ -39,21 +39,30 @@ import {
                             </span>
                         </a>
 
-                        <nav class="hidden md:flex items-center gap-8">
+                        <nav class="hidden md:flex items-center gap-1">
                             @for (link of navLinks; track link.label) {
-                                <a
-                                    [routerLink]="link.href"
-                                    [fragment]="link.fragment"
-                                    class="text-slate-700 hover:text-blue-600 text-sm font-medium transition cursor-pointer"
-                                >
-                                    {{ link.label }}
-                                </a>
+                                @if (link.fragment) {
+                                    <button
+                                        type="button"
+                                        (click)="scrollTo(link.fragment)"
+                                        class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-blue-600 rounded-lg hover:bg-blue-50 transition"
+                                    >
+                                        {{ link.label }}
+                                    </button>
+                                } @else {
+                                    <a
+                                        [routerLink]="link.href"
+                                        class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-blue-600 rounded-lg hover:bg-blue-50 transition"
+                                    >
+                                        {{ link.label }}
+                                    </a>
+                                }
                             }
                         </nav>
 
                         <div class="flex items-center gap-3">
                             <a routerLink="/booking" class="hidden sm:inline-flex">
-                                <app-ui-button> Book Appointment </app-ui-button>
+                                <app-button> Book Appointment </app-button>
                             </a>
                         </div>
                     </div>
@@ -61,7 +70,7 @@ import {
             </header>
 
             <main class="flex-1">
-                <ng-content></ng-content>
+                <ng-content />
             </main>
 
             <footer class="bg-slate-900 pt-16 pb-0">
@@ -109,16 +118,28 @@ import {
                             <ul class="space-y-3">
                                 @for (link of navLinks; track link.label) {
                                     <li>
-                                        <a
-                                            [routerLink]="link.href"
-                                            [fragment]="link.fragment"
-                                            class="text-sm text-slate-400 hover:text-primary transition flex items-center gap-2"
-                                        >
-                                            <span
-                                                class="w-1 h-1 rounded-full bg-slate-600 shrink-0"
-                                            ></span>
-                                            {{ link.label }}
-                                        </a>
+                                        @if (link.fragment) {
+                                            <button
+                                                type="button"
+                                                (click)="scrollTo(link.fragment)"
+                                                class="text-sm text-slate-400 hover:text-primary transition flex items-center gap-2"
+                                            >
+                                                <span
+                                                    class="w-1 h-1 rounded-full bg-slate-600 shrink-0"
+                                                ></span>
+                                                {{ link.label }}
+                                            </button>
+                                        } @else {
+                                            <a
+                                                [routerLink]="link.href"
+                                                class="text-sm text-slate-400 hover:text-primary transition flex items-center gap-2"
+                                            >
+                                                <span
+                                                    class="w-1 h-1 rounded-full bg-slate-600 shrink-0"
+                                                ></span>
+                                                {{ link.label }}
+                                            </a>
+                                        }
                                     </li>
                                 }
                                 <li>
@@ -268,10 +289,17 @@ export class LayoutPublic {
         { href: '/', label: 'Home', fragment: 'hero' },
         { href: '/', label: 'About', fragment: 'about' },
         { href: '/', label: 'Services', fragment: 'services' },
-        { href: '/blog', label: 'Blog', fragment: undefined },
+        { href: '/', label: 'Blog', fragment: 'blogs' },
         { href: '/', label: 'Location', fragment: 'location' },
     ];
     currentYear: number = new Date().getFullYear();
+
+    scrollTo(id: string): void {
+        const el = document.getElementById(id);
+        if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }
     socialMediaMapper: Record<string, string> = {
         facebook: 'faBrandFacebook',
         instagram: 'faBrandInstagram',
@@ -293,6 +321,7 @@ export class LayoutPublic {
             hours: val ? `${val.start} - ${val.end}` : null,
         }));
     }
+
     data = {
         address: '123 Al-Kawthar street, Hurghada, Red Sea Governorate',
         consultationFee: 500,

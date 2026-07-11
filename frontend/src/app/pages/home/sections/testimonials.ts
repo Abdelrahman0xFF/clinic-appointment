@@ -1,0 +1,16 @@
+import { Component } from '@angular/core';
+import { Section } from '../../../components/section/section';
+import { Video } from '../../../components/ui/video';
+
+@Component({
+    selector: 'app-testimonials',
+    imports: [Section, Video],
+    template: `<app-section
+        id="testimonials"
+        title="What Our Patients Say"
+        description="Hear from those who have experienced our care."
+    >
+        <app-video src="assets/testimonials/video.mp4" />
+    </app-section>`,
+})
+export class Testimonials {}
