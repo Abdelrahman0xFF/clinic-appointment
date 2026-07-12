@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { UiButton } from '../../../components/ui/button';
 import { NgIcon, provideIcons } from '@ng-icons/core';
@@ -8,15 +8,15 @@ import {
     heroPhone,
     heroChatBubbleLeftEllipsis,
 } from '@ng-icons/heroicons/outline';
+import { ClinicService } from '../../../services/clinic.service';
+import { Section } from '../../../components/section/section';
 
 @Component({
     viewProviders: [provideIcons({ heroMapPin, heroClock, heroPhone, heroChatBubbleLeftEllipsis })],
     selector: 'app-visit',
-    imports: [UiButton, NgIcon, RouterLink],
+    imports: [UiButton, NgIcon, RouterLink, Section],
     template: `
-        <section id="visit" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
-            <h2 class="text-3xl lg:text-4xl font-bold text-slate-900 mb-12">Visit Our Clinic</h2>
-
+        <app-section id="visit" title="Visit Our Clinic">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <div class="p-6 lg:p-8 rounded-xl border border-slate-200 bg-white">
                     <h3 class="text-xl font-bold text-slate-900 mb-6">Clinic Information</h3>
@@ -46,11 +46,7 @@ import {
                             />
                             <div>
                                 <p class="font-semibold text-slate-900 mb-2">Working Hours</p>
-                                <ul class="text-slate-600 space-y-1 text-sm">
-                                    <!-- <li>Mon-Sat: 9:00 AM - 5:00 PM</li>
-                                    <li>Friday: Closed</li>
-                                    <li>Sunday: 10:00 AM - 2:00 PM</li> -->
-                                </ul>
+                                <ul class="text-slate-600 space-y-1 text-sm"></ul>
                             </div>
                         </div>
 
@@ -120,10 +116,11 @@ import {
                     </div>
                 </div>
             </div>
-        </section>
+        </app-section>
     `,
 })
 export class Visit {
-    @Input() address!: string;
-    @Input() phone!: string;
+    private clinic = inject(ClinicService);
+    address = this.clinic.address;
+    phone = this.clinic.phone;
 }

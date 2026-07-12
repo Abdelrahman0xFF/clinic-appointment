@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Section } from '../../../components/section/section';
 import { ServiceCard } from '../../../components/ui/cards/service-card';
+import { ClinicService } from '../../../services/clinic.service';
 
 @Component({
     selector: 'app-services',
@@ -24,36 +25,6 @@ import { ServiceCard } from '../../../components/ui/cards/service-card';
     `,
 })
 export class Services {
-    services = [
-        {
-            icon: 'fluentStethoscope',
-            title: 'General Dermatology',
-            description: 'Treatment of skin diseases and conditions',
-        },
-        {
-            icon: 'fluentHeartPulse',
-            title: 'Skin Health',
-            description: 'Preventive care for healthy skin',
-        },
-        {
-            icon: 'fluentSyringe',
-            title: 'Injectable Treatments',
-            description: 'Botox, fillers, and aesthetic injectables',
-        },
-        {
-            icon: 'fluentClipboardTaskListLtr',
-            title: 'Laser Therapy',
-            description: 'Advanced laser treatments for skin rejuvenation',
-        },
-        {
-            icon: 'fluentPulse',
-            title: 'Acne Treatment',
-            description: 'Specialized acne management and scar revision',
-        },
-        {
-            icon: 'fluentPeople',
-            title: 'Consultations',
-            description: 'Personalized consultation services for skin care needs',
-        },
-    ];
+    private clinic = inject(ClinicService);
+    services = this.clinic.services;
 }

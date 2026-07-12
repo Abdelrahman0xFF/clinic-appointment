@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { KeyValuePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { UiButton } from '../../components/ui/button';
@@ -10,6 +10,8 @@ import {
     faBrandTwitter,
     faBrandLinkedin,
 } from '@ng-icons/font-awesome/brands';
+import { ClinicService } from '../../services/clinic.service';
+import { scrollToElement } from '../../utils/scroll';
 
 @Component({
     viewProviders: [
@@ -90,7 +92,7 @@ import {
                                 excellence. Your health and well-being are our top priority.
                             </p>
                             <div class="flex gap-2">
-                                @for (item of data.socialMedia | keyvalue; track item.key) {
+                                @for (item of clinic.socialMedia | keyvalue; track item.key) {
                                     @if (item.value?.link) {
                                         <a
                                             [href]="item.value.link"
@@ -183,7 +185,7 @@ import {
                                             d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                                         />
                                     </svg>
-                                    <span>{{ data.address }}</span>
+                                    <span>{{ clinic.address }}</span>
                                 </li>
                                 <li class="flex items-start gap-3">
                                     <svg
@@ -200,9 +202,9 @@ import {
                                         />
                                     </svg>
                                     <a
-                                        href="tel:{{ data.phone }}"
+                                        href="tel:{{ clinic.phone }}"
                                         class="hover:text-white transition"
-                                        >{{ data.phone }}</a
+                                        >{{ clinic.phone }}</a
                                     >
                                 </li>
                                 <li class="flex items-start gap-3">
@@ -273,11 +275,11 @@ import {
             </footer>
 
             <a
-                href="https://wa.me/{{ data.phone }}"
+                href="https://wa.me/{{ clinic.phone }}"
                 target="_blank"
                 rel="noopener noreferrer"
                 class="fixed bottom-6 right-6 w-14 h-14 bg-emerald-500 rounded-full shadow-lg hover:bg-emerald-600 transition flex items-center justify-center text-white z-50"
-                aria-label="contactUs"
+                aria-label="Contact us on WhatsApp"
             >
                 <ng-icon size="30" name="faBrandWhatsapp" />
             </a>
@@ -285,94 +287,10 @@ import {
     `,
 })
 export class LayoutPublic {
-    navLinks = [
-        { href: '/', label: 'Home', fragment: 'hero' },
-        { href: '/', label: 'About', fragment: 'about' },
-        { href: '/', label: 'Services', fragment: 'services' },
-        { href: '/', label: 'Blog', fragment: 'blogs' },
-        { href: '/', label: 'Location', fragment: 'location' },
-    ];
-    currentYear: number = new Date().getFullYear();
-
-    scrollTo(id: string): void {
-        const el = document.getElementById(id);
-        if (el) {
-            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-    }
-    socialMediaMapper: Record<string, string> = {
-        facebook: 'faBrandFacebook',
-        instagram: 'faBrandInstagram',
-        twitter: 'faBrandTwitter',
-        linkedin: 'faBrandLinkedin',
-    };
-    dayLabels: Record<string, string> = {
-        monday: 'Mon',
-        tuesday: 'Tue',
-        wednesday: 'Wed',
-        thursday: 'Thu',
-        friday: 'Fri',
-        saturday: 'Sat',
-        sunday: 'Sun',
-    };
-    get workingHoursList() {
-        return Object.entries(this.data.workingHours).map(([key, val]) => ({
-            label: this.dayLabels[key] || key,
-            hours: val ? `${val.start} - ${val.end}` : null,
-        }));
-    }
-
-    data = {
-        address: '123 Al-Kawthar street, Hurghada, Red Sea Governorate',
-        consultationFee: 500,
-        credentials: [
-            'Licensed by the Egyptian Ministry of Health',
-            'ISO 9001 Certified for Healthcare Quality',
-            'Voted Best Specialized Clinic in 2025',
-        ],
-        instapayLink: 'https://ipn.eg/S/abdelrahmanashraf5515/instapay/56v0E0',
-        name: 'Hurghada Dental Clinic',
-        phone: '01123593773',
-        socialMedia: {
-            facebook: {
-                link: '#',
-            },
-            instagram: {
-                link: '#',
-            },
-            twitter: null,
-            linkedin: {
-                link: '#',
-            },
-        },
-        specialization: 'Advanced Dentistry and Orthodontics',
-        walletNumber: '01123593773',
-        workingHours: {
-            monday: {
-                start: '09:00',
-                end: '17:00',
-            },
-            tuesday: {
-                start: '09:00',
-                end: '17:00',
-            },
-            wednesday: {
-                start: '09:00',
-                end: '17:00',
-            },
-            thursday: {
-                start: '09:00',
-                end: '17:00',
-            },
-            friday: null,
-            saturday: {
-                start: '10:00',
-                end: '14:00',
-            },
-            sunday: {
-                start: '09:00',
-                end: '17:00',
-            },
-        },
-    };
+    clinic = inject(ClinicService);
+    navLinks = this.clinic.navLinks;
+    socialMediaMapper = this.clinic.socialMediaMapper;
+    workingHoursList = this.clinic.workingHoursList;
+    currentYear = new Date().getFullYear();
+    scrollTo = scrollToElement;
 }

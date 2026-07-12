@@ -3,13 +3,15 @@ import { RouterLink } from '@angular/router';
 import { UiButton } from '../../../components/ui/button';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { heroStar } from '@ng-icons/heroicons/outline';
+import { scrollToElement } from '../../../utils/scroll';
+import { Section } from '../../../components/section/section';
 
 @Component({
     viewProviders: [provideIcons({ heroStar })],
     selector: 'app-hero',
-    imports: [RouterLink, UiButton, NgIcon],
+    imports: [RouterLink, UiButton, NgIcon, Section],
     template: `
-        <section id="hero" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
+        <app-section id="hero">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 items-center">
                 <div>
                     <span
@@ -112,12 +114,9 @@ import { heroStar } from '@ng-icons/heroicons/outline';
                     </div>
                 </div>
             </div>
-        </section>
+        </app-section>
     `,
 })
 export class Hero {
-    scrollTo(id: string): void {
-        const el = document.getElementById(id);
-        el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+    scrollTo = scrollToElement;
 }
