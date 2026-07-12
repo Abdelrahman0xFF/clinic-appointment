@@ -1,20 +1,19 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { ClinicService } from '../../../services/clinic.service';
-import { Section } from '../../../components/section/section';
+import { ClinicService } from '../../../core/clinic';
+import { Section } from '../../../shared/section';
 
 @Component({
     selector: 'app-blog',
     imports: [RouterLink, Section],
     template: `
-        <app-section id="blog" class="bg-white border-y border-slate-200">
+        <app-section
+            id="blog"
+            title="Latest Insights"
+            description="Expert advice and updates from our clinic."
+            [class]="class"
+        >
             <div class="flex items-center justify-between mb-12">
-                <div>
-                    <h2 class="text-3xl lg:text-4xl font-bold text-slate-900 mb-2">
-                        Latest Insights
-                    </h2>
-                    <p class="text-slate-600">Expert advice and updates from our clinic.</p>
-                </div>
                 <a
                     routerLink="/blog"
                     class="text-blue-600 hover:text-blue-700 font-semibold text-sm shrink-0"
@@ -54,6 +53,7 @@ import { Section } from '../../../components/section/section';
     `,
 })
 export class Blog {
+    @Input() class = '';
     private clinic = inject(ClinicService);
     posts = this.clinic.posts;
 }

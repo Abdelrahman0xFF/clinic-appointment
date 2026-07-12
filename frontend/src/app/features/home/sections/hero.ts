@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { UiButton } from '../../../components/ui/button';
+import { UiButton } from '../../../shared/ui/button';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { heroStar } from '@ng-icons/heroicons/outline';
 import { scrollToElement } from '../../../utils/scroll';
-import { Section } from '../../../components/section/section';
+import { Section } from '../../../shared/section';
 
 @Component({
     viewProviders: [provideIcons({ heroStar })],

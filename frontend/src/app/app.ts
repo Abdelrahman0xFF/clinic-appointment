@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { LayoutPublic } from './layouts/public/public';
-import { Home } from './pages/home/home';
+import { LayoutPublic } from './core/layout/public';
+import { Home } from './features/home/home';
 
 @Component({
     selector: 'app-root',

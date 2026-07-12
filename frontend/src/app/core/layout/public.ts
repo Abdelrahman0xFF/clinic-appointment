@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { KeyValuePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { UiButton } from '../../components/ui/button';
+import { UiButton } from '../../shared/ui/button';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import {
     faBrandWhatsapp,
@@ -10,7 +10,7 @@ import {
     faBrandTwitter,
     faBrandLinkedin,
 } from '@ng-icons/font-awesome/brands';
-import { ClinicService } from '../../services/clinic.service';
+import { ClinicService } from '../clinic';
 import { scrollToElement } from '../../utils/scroll';
 
 @Component({

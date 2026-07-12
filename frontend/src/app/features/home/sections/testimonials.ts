@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { Section } from '../../../components/section/section';
-import { Video } from '../../../components/ui/video';
+import { Section } from '../../../shared/section';
+import { Video } from '../../../shared/ui/video';
 
 @Component({
     selector: 'app-testimonials',

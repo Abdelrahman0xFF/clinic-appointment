@@ -16,7 +16,7 @@ import { Visit } from './sections/visit';
         <app-services />
         <app-results class="bg-white" />
         <app-testimonials />
-        <app-blog />
+        <app-blog class="bg-white" />
         <app-visit />
     `,
 })

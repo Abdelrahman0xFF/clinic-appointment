@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Section } from '../../../components/section/section';
+import { Section } from '../../../shared/section';
 
 @Component({
     selector: 'app-about',

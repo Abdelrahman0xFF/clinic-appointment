@@ -1,7 +1,7 @@
 import { Component, Input, inject } from '@angular/core';
-import { Section } from '../../../components/section/section';
-import { ResultsCard } from '../../../components/ui/cards/results-card';
-import { ClinicService } from '../../../services/clinic.service';
+import { Section } from '../../../shared/section';
+import { ResultsCard } from '../../../shared/ui/cards/results-card';
+import { ClinicService } from '../../../core/clinic';
 
 @Component({
     selector: 'app-results',

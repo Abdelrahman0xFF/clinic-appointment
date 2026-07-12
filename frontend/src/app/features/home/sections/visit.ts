@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { UiButton } from '../../../components/ui/button';
+import { UiButton } from '../../../shared/ui/button';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import {
     heroMapPin,
@@ -8,8 +8,8 @@ import {
     heroPhone,
     heroChatBubbleLeftEllipsis,
 } from '@ng-icons/heroicons/outline';
-import { ClinicService } from '../../../services/clinic.service';
-import { Section } from '../../../components/section/section';
+import { ClinicService } from '../../../core/clinic';
+import { Section } from '../../../shared/section';
 
 @Component({
     viewProviders: [provideIcons({ heroMapPin, heroClock, heroPhone, heroChatBubbleLeftEllipsis })],

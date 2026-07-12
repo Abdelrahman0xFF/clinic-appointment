@@ -1,5 +1,28 @@
 import { Injectable } from '@angular/core';
-import type { NavLink, Service, BlogPost, ResultItem } from '../models/clinic.model';
+
+export interface NavLink {
+    href: string;
+    label: string;
+    fragment?: string;
+}
+
+export interface Service {
+    icon: string;
+    title: string;
+    description: string;
+}
+
+export interface BlogPost {
+    title: string;
+    excerpt: string;
+    category: string;
+    date: string;
+}
+
+export interface ResultItem {
+    id: number;
+    image?: string;
+}
 
 @Injectable({ providedIn: 'root' })
 export class ClinicService {
