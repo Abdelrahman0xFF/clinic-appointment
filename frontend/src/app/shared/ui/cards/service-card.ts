@@ -25,15 +25,25 @@ import {
     imports: [NgIcon],
     template: `
         <div
-            class="p-6 bg-white rounded-xl border border-slate-200 shadow-sm group hover:shadow-md *:transition-all duration-200 hover:scale-[1.05]"
+            class="group relative p-6 bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl hover:border-blue-100 transition-all duration-300 hover:-translate-y-1"
         >
             <div
-                class="w-12 h-12 bg-blue-100 border-3 border-blue-200 text-primary rounded-lg flex items-center justify-center mb-4 group-hover:border-3 group-hover:shadow-md transform group-hover:scale-110 transition-all duration-200"
+                class="absolute top-0 right-0 w-24 h-24 bg-linear-to-br from-blue-500/5 to-blue-500/5 rounded-bl-[4rem] opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            ></div>
+            <div
+                class="relative flex items-center justify-center size-14 rounded-2xl bg-linear-to-br from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-200 mb-5 group-hover:scale-110 group-hover:shadow-xl group-hover:shadow-blue-200/50 transition-all duration-300"
             >
-                <ng-icon name="{{ icon }}" size="24" />
+                <ng-icon name="{{ icon }}" size="26" />
             </div>
-            <h3 class="font-semibold text-slate-900 mb-2">{{ title }}</h3>
-            <p class="text-slate-600 text-sm">{{ description }}</p>
+            <h3
+                class="font-semibold text-slate-900 mb-2 text-lg group-hover:text-blue-600 transition-colors"
+            >
+                {{ title }}
+            </h3>
+            <p class="text-slate-500 text-sm leading-relaxed">{{ description }}</p>
+            <div
+                class="mt-4 h-px bg-linear-to-r from-blue-100 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"
+            ></div>
         </div>
     `,
 })

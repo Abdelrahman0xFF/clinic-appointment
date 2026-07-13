@@ -158,8 +158,18 @@ export class ClinicService {
         { id: 5, patientName: 'Dina Adel', time: '11:00', stage: 'waiting' },
     ];
 
+    name = 'Hurghada Dental Clinic';
+    specialization = 'Advanced Dentistry and Orthodontics';
     address = '123 Al-Kawthar street, Hurghada, Red Sea Governorate';
-    phone = '01123593773';
+    phone = '01012345678';
+    consultationFee = 500;
+    instapayLink = 'https://ipn.eg/S/abdelrahmanashraf5515/instapay/56v0E0';
+    walletNumber = '01012345678';
+    credentials: string[] = [
+        'Licensed by the Egyptian Ministry of Health',
+        'ISO 9001 Certified for Healthcare Quality',
+        'Voted Best Specialized Clinic in 2025',
+    ];
 
     dayLabels: Record<string, string> = {
         monday: 'Mon',
@@ -171,6 +181,16 @@ export class ClinicService {
         sunday: 'Sun',
     };
 
+    fullDayLabels: Record<string, string> = {
+        monday: 'Monday',
+        tuesday: 'Tuesday',
+        wednesday: 'Wednesday',
+        thursday: 'Thursday',
+        friday: 'Friday',
+        saturday: 'Saturday',
+        sunday: 'Sunday',
+    };
+
     socialMediaMapper: Record<string, string> = {
         facebook: 'faBrandFacebook',
         instagram: 'faBrandInstagram',
@@ -179,10 +199,10 @@ export class ClinicService {
     };
 
     socialMedia: Record<string, { link?: string } | null> = {
-        facebook: { link: '#' },
-        instagram: { link: '#' },
+        facebook: { link: 'https://facebook.com/nexushealth' },
+        instagram: { link: 'https://instagram.com/nexushealth' },
         twitter: null,
-        linkedin: { link: '#' },
+        linkedin: null,
     };
 
     workingHours: Record<string, { start: string; end: string } | null> = {
@@ -197,6 +217,7 @@ export class ClinicService {
 
     get workingHoursList() {
         return Object.entries(this.workingHours).map(([key, val]) => ({
+            key,
             label: this.dayLabels[key] || key,
             hours: val ? `${val.start} - ${val.end}` : null,
         }));

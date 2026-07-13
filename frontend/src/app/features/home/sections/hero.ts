@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { UiButton } from '../../../shared/ui/button';
 import { NgIcon, provideIcons } from '@ng-icons/core';
@@ -11,73 +11,89 @@ import { Section } from '../../../shared/section';
     selector: 'app-hero',
     imports: [RouterLink, UiButton, NgIcon, Section],
     template: `
-        <app-section id="hero">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 items-center">
+        <app-section id="hero" [class]="class">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
                 <div>
                     <span
-                        class="inline-block mb-4 px-3 py-1.5 bg-emerald-100 text-emerald-700 text-sm font-medium rounded-full"
+                        class="inline-flex items-center gap-2 mb-5 px-4 py-1.5 bg-blue-100 text-blue-700 text-sm font-medium rounded-full"
                     >
+                        <span class="size-2 rounded-full bg-blue-500 animate-pulse"></span>
                         Accepting New Patients
                     </span>
 
                     <h1
-                        class="text-4xl lg:text-5xl font-bold text-slate-900 mb-4 leading-tight text-balance"
+                        class="text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-900 mb-6 leading-[1.1] tracking-tight"
                     >
-                        Expert Dermatology Care for Healthy Skin
+                        Expert Dermatology Care
+                        <span
+                            class="text-transparent bg-clip-text bg-linear-to-r from-blue-600 to-blue-500"
+                        >
+                            for Healthy Skin
+                        </span>
                     </h1>
 
-                    <p class="text-lg text-slate-600 mb-6 leading-relaxed">
+                    <p class="text-lg text-slate-600 mb-8 leading-relaxed max-w-xl">
                         With over a decade of experience, Dr. Ahmed provides comprehensive
                         dermatological care using the latest medical advancements. Your skin health
                         is our priority.
                     </p>
 
-                    <div class="flex flex-wrap gap-2 mb-8">
+                    <div class="flex flex-wrap gap-2 mb-10">
                         <span
-                            class="px-3 py-2 text-sm rounded-md border border-slate-200 text-slate-700 bg-white"
+                            class="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-sm rounded-lg border border-slate-200 text-slate-700 bg-white/80"
                         >
+                            <span class="size-1.5 rounded-full bg-blue-500"></span>
                             Consultant Dermatologist
                         </span>
                         <span
-                            class="px-3 py-2 text-sm rounded-md border border-slate-200 text-slate-700 bg-white"
+                            class="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-sm rounded-lg border border-slate-200 text-slate-700 bg-white/80"
                         >
+                            <span class="size-1.5 rounded-full bg-blue-500"></span>
                             MD Cairo University
                         </span>
                         <span
-                            class="px-3 py-2 text-sm rounded-md border border-slate-200 text-slate-700 bg-white"
+                            class="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-sm rounded-lg border border-slate-200 text-slate-700 bg-white/80"
                         >
+                            <span class="size-1.5 rounded-full bg-blue-500"></span>
                             Certified Surgery
                         </span>
                     </div>
 
-                    <div class="grid grid-cols-3 gap-4 mb-8">
-                        <div>
-                            <p class="text-2xl font-bold text-blue-600">10+</p>
-                            <p class="text-sm text-slate-600">Years Experience</p>
-                        </div>
-                        <div>
-                            <p class="text-2xl font-bold text-blue-600">2000+</p>
-                            <p class="text-sm text-slate-600">Patients Treated</p>
-                        </div>
-                        <div>
-                            <p class="text-2xl font-bold text-blue-600">4.9/5</p>
-                            <p class="text-sm text-slate-600">Patient Rating</p>
-                        </div>
-                    </div>
-
-                    <div class="flex flex-col sm:flex-row gap-3">
+                    <div class="flex flex-col sm:flex-row gap-4 mb-12">
                         <a routerLink="/booking">
-                            <app-button size="lg" class="w-full sm:w-auto">
+                            <app-button
+                                size="lg"
+                                class="w-full sm:w-auto shadow-md shadow-blue-200"
+                            >
+                                <ng-icon name="heroStar" size="18" class="text-yellow-300" />
                                 Book Appointment
                             </app-button>
                         </a>
                         <button
                             type="button"
                             (click)="scrollTo('services')"
-                            class="inline-flex shrink-0 items-center justify-center rounded-lg border border-ring bg-background hover:bg-muted hover:text-foreground px-4 py-2 text-sm font-medium whitespace-nowrap transition h-9"
+                            class="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-slate-200 bg-white hover:bg-slate-50 hover:border-slate-300 text-slate-700 px-6 py-2.5 text-sm font-medium transition-all cursor-pointer"
                         >
                             View Services
                         </button>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-6 sm:gap-10">
+                        <div>
+                            <p class="text-3xl font-bold text-slate-900">10+</p>
+                            <p class="text-sm text-slate-500 mt-1">Years Experience</p>
+                        </div>
+                        <div>
+                            <p class="text-3xl font-bold text-slate-900">2000+</p>
+                            <p class="text-sm text-slate-500 mt-1">Patients Treated</p>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-1 mb-0.5">
+                                <p class="text-3xl font-bold text-slate-900">4.9</p>
+                                <span class="text-lg text-slate-400">/5</span>
+                            </div>
+                            <p class="text-sm text-slate-500 mt-1">Patient Rating</p>
+                        </div>
                     </div>
                 </div>
 
@@ -100,9 +116,9 @@ import { Section } from '../../../shared/section';
                     >
                         <div class="flex items-center gap-3">
                             <div
-                                class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center shrink-0"
+                                class="size-12 rounded-full bg-blue-100 flex items-center justify-center shrink-0"
                             >
-                                <ng-icon name="heroStar" size="24" color="#059669" class="block" />
+                                <ng-icon name="heroStar" size="24" color="#2563eb" />
                             </div>
                             <div>
                                 <p class="font-semibold text-slate-900 text-sm">
@@ -118,5 +134,6 @@ import { Section } from '../../../shared/section';
     `,
 })
 export class Hero {
+    @Input() class = '';
     scrollTo = scrollToElement;
 }

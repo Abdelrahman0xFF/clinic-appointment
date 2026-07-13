@@ -30,7 +30,10 @@ import { scrollToElement } from '../../utils/scroll';
             <header class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-slate-200">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
                     <div class="flex items-center justify-between">
-                        <a routerLink="/" fragment="hero" class="flex items-center gap-2">
+                        <button
+                            (click)="scrollTo('hero')"
+                            class="flex items-center gap-2 cursor-pointer"
+                        >
                             <div
                                 class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center"
                             >
@@ -39,7 +42,7 @@ import { scrollToElement } from '../../utils/scroll';
                             <span class="font-bold text-slate-900 hidden sm:inline">
                                 MediCare Clinic
                             </span>
-                        </a>
+                        </button>
 
                         <nav class="hidden md:flex items-center gap-1">
                             @for (link of navLinks; track link.label) {
@@ -278,7 +281,7 @@ import { scrollToElement } from '../../utils/scroll';
                 href="https://wa.me/{{ clinic.phone }}"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="fixed bottom-6 right-6 w-14 h-14 bg-emerald-500 rounded-full shadow-lg hover:bg-emerald-600 transition flex items-center justify-center text-white z-50"
+                class="fixed bottom-6 right-6 w-14 h-14 bg-blue-500 rounded-full shadow-lg hover:bg-blue-600 transition flex items-center justify-center text-white z-50"
                 aria-label="Contact us on WhatsApp"
             >
                 <ng-icon size="30" name="faBrandWhatsapp" />
@@ -294,6 +297,7 @@ export class LayoutPublic {
         { href: '/', label: 'Services', fragment: 'services' },
         { href: '/', label: 'Blog', fragment: 'blog' },
         { href: '/', label: 'Visit', fragment: 'visit' },
+        { href: '/admin/dashboard', label: 'Admin' },
     ];
     socialMediaMapper = this.clinic.socialMediaMapper;
     workingHoursList = this.clinic.workingHoursList;
