@@ -9,7 +9,7 @@ const buttonVariants = cva(
                 default:
                     'bg-primary text-primary-foreground hover:bg-primary/80 border-transparent',
                 outline:
-                    'border-ring bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50',
+                    'border border-slate-200 bg-white text-slate-700 shadow-xs hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900 hover:shadow-sm active:bg-slate-100 aria-expanded:bg-slate-50 aria-expanded:text-slate-900 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-slate-600 dark:hover:bg-slate-800 dark:hover:text-slate-100',
                 secondary:
                     'bg-secondary text-secondary-foreground border-transparent hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)] aria-expanded:bg-secondary aria-expanded:text-secondary-foreground',
                 ghost: 'text-slate-500 border-transparent hover:bg-slate-100 hover:text-slate-900 active:bg-slate-200 aria-expanded:bg-slate-100 aria-expanded:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-50 dark:active:bg-slate-700 dark:aria-expanded:bg-slate-800 dark:aria-expanded:text-slate-50',
@@ -42,7 +42,7 @@ const buttonVariants = cva(
     selector: 'app-button',
     standalone: true,
     template: `
-        <button data-slot="button" type="button" [class]="classes">
+        <button data-slot="button" type="button" [class]="classes" [disabled]="disabled">
             <ng-content />
         </button>
     `,
@@ -55,6 +55,7 @@ export class UiButton {
         'default';
 
     @Input() class?: string;
+    @Input() disabled = false;
 
     get classes(): string {
         const base = buttonVariants({ variant: this.variant, size: this.size });

@@ -8,7 +8,7 @@ import { fluentClock } from '@ng-icons/fluent-ui';
     selector: 'app-settings-hours',
     imports: [NgIcon],
     template: `
-        <div class="rounded-xl border border-slate-200 bg-white p-6">
+        <div class="rounded-xl border border-slate-200 bg-white p-6 h-full flex flex-col">
             <div class="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100">
                 <span class="flex items-center justify-center size-10 rounded-xl bg-indigo-100 text-indigo-600">
                     <ng-icon name="fluentClock" size="22" />

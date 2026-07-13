@@ -46,22 +46,13 @@ import { scrollToElement } from '../../utils/scroll';
 
                         <nav class="hidden md:flex items-center gap-1">
                             @for (link of navLinks; track link.label) {
-                                @if (link.fragment) {
-                                    <button
-                                        type="button"
-                                        (click)="scrollTo(link.fragment)"
-                                        class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-blue-600 rounded-lg cursor-pointer transition"
-                                    >
-                                        {{ link.label }}
-                                    </button>
-                                } @else {
-                                    <a
-                                        [routerLink]="link.href"
-                                        class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-blue-600 rounded-lg cursor-pointer transition"
-                                    >
-                                        {{ link.label }}
-                                    </a>
-                                }
+                                <a
+                                    [routerLink]="link.href"
+                                    [fragment]="link.fragment"
+                                    class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-blue-600 rounded-lg cursor-pointer transition"
+                                >
+                                    {{ link.label }}
+                                </a>
                             }
                         </nav>
 
@@ -123,28 +114,16 @@ import { scrollToElement } from '../../utils/scroll';
                             <ul class="space-y-3">
                                 @for (link of navLinks; track link.label) {
                                     <li>
-                                        @if (link.fragment) {
-                                            <button
-                                                type="button"
-                                                (click)="scrollTo(link.fragment)"
-                                                class="text-sm text-slate-400 hover:text-primary transition flex items-center gap-2"
-                                            >
-                                                <span
-                                                    class="w-1 h-1 rounded-full bg-slate-600 shrink-0"
-                                                ></span>
-                                                {{ link.label }}
-                                            </button>
-                                        } @else {
-                                            <a
-                                                [routerLink]="link.href"
-                                                class="text-sm text-slate-400 hover:text-primary transition flex items-center gap-2"
-                                            >
-                                                <span
-                                                    class="w-1 h-1 rounded-full bg-slate-600 shrink-0"
-                                                ></span>
-                                                {{ link.label }}
-                                            </a>
-                                        }
+                                        <a
+                                            [routerLink]="link.href"
+                                            [fragment]="link.fragment"
+                                            class="text-sm text-slate-400 hover:text-primary transition flex items-center gap-2"
+                                        >
+                                            <span
+                                                class="w-1 h-1 rounded-full bg-slate-600 shrink-0"
+                                            ></span>
+                                            {{ link.label }}
+                                        </a>
                                     </li>
                                 }
                                 <li>

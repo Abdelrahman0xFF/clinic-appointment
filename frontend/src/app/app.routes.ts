@@ -10,7 +10,21 @@ export const routes: Routes = [
     {
         path: '',
         component: LayoutPublic,
-        children: [{ path: '', component: Home }],
+        children: [
+            { path: '', component: Home },
+            {
+                path: 'blog',
+                loadComponent: () => import('./features/blog/blog').then((m) => m.Blog),
+            },
+            {
+                path: 'blog/:id',
+                loadComponent: () => import('./features/blog/article').then((m) => m.Article),
+            },
+            {
+                path: 'booking',
+                loadComponent: () => import('./features/booking/booking').then((m) => m.Booking),
+            },
+        ],
     },
     {
         path: 'admin',
@@ -19,6 +33,14 @@ export const routes: Routes = [
             { path: 'dashboard', component: Dashboard },
             { path: 'appointments', component: Appointments },
             { path: 'settings', component: Settings },
+            {
+                path: 'blog',
+                loadComponent: () => import('./features/blogs/blogs').then((m) => m.Blogs),
+            },
+            {
+                path: 'queue',
+                loadComponent: () => import('./features/queue/queue').then((m) => m.Queue),
+            },
             { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
         ],
     },
