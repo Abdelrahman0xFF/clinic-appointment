@@ -24,16 +24,25 @@ export interface ResultItem {
     image?: string;
 }
 
+export interface Appointment {
+    id: number;
+    patientName: string;
+    phone: string;
+    date: string;
+    time: string;
+    reason: string;
+    status: 'pending' | 'approved' | 'rejected';
+}
+
+export interface QueueEntry {
+    id: number;
+    patientName: string;
+    time: string;
+    stage: 'waiting' | 'in_consultation' | 'completed';
+}
+
 @Injectable({ providedIn: 'root' })
 export class ClinicService {
-    navLinks: NavLink[] = [
-        { href: '/', label: 'Home', fragment: 'hero' },
-        { href: '/', label: 'About', fragment: 'about' },
-        { href: '/', label: 'Services', fragment: 'services' },
-        { href: '/', label: 'Blog', fragment: 'blog' },
-        { href: '/', label: 'Visit', fragment: 'visit' },
-    ];
-
     services: Service[] = [
         {
             icon: 'fluentStethoscope',
@@ -91,13 +100,62 @@ export class ClinicService {
         },
     ];
 
-    results: ResultItem[] = [
-        { id: 1 },
-        { id: 2 },
-        { id: 3 },
-        { id: 4 },
-        { id: 5 },
-        { id: 6 },
+    results: ResultItem[] = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }];
+
+    appointments: Appointment[] = [
+        {
+            id: 1,
+            patientName: 'Ahmed Mohamed',
+            phone: '01234567890',
+            date: '2026-07-13',
+            time: '10:00',
+            reason: 'Acne treatment consultation',
+            status: 'pending',
+        },
+        {
+            id: 2,
+            patientName: 'Sara Ali',
+            phone: '01123456789',
+            date: '2026-07-13',
+            time: '11:30',
+            reason: 'Skin rash checkup',
+            status: 'pending',
+        },
+        {
+            id: 3,
+            patientName: 'Omar Hassan',
+            phone: '01098765432',
+            date: '2026-07-13',
+            time: '14:00',
+            reason: 'Laser hair removal',
+            status: 'approved',
+        },
+        {
+            id: 4,
+            patientName: 'Nour Khaled',
+            phone: '01555555555',
+            date: '2026-07-12',
+            time: '09:00',
+            reason: 'General consultation',
+            status: 'approved',
+        },
+        {
+            id: 5,
+            patientName: 'Youssef Ibrahim',
+            phone: '01211111111',
+            date: '2026-07-12',
+            time: '15:30',
+            reason: 'Botox follow-up',
+            status: 'rejected',
+        },
+    ];
+
+    queueEntries: QueueEntry[] = [
+        { id: 1, patientName: 'Mona Said', time: '09:00', stage: 'completed' },
+        { id: 2, patientName: 'Ali Reda', time: '09:30', stage: 'completed' },
+        { id: 3, patientName: 'Heba Mostafa', time: '10:00', stage: 'in_consultation' },
+        { id: 4, patientName: 'Khaled Samir', time: '10:30', stage: 'waiting' },
+        { id: 5, patientName: 'Dina Adel', time: '11:00', stage: 'waiting' },
     ];
 
     address = '123 Al-Kawthar street, Hurghada, Red Sea Governorate';

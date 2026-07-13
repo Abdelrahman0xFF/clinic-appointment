@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { KeyValuePipe } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { RouterLink, RouterOutlet } from '@angular/router';
 import { UiButton } from '../../shared/ui/button';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import {
@@ -24,7 +24,7 @@ import { scrollToElement } from '../../utils/scroll';
         }),
     ],
     selector: 'app-layout-public',
-    imports: [NgIcon, UiButton, KeyValuePipe, RouterLink],
+    imports: [NgIcon, UiButton, KeyValuePipe, RouterLink, RouterOutlet],
     template: `
         <div class="min-h-screen bg-slate-50 flex flex-col">
             <header class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-slate-200">
@@ -47,14 +47,14 @@ import { scrollToElement } from '../../utils/scroll';
                                     <button
                                         type="button"
                                         (click)="scrollTo(link.fragment)"
-                                        class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-blue-600 rounded-lg hover:bg-blue-50 transition"
+                                        class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-blue-600 rounded-lg cursor-pointer transition"
                                     >
                                         {{ link.label }}
                                     </button>
                                 } @else {
                                     <a
                                         [routerLink]="link.href"
-                                        class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-blue-600 rounded-lg hover:bg-blue-50 transition"
+                                        class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-blue-600 rounded-lg cursor-pointer transition"
                                     >
                                         {{ link.label }}
                                     </a>
@@ -72,7 +72,7 @@ import { scrollToElement } from '../../utils/scroll';
             </header>
 
             <main class="flex-1">
-                <ng-content />
+                <router-outlet />
             </main>
 
             <footer class="bg-slate-900 pt-16 pb-0">
@@ -288,7 +288,13 @@ import { scrollToElement } from '../../utils/scroll';
 })
 export class LayoutPublic {
     clinic = inject(ClinicService);
-    navLinks = this.clinic.navLinks;
+    navLinks = [
+        { href: '/', label: 'Home', fragment: 'hero' },
+        { href: '/', label: 'About', fragment: 'about' },
+        { href: '/', label: 'Services', fragment: 'services' },
+        { href: '/', label: 'Blog', fragment: 'blog' },
+        { href: '/', label: 'Visit', fragment: 'visit' },
+    ];
     socialMediaMapper = this.clinic.socialMediaMapper;
     workingHoursList = this.clinic.workingHoursList;
     currentYear = new Date().getFullYear();

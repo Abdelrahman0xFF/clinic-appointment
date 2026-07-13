@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
-import { LayoutPublic } from './core/layout/public';
-import { Home } from './features/home/home';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
     selector: 'app-root',
-    imports: [LayoutPublic, Home],
+    imports: [RouterOutlet],
     standalone: true,
-    template: `<app-layout-public> <app-home /></app-layout-public>`,
+    template: `<router-outlet />`,
 })
 export class App {}

@@ -4,10 +4,7 @@ import { Component, Input } from '@angular/core';
     selector: 'app-section',
     imports: [],
     template: `<div [class]="class">
-        <section
-            id="{{ id }}"
-            class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20"
-        >
+        <section id="{{ id }}" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
             @if (title) {
                 <div class="mb-12">
                     <h2 class="text-3xl lg:text-4xl font-bold text-slate-900 mb-4">{{ title }}</h2>
