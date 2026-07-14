@@ -42,7 +42,24 @@ const buttonVariants = cva(
     selector: 'app-button',
     standalone: true,
     template: `
-        <button data-slot="button" type="button" [class]="classes" [disabled]="disabled">
+        <button data-slot="button" type="button" [class]="classes" [disabled]="disabled || loading">
+            @if (loading) {
+                <svg class="animate-spin size-4" viewBox="0 0 24 24" fill="none">
+                    <circle
+                        class="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        stroke-width="4"
+                    />
+                    <path
+                        class="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                    />
+                </svg>
+            }
             <ng-content />
         </button>
     `,
@@ -56,6 +73,7 @@ export class UiButton {
 
     @Input() class?: string;
     @Input() disabled = false;
+    @Input() loading = false;
 
     get classes(): string {
         const base = buttonVariants({ variant: this.variant, size: this.size });

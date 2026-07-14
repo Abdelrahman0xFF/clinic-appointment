@@ -37,9 +37,35 @@ import { UiButton } from '../../../../shared/ui/button';
                 </div>
             </div>
 
+            @if (errorMessage) {
+                <div
+                    class="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm"
+                >
+                    {{ errorMessage }}
+                </div>
+            }
+
             <div class="flex gap-3">
-                <app-button variant="outline" (click)="back.emit()" class="w-full">Back</app-button>
-                <app-button (click)="confirm.emit()" class="w-full">Confirm & Submit</app-button>
+                @if (!submitting) {
+                    <app-button
+                        variant="outline"
+                        [loading]="submitting"
+                        (click)="back.emit()"
+                        class="w-full"
+                        >Back</app-button
+                    >
+                }
+                <app-button
+                    (click)="confirm.emit()"
+                    [loading]="submitting"
+                    class="w-full"
+                >
+                    @if (submitting) {
+                        Submitting...
+                    } @else {
+                        Confirm & Submit
+                    }
+                </app-button>
             </div>
         </div>
     `,
@@ -51,6 +77,8 @@ export class BookingStepReview {
     @Input() phone = '';
     @Input() reason = '';
     @Input() hasReceipt = false;
+    @Input() submitting = false;
+    @Input() errorMessage = '';
     @Output() back = new EventEmitter<void>();
     @Output() confirm = new EventEmitter<void>();
 }

@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { TimeSlot } from '../../../../core/clinic';
+import { TimeSlot } from '../../../../core/api/appointment/appointment.types';
 import { UiButton } from '../../../../shared/ui/button';
 import { RouterLink } from '@angular/router';
 
@@ -30,9 +30,6 @@ import { RouterLink } from '@angular/router';
                 @if (showErrors && !selectedDate) {
                     <p class="text-xs text-red-500 mt-1.5">Please select a date</p>
                 }
-                <p class="text-xs text-slate-500 mt-2">
-                    Note: {{ fullyBookedLabel }} is fully booked
-                </p>
             </div>
 
             @if (selectedDate) {
@@ -40,6 +37,11 @@ import { RouterLink } from '@angular/router';
                     <span class="block text-sm font-semibold text-slate-900 mb-3"
                         >Available Times</span
                     >
+                    @if (timeSlots.length === 0) {
+                        <p class="text-sm text-slate-500 mb-6 py-4 text-center bg-slate-50 rounded-lg">
+                            No available slots for this date. Please select another date.
+                        </p>
+                    }
                     <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-2 mb-6">
                         @for (slot of timeSlots; track slot.time) {
                             <button
@@ -79,7 +81,6 @@ export class BookingStepDateTime {
     @Input() selectedTime = '';
     @Input() timeSlots: TimeSlot[] = [];
     @Input() todayStr = '';
-    @Input() fullyBookedLabel = '';
     @Output() dateChange = new EventEmitter<string>();
     @Output() selectTime = new EventEmitter<string>();
     @Output() next = new EventEmitter<void>();

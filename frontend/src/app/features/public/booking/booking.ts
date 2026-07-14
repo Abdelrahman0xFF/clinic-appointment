@@ -1,5 +1,7 @@
-import { Component, inject } from '@angular/core';
-import { ClinicService, TimeSlot } from '../../../core/clinic';
+import { Component, inject, signal } from '@angular/core';
+import { ClinicService } from '../../../core/api/clinic/clinic.service';
+import { AppointmentApi } from '../../../core/api/appointment/appointment.service';
+import { AppointmentDto, TimeSlot } from '../../../core/api/appointment/appointment.types';
 import { BookingStepper } from './sections/stepper';
 import { BookingStepDateTime } from './sections/step-date-time';
 import { BookingStepDetails } from './sections/step-details';
@@ -19,24 +21,23 @@ import { BookingStepSuccess } from './sections/step-success';
     ],
     template: `
         <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            @if (step < 5) {
-                <app-booking-stepper [current]="step" />
+            @if (step() < 5) {
+                <app-booking-stepper [current]="step()" />
             }
 
-            @if (step === 1) {
+            @if (step() === 1) {
                 <app-booking-step-date-time
                     [selectedDate]="selectedDate"
                     [selectedTime]="selectedTime"
-                    [timeSlots]="timeSlots"
+                    [timeSlots]="timeSlots()"
                     [todayStr]="todayStr"
-                    [fullyBookedLabel]="fullyBookedLabel"
                     (dateChange)="onDateChange($event)"
                     (selectTime)="selectedTime = $event"
-                    (next)="step = 2"
+                    (next)="step.set(2)"
                 />
             }
 
-            @if (step === 2) {
+            @if (step() === 2) {
                 <app-booking-step-details
                     [fullName]="fullName"
                     [phone]="phone"
@@ -44,26 +45,26 @@ import { BookingStepSuccess } from './sections/step-success';
                     (fullNameChange)="fullName = $event"
                     (phoneChange)="phone = $event"
                     (reasonChange)="reason = $event"
-                    (next)="step = 3"
-                    (back)="step = 1"
+                    (next)="step.set(3)"
+                    (back)="step.set(1)"
                 />
             }
 
-            @if (step === 3) {
+            @if (step() === 3) {
                 <app-booking-step-payment
-                    [instapayLink]="service.instapayLink"
-                    [walletNumber]="service.walletNumber"
-                    [consultationFee]="service.consultationFee"
+                    [instapayLink]="clinicData?.instapayLink ?? ''"
+                    [walletNumber]="clinicData?.walletNumber ?? ''"
+                    [consultationFee]="clinicData?.consultationFee ?? 0"
                     [receiptFileName]="receiptFile?.name ?? null"
                     [receiptFileSizeKB]="receiptFile ? +(receiptFile.size / 1024).toFixed(1) : 0"
                     (fileSelected)="onFileSelected($event)"
                     (removeReceipt)="receiptFile = null"
-                    (next)="step = 4"
-                    (back)="step = 2"
+                    (next)="step.set(4)"
+                    (back)="step.set(2)"
                 />
             }
 
-            @if (step === 4) {
+            @if (step() === 4) {
                 <app-booking-step-review
                     [selectedDate]="selectedDate"
                     [selectedTime]="selectedTime"
@@ -71,17 +72,17 @@ import { BookingStepSuccess } from './sections/step-success';
                     [phone]="phone"
                     [reason]="reason"
                     [hasReceipt]="!!receiptFile"
+                    [submitting]="submitting()"
+                    [errorMessage]="errorMessage()"
                     (confirm)="submitBooking()"
-                    (back)="step = 3"
+                    (back)="onBackFromReview()"
                 />
             }
 
-            @if (step === 5) {
+            @if (step() === 5) {
                 <app-booking-step-success
-                    [selectedDate]="selectedDate"
-                    [selectedTime]="selectedTime"
-                    [referenceNumber]="referenceNumber"
-                    [address]="service.address"
+                    [appointment]="confirmedAppointment"
+                    [address]="clinicData?.address ?? ''"
                 />
             }
         </div>
@@ -89,80 +90,81 @@ import { BookingStepSuccess } from './sections/step-success';
 })
 export class Booking {
     private clinicService = inject(ClinicService);
-    step = 1;
+    private appointmentApi = inject(AppointmentApi);
+
+    step = signal(1);
+    submitting = signal(false);
+    errorMessage = signal('');
+
     selectedDate = '';
     selectedTime = '';
     fullName = '';
     phone = '';
     reason = '';
     receiptFile: File | null = null;
-    referenceNumber = '';
+    confirmedAppointment: AppointmentDto | null = null;
 
-    get service() {
-        return this.clinicService;
+    timeSlots = signal<TimeSlot[]>([]);
+
+    get clinicData() {
+        return this.clinicService.clinicData();
     }
 
     get todayStr() {
         return new Date().toISOString().split('T')[0];
     }
 
-    get fullyBookedDate() {
-        const d = new Date();
-        d.setDate(d.getDate() + 2);
-        return d;
-    }
-
-    get fullyBookedLabel() {
-        return this.fullyBookedDate.toLocaleDateString('en-US', {
-            weekday: 'long',
-            month: 'long',
-            day: 'numeric',
-        });
-    }
-
-    get isFullyBooked() {
-        return this.selectedDate === this.fullyBookedDate.toISOString().split('T')[0];
-    }
-
-    get timeSlots(): TimeSlot[] {
-        const slots = [
-            '14:00',
-            '14:30',
-            '15:00',
-            '15:30',
-            '16:00',
-            '16:30',
-            '17:00',
-            '17:30',
-            '18:00',
-            '18:30',
-        ];
-        return slots.map((time) => ({
-            time,
-            available: this.isFullyBooked ? false : Math.random() > 0.3,
-        }));
-    }
-
     onDateChange(date: string) {
         this.selectedDate = date;
         this.selectedTime = '';
+        if (date) {
+            this.appointmentApi.getSlots(date).subscribe({
+                next: (slots) =>
+                    this.timeSlots.set(slots.map((t) => ({ time: t, available: true }))),
+                error: () => this.timeSlots.set([]),
+            });
+        } else {
+            this.timeSlots.set([]);
+        }
     }
 
     onFileSelected(file: File) {
         this.receiptFile = file;
     }
 
+    onBackFromReview() {
+        this.errorMessage.set('');
+        this.submitting.set(false);
+        this.step.set(3);
+    }
+
     submitBooking() {
-        this.referenceNumber = Date.now().toString().slice(-8);
-        this.clinicService.addAppointment({
-            patientName: this.fullName,
-            phone: this.phone,
-            date: this.selectedDate,
-            time: this.selectedTime,
-            reason: this.reason,
-            receiptImageUrl: this.receiptFile ? URL.createObjectURL(this.receiptFile) : undefined,
-            status: 'pending',
+        if (this.submitting()) return;
+        this.submitting.set(true);
+        this.errorMessage.set('');
+
+        const formData = new FormData();
+        formData.append('fullName', this.fullName);
+        formData.append('phone', this.phone);
+        if (this.reason) {
+            formData.append('reason', this.reason);
+        }
+        formData.append('date', this.selectedDate);
+        formData.append('time', this.selectedTime);
+        if (this.receiptFile) {
+            formData.append('receiptFile', this.receiptFile);
+        }
+
+        this.appointmentApi.create(formData).subscribe({
+            next: (res) => {
+                this.confirmedAppointment = res.data ?? null;
+                this.submitting.set(false);
+                this.step.set(5);
+            },
+            error: (err) => {
+                this.submitting.set(false);
+                this.errorMessage.set(err.error?.message ?? 'Booking failed. Please try again.');
+            },
         });
-        this.step = 5;
     }
 }

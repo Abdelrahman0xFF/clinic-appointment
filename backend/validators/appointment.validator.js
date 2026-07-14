@@ -6,7 +6,7 @@ export const validateAppointmentForm = (data) => {
         phone: Joi.string()
             .pattern(/^01[0125][0-9]{8}$/)
             .required(),
-        reason: Joi.string().min(5).max(500).required(),
+        reason: Joi.string().min(0).max(500).optional().allow(""),
         date: Joi.string()
             .pattern(/^\d{4}-\d{2}-\d{2}$/)
             .custom((value, helpers) => {

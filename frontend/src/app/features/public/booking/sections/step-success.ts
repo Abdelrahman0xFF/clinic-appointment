@@ -3,6 +3,7 @@ import { NgIcon, provideIcons } from '@ng-icons/core';
 import { fluentCheckmarkCircle } from '@ng-icons/fluent-ui';
 import { UiButton } from '../../../../shared/ui/button';
 import { RouterLink } from '@angular/router';
+import { AppointmentDto } from '../../../../core/api/appointment/appointment.types';
 
 @Component({
     selector: 'app-booking-step-success',
@@ -26,20 +27,14 @@ import { RouterLink } from '@angular/router';
                 class="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-8 text-left max-w-md mx-auto"
             >
                 <div class="space-y-4">
-                    <div>
-                        <p class="text-sm font-medium text-slate-600">Reference Number</p>
-                        <code class="text-lg font-bold text-blue-700"
-                            >#MC-{{ referenceNumber }}</code
-                        >
-                    </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <p class="text-sm font-medium text-slate-600">Date</p>
-                            <p class="text-slate-900 font-semibold">{{ selectedDate }}</p>
+                            <p class="text-slate-900 font-semibold">{{ appointment?.date }}</p>
                         </div>
                         <div>
                             <p class="text-sm font-medium text-slate-600">Time</p>
-                            <p class="text-slate-900 font-semibold">{{ selectedTime }}</p>
+                            <p class="text-slate-900 font-semibold">{{ appointment?.time }}</p>
                         </div>
                     </div>
                     <div>
@@ -58,8 +53,6 @@ import { RouterLink } from '@angular/router';
     `,
 })
 export class BookingStepSuccess {
-    @Input() selectedDate = '';
-    @Input() selectedTime = '';
-    @Input() referenceNumber = '';
+    @Input() appointment: AppointmentDto | null = null;
     @Input() address = '';
 }

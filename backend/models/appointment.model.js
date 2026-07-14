@@ -7,7 +7,7 @@ const appointmentSchema = new mongoose.Schema(
             ref: "Patient",
             required: true,
         },
-        reason: { type: String, required: true },
+        reason: { type: String, default: "" },
         date: { type: String, required: true },
         time: { type: String, required: true },
         status: {
@@ -15,7 +15,7 @@ const appointmentSchema = new mongoose.Schema(
             enum: ["pending", "approved", "rejected"],
             default: "pending",
         },
-        receiptImageUrl: { type: String, required: true },
+        receiptImageUrl: { type: String },
         checkedIn: { type: Boolean, default: false },
     },
     {
