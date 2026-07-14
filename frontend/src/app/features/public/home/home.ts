@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, computed } from '@angular/core';
 import { Hero } from './sections/hero';
 import { About } from './sections/about';
 import { Services } from './sections/services';
@@ -26,8 +26,8 @@ import { BlogPost } from '../../../core/api/blog/blog.types';
 export class Home implements OnInit {
     private clinic = inject(ClinicService);
 
-    address = signal('');
-    phone = signal('');
+    address = computed(() => this.clinic.clinicData()?.address ?? '');
+    phone = computed(() => this.clinic.clinicData()?.phone ?? '');
     services: Service[] = [
         {
             icon: 'fluentStethoscope',
@@ -86,11 +86,6 @@ export class Home implements OnInit {
     ];
 
     ngOnInit() {
-        this.clinic.getInfo().subscribe({
-            next: (data) => {
-                this.address.set(data.address);
-                this.phone.set(data.phone);
-            },
-        });
+        this.clinic.getInfo();
     }
 }

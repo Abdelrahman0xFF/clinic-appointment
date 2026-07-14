@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import {
@@ -8,7 +8,7 @@ import {
     fluentChevronDown,
     fluentBookmarkMultiple,
 } from '@ng-icons/fluent-ui';
-import { ClinicService } from '../../../core/clinic';
+import { BlogService } from '../../../core/api/blog/blog.service';
 
 @Component({
     selector: 'app-article',
@@ -23,7 +23,7 @@ import { ClinicService } from '../../../core/clinic';
         }),
     ],
     template: `
-        @if (post) {
+        @if (post(); as p) {
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
                 <a
                     routerLink="/blog"
@@ -36,10 +36,10 @@ import { ClinicService } from '../../../core/clinic';
                 <div class="lg:grid lg:grid-cols-[1fr_280px] lg:gap-10">
                     <article>
                         <div class="rounded-xl overflow-hidden mb-8 aspect-2/1 bg-slate-100">
-                            @if (post.coverImageUrl) {
+                            @if (p.coverImageUrl) {
                                 <img
-                                    [src]="post.coverImageUrl"
-                                    [alt]="post.title"
+                                    [src]="p.coverImageUrl"
+                                    [alt]="p.title"
                                     class="w-full h-full object-cover"
                                 />
                             }
@@ -49,41 +49,41 @@ import { ClinicService } from '../../../core/clinic';
                             <span
                                 class="text-xs font-medium text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full"
                             >
-                                {{ post.category }}
+                                {{ p.category }}
                             </span>
                             <span class="text-xs text-slate-400 flex items-center gap-1">
                                 <ng-icon name="fluentClock" size="13" />
-                                {{ post.readTimeMinutes }} min read
+                                {{ p.readTimeMinutes }} min read
                             </span>
                             <span class="text-xs text-slate-400 flex items-center gap-1">
                                 <ng-icon name="fluentCalendarClock" size="13" />
-                                {{ post.date }}
+                                {{ p.date }}
                             </span>
                         </div>
 
                         <h1
                             class="text-2xl lg:text-4xl font-bold text-slate-900 mb-6 leading-tight"
                         >
-                            {{ post.title }}
+                            {{ p.title }}
                         </h1>
 
                         <p class="text-lg text-slate-600 mb-8 leading-relaxed">
-                            {{ post.excerpt }}
+                            {{ p.excerpt }}
                         </p>
 
                         <div class="prose prose-slate max-w-none">
-                            @for (paragraph of contentParagraphs; track $index) {
+                            @for (paragraph of contentParagraphs(); track $index) {
                                 <p class="text-slate-700 leading-relaxed mb-4">{{ paragraph }}</p>
                             }
                         </div>
 
-                        @if (post.faqs.length > 0) {
+                        @if (p.faqs.length > 0) {
                             <div class="mt-12 pt-8 border-t border-slate-200">
                                 <h2 class="text-xl font-bold text-slate-900 mb-6">
                                     Frequently Asked Questions
                                 </h2>
                                 <div class="space-y-3">
-                                    @for (faq of post.faqs; track $index) {
+                                    @for (faq of p.faqs; track $index) {
                                         <div
                                             class="rounded-xl border border-slate-200 bg-white overflow-hidden"
                                         >
@@ -125,7 +125,7 @@ import { ClinicService } from '../../../core/clinic';
 
                     <aside class="hidden lg:block">
                         <div class="sticky top-24">
-                            @if (post.tableOfContents.length > 0) {
+                            @if (p.tableOfContents.length > 0) {
                                 <div class="rounded-xl border border-slate-200 bg-white p-5">
                                     <div
                                         class="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100"
@@ -140,7 +140,7 @@ import { ClinicService } from '../../../core/clinic';
                                         </h3>
                                     </div>
                                     <ul class="space-y-2">
-                                        @for (toc of post.tableOfContents; track toc.id) {
+                                        @for (toc of p.tableOfContents; track toc.id) {
                                             <li>
                                                 <a
                                                     [href]="'#' + toc.id"
@@ -170,19 +170,24 @@ import { ClinicService } from '../../../core/clinic';
         }
     `,
 })
-export class Article {
+export class Article implements OnInit {
     private route = inject(ActivatedRoute);
-    private clinic = inject(ClinicService);
+    private blog = inject(BlogService);
 
     openFaqIndex: number | null = null;
 
-    get post() {
-        const id = this.route.snapshot.paramMap.get('id');
-        return this.clinic.blogPosts.find((p) => p.id === id && p.status === 'published');
-    }
+    post = computed(() => this.blog.selectedPost());
 
-    get contentParagraphs() {
-        return this.post?.content.split('\n\n').filter(Boolean) ?? [];
+    contentParagraphs = computed(() => {
+        const p = this.post();
+        return p?.content.split('\n\n').filter(Boolean) ?? [];
+    });
+
+    ngOnInit() {
+        const id = this.route.snapshot.paramMap.get('id');
+        if (id) {
+            this.blog.getPostById(id);
+        }
     }
 
     toggleFaq(index: number) {

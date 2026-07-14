@@ -1,5 +1,5 @@
-import { Component, inject } from '@angular/core';
-import { ClinicService } from '../../../core/clinic';
+import { Component, computed, inject, OnInit } from '@angular/core';
+import { BlogService } from '../../../core/api/blog/blog.service';
 import { Section } from '../../../shared/section';
 import { BlogCard } from './sections/blog-card';
 
@@ -32,9 +32,9 @@ const CATEGORIES = ['All', 'Skin & Beauty', 'General Health', 'Patient Guides', 
                 }
             </div>
 
-            @if (filteredPosts.length > 0) {
+            @if (filteredPosts().length > 0) {
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    @for (post of filteredPosts; track post.id) {
+                    @for (post of filteredPosts(); track post.id) {
                         <app-blog-card [post]="post" />
                     }
                 </div>
@@ -46,14 +46,19 @@ const CATEGORIES = ['All', 'Skin & Beauty', 'General Health', 'Patient Guides', 
         </app-section>
     `,
 })
-export class Blog {
-    private clinic = inject(ClinicService);
+export class Blog implements OnInit {
+    private blog = inject(BlogService);
     categories = CATEGORIES;
     selectedCategory = 'All';
 
-    get filteredPosts() {
-        const published = this.clinic.blogPosts.filter((p) => p.status === 'published');
-        if (this.selectedCategory === 'All') return published;
-        return published.filter((p) => p.category === this.selectedCategory);
+    filteredPosts = computed(() => {
+        const posts = this.blog.posts();
+        return this.selectedCategory === 'All'
+            ? posts
+            : posts.filter((p) => p.category === this.selectedCategory);
+    });
+
+    ngOnInit() {
+        this.blog.getPosts();
     }
 }

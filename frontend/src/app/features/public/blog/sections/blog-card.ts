@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { fluentClock, fluentCalendarClock } from '@ng-icons/fluent-ui';
-import { Blog } from '../../../../core/clinic';
+import { BlogDto } from '../../../../core/api/blog/blog.types';
 
 @Component({
     selector: 'app-blog-card',
@@ -59,5 +59,5 @@ import { Blog } from '../../../../core/clinic';
     `,
 })
 export class BlogCard {
-    @Input() post!: Blog;
+    @Input() post!: BlogDto;
 }

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit } from '@angular/core';
 import { KeyValuePipe } from '@angular/common';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { UiButton } from '../../shared/ui/button';
@@ -19,7 +19,6 @@ import {
 } from '@ng-icons/heroicons/outline';
 import { ClinicService } from '../api/clinic/clinic.service';
 import { NavLink, SOCIAL_MEDIA_MAPPER } from './layout.types';
-import { SocialMediaEntry, WorkingHoursDisplay } from '../api/clinic/clinic.types';
 import { scrollToElement } from '../../utils/scroll';
 
 @Component({
@@ -242,21 +241,17 @@ export class LayoutPublic implements OnInit {
         { href: '/admin/dashboard', label: 'Admin' },
     ];
 
-    address = signal('');
-    phone = signal('');
-    socialMedia = signal<Record<string, SocialMediaEntry | null>>({});
-    workingHoursList = signal<WorkingHoursDisplay[]>([]);
+    address = computed(() => this.clinic.clinicData()?.address ?? '');
+    phone = computed(() => this.clinic.clinicData()?.phone ?? '');
+    socialMedia = computed(() => this.clinic.clinicData()?.socialMedia ?? {});
+    workingHoursList = computed(() => {
+        const data = this.clinic.clinicData();
+        return data ? this.clinic.toWorkingHoursList(data.workingHours) : [];
+    });
     currentYear = new Date().getFullYear();
     scrollTo = scrollToElement;
 
     ngOnInit() {
-        this.clinic.getInfo().subscribe({
-            next: (data) => {
-                this.address.set(data.address);
-                this.phone.set(data.phone);
-                this.socialMedia.set(data.socialMedia);
-                this.workingHoursList.set(this.clinic.toWorkingHoursList(data.workingHours));
-            },
-        });
+        this.clinic.getInfo();
     }
 }
