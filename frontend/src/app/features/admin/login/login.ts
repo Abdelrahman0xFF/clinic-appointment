@@ -3,11 +3,12 @@ import { Router, RouterLink } from '@angular/router';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { fluentEye, fluentEyeOff, fluentLockClosed, fluentPerson } from '@ng-icons/fluent-ui';
 import { AuthService } from '../../../core/auth/auth.service';
+import { UiButton } from '../../../shared/ui/button';
 
 @Component({
     viewProviders: [provideIcons({ fluentLockClosed, fluentPerson, fluentEye, fluentEyeOff })],
     selector: 'app-login',
-    imports: [NgIcon, RouterLink],
+    imports: [NgIcon, RouterLink, UiButton],
     template: `
         <div class="min-h-screen bg-slate-50 flex items-center justify-center p-4">
             <div class="w-full max-w-md">
@@ -82,21 +83,9 @@ import { AuthService } from '../../../core/auth/auth.service';
                             </div>
                         }
 
-                        <button
-                            type="button"
-                            (click)="handleLogin()"
-                            [disabled]="loading()"
-                            class="w-full h-9 inline-flex items-center justify-center rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-                        >
-                            @if (loading()) {
-                                <span class="flex items-center gap-2">
-                                    <span class="size-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
-                                    Signing in...
-                                </span>
-                            } @else {
-                                Sign in
-                            }
-                        </button>
+                        <app-button (click)="handleLogin()" [loading]="loading()" class="w-full">
+                            Sign in
+                        </app-button>
                     </div>
                 </div>
 

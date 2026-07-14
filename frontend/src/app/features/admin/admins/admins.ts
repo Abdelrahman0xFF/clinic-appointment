@@ -138,12 +138,8 @@ import { UiButton } from '../../../shared/ui/button';
                     </div>
                     <div class="flex justify-end gap-3 p-6 border-t border-slate-200">
                         <app-button variant="outline" (click)="dialogOpen.set(false)">Cancel</app-button>
-                        <app-button (click)="handleCreate()" [disabled]="creating()">
-                            @if (creating()) {
-                                Creating...
-                            } @else {
-                                Create Admin
-                            }
+                        <app-button (click)="handleCreate()" [loading]="creating()">
+                            Create Admin
                         </app-button>
                     </div>
                 </div>
