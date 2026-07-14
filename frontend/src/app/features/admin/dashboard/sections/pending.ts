@@ -62,13 +62,6 @@ import { fluentClock, fluentArrowRight, fluentCheckmarkCircle } from '@ng-icons/
                                     <ng-icon name="fluentClock" size="12" />
                                     Pending
                                 </span>
-                                <button
-                                    type="button"
-                                    class="size-8 rounded-lg flex items-center justify-center text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors cursor-pointer"
-                                    title="Review"
-                                >
-                                    <ng-icon name="fluentArrowRight" size="18" />
-                                </button>
                             </div>
                         </div>
                     }
@@ -105,7 +98,7 @@ import { fluentClock, fluentArrowRight, fluentCheckmarkCircle } from '@ng-icons/
 export class DashboardPending {
     @Input() pendingCount = 0;
     @Input() recentPending: {
-        id: number;
+        id: string;
         patientName: string;
         date: string;
         time: string;

@@ -187,7 +187,7 @@ export const updateAppointmentStatus = asyncHandler(async (req, res, next) => {
     if (req.body.status === "approved") {
         const patient = await Patient.findById(appointment.patientId);
         if (patient && patient.phone) {
-            const message = `Hello ${patient.fullName}, your appointment at MediCare Clinic for ${appointment.date} at ${appointment.time} is confirmed!\n\nمرحباً ${patient.fullName}، تم تأكيد موعدك في عيادة ميديكير بتاريخ ${appointment.date} الساعة ${appointment.time}!`;
+            const message = `Hello ${patient.fullName}, your appointment at MediCare Clinic for ${appointment.date} at ${appointment.time} is confirmed!`;
             sendSMS(patient.phone, message);
         }
     }

@@ -1,5 +1,6 @@
-import { Component, inject } from '@angular/core';
-import { ClinicService } from '../../../core/clinic';
+import { Component, OnInit, inject, signal } from '@angular/core';
+import { AppointmentApi } from '../../../core/api/appointment/appointment.service';
+import { AppointmentDto } from '../../../core/api/appointment/appointment.types';
 import { AppointmentsToolbar } from './sections/toolbar';
 import { AppointmentsTable } from './sections/table';
 
@@ -10,50 +11,111 @@ import { AppointmentsTable } from './sections/table';
         <div>
             <app-appointments-toolbar
                 [filterTabs]="filterTabs"
-                [selectedFilter]="selectedFilter"
-                (filterChange)="selectedFilter = $event"
+                [selectedFilter]="selectedFilter()"
+                (filterChange)="selectedFilter.set($event)"
             />
 
-            <app-appointments-table
-                [appointments]="filteredAppointments"
-                [showReceiptFor]="showReceiptFor"
-                [selectedFilter]="selectedFilter"
-                (toggleReceipt)="showReceiptFor = showReceiptFor === $event ? null : $event"
-            />
+            @if (loading()) {
+                <div class="flex items-center justify-center py-16">
+                    <span
+                        class="size-6 border-2 border-blue-600/30 border-t-blue-600 rounded-full animate-spin"
+                    ></span>
+                </div>
+            } @else {
+                <app-appointments-table
+                    [appointments]="displayAppointments"
+                    [selectedFilter]="selectedFilter()"
+                    [actionLoading]="actionLoading()"
+                    (approve)="handleApprove($event)"
+                    (reject)="handleReject($event)"
+                />
+            }
         </div>
     `,
 })
-export class Appointments {
-    private clinic = inject(ClinicService);
+export class Appointments implements OnInit {
+    private appointmentApi = inject(AppointmentApi);
 
-    appointments = this.clinic.appointments;
+    appointments = signal<AppointmentDto[]>([]);
+    selectedFilter = signal('all');
+    actionLoading = signal<string | null>(null);
+    loading = signal(true);
 
-    selectedFilter = 'all';
-    showReceiptFor: number | null = null;
+    ngOnInit() {
+        this.appointmentApi.getAll({ limit: 100 }).subscribe({
+            next: (res) => {
+                this.appointments.set(res.data);
+                this.loading.set(false);
+            },
+            error: () => this.loading.set(false),
+        });
+    }
 
     get pendingCount() {
-        return this.appointments.filter((a) => a.status === 'pending').length;
+        return this.appointments().filter((a) => a.status === 'pending').length;
     }
 
     get approvedCount() {
-        return this.appointments.filter((a) => a.status === 'approved').length;
+        return this.appointments().filter((a) => a.status === 'approved').length;
     }
 
     get rejectedCount() {
-        return this.appointments.filter((a) => a.status === 'rejected').length;
+        return this.appointments().filter((a) => a.status === 'rejected').length;
     }
 
     get filterTabs() {
         return [
-            { key: 'all', label: 'All', count: this.appointments.length },
+            { key: 'all', label: 'All', count: this.appointments().length },
             { key: 'pending', label: 'Pending', count: this.pendingCount },
             { key: 'approved', label: 'Approved', count: this.approvedCount },
             { key: 'rejected', label: 'Rejected', count: this.rejectedCount },
         ];
     }
 
-    get filteredAppointments() {
-        if (this.selectedFilter === 'all') return this.appointments;
-        return this.appointments.filter((a) => a.status === this.selectedFilter);
+    get displayAppointments() {
+        const filter = this.selectedFilter();
+        const list =
+            filter === 'all'
+                ? this.appointments()
+                : this.appointments().filter((a) => a.status === filter);
+        return list.map((a) => ({
+            id: a.id,
+            patientName: typeof a.patientId === 'object' ? a.patientId.fullName : 'Unknown',
+            date: a.date,
+            time: a.time,
+            phone: typeof a.patientId === 'object' ? a.patientId.phone : '',
+            status: a.status,
+            reason: a.reason || undefined,
+            receiptImageUrl: a.receiptImageUrl || undefined,
+        }));
+    }
+
+    handleApprove(id: string): void {
+        this.actionLoading.set(id);
+        this.appointmentApi.updateStatus(id, 'approved').subscribe({
+            next: (res) => {
+                this.appointments.update((list) =>
+                    list.map((a) => (a.id === id ? { ...a, status: 'approved' as const } : a)),
+                );
+                this.actionLoading.set(null);
+                if (res.smsStatus && res.smsStatus !== 'sent') {
+                    console.warn('SMS status:', res.smsStatus);
+                }
+            },
+            error: () => this.actionLoading.set(null),
+        });
+    }
+
+    handleReject(id: string): void {
+        this.actionLoading.set(id);
+        this.appointmentApi.updateStatus(id, 'rejected').subscribe({
+            next: () => {
+                this.appointments.update((list) =>
+                    list.map((a) => (a.id === id ? { ...a, status: 'rejected' as const } : a)),
+                );
+                this.actionLoading.set(null);
+            },
+            error: () => this.actionLoading.set(null),
+        });
     }
 }

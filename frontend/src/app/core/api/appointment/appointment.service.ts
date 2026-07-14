@@ -1,13 +1,21 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable, timeout } from 'rxjs';
-import { ApiResponse } from '../shared/api.types';
+import { ApiResponse, PaginatedResponse } from '../shared/api.types';
 import { AppointmentDto } from './appointment.types';
 
 @Injectable({ providedIn: 'root' })
 export class AppointmentApi {
     private http = inject(HttpClient);
     private base = '/api/appointment';
+
+    getAll(params?: {
+        page?: number;
+        limit?: number;
+        date?: string;
+    }): Observable<PaginatedResponse<AppointmentDto>> {
+        return this.http.get<PaginatedResponse<AppointmentDto>>(this.base, { params });
+    }
 
     getSlots(date: string): Observable<string[]> {
         return this.http
@@ -25,6 +33,13 @@ export class AppointmentApi {
         return this.http
             .get<ApiResponse<AppointmentDto[]>>(`${this.base}/${phone}/${fullName}`)
             .pipe(map((res) => res.data!));
+    }
+
+    updateStatus(
+        id: string,
+        status: 'approved' | 'rejected',
+    ): Observable<ApiResponse<AppointmentDto>> {
+        return this.http.put<ApiResponse<AppointmentDto>>(`${this.base}/${id}`, { status });
     }
 
     reschedule(

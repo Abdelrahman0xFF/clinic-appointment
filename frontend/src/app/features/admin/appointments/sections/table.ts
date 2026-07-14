@@ -5,11 +5,11 @@ import {
     fluentCheckmark,
     fluentDismiss,
     fluentCalendarClock,
-    fluentSearch,
     fluentPerson,
     fluentPhone,
     fluentDocumentText,
     fluentMoney,
+    fluentImage,
 } from '@ng-icons/fluent-ui';
 
 @Component({
@@ -19,11 +19,11 @@ import {
             fluentCheckmark,
             fluentDismiss,
             fluentCalendarClock,
-            fluentSearch,
             fluentPerson,
             fluentPhone,
             fluentDocumentText,
             fluentMoney,
+            fluentImage,
         }),
     ],
     selector: 'app-appointments-table',
@@ -119,7 +119,7 @@ import {
                                         <div class="flex items-center justify-end gap-1.5">
                                             <button
                                                 type="button"
-                                                (click)="toggleReceipt.emit(apt.id)"
+                                                (click)="viewApt = apt"
                                                 class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition cursor-pointer"
                                             >
                                                 <ng-icon name="fluentEye" size="16" />
@@ -129,136 +129,38 @@ import {
                                             @if (apt.status === 'pending') {
                                                 <button
                                                     type="button"
-                                                    class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium text-blue-700 bg-blue-50 hover:bg-blue-100 transition cursor-pointer"
+                                                    (click)="approve.emit(apt.id)"
+                                                    [disabled]="actionLoading === apt.id"
+                                                    class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium text-blue-700 bg-blue-50 hover:bg-blue-100 transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                                                 >
-                                                    <ng-icon name="fluentCheckmark" size="16" />
+                                                    @if (actionLoading === apt.id) {
+                                                        <span
+                                                            class="size-3.5 border-2 border-blue-600/30 border-t-blue-600 rounded-full animate-spin"
+                                                        ></span>
+                                                    } @else {
+                                                        <ng-icon name="fluentCheckmark" size="16" />
+                                                    }
                                                     <span class="hidden sm:inline">Approve</span>
                                                 </button>
                                                 <button
                                                     type="button"
-                                                    class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium text-rose-700 bg-rose-50 hover:bg-rose-100 transition cursor-pointer"
+                                                    (click)="reject.emit(apt.id)"
+                                                    [disabled]="actionLoading === apt.id"
+                                                    class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium text-rose-700 bg-rose-50 hover:bg-rose-100 transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                                                 >
-                                                    <ng-icon name="fluentDismiss" size="16" />
+                                                    @if (actionLoading === apt.id) {
+                                                        <span
+                                                            class="size-3.5 border-2 border-rose-600/30 border-t-rose-600 rounded-full animate-spin"
+                                                        ></span>
+                                                    } @else {
+                                                        <ng-icon name="fluentDismiss" size="16" />
+                                                    }
                                                     <span class="hidden sm:inline">Reject</span>
                                                 </button>
                                             }
                                         </div>
                                     </td>
                                 </tr>
-
-                                @if (showReceiptFor === apt.id) {
-                                    <tr class="bg-slate-50/50">
-                                        <td colspan="5" class="px-6 py-5">
-                                            <div
-                                                class="rounded-xl border border-slate-200 bg-white p-5"
-                                            >
-                                                <div
-                                                    class="flex items-center gap-3 mb-4 pb-3 border-b border-slate-100"
-                                                >
-                                                    <ng-icon
-                                                        name="fluentDocumentText"
-                                                        size="20"
-                                                        class="text-blue-600"
-                                                    />
-                                                    <h3
-                                                        class="font-semibold text-slate-900 text-sm"
-                                                    >
-                                                        Payment Receipt
-                                                    </h3>
-                                                </div>
-
-                                                <div
-                                                    class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
-                                                >
-                                                    <div>
-                                                        <p
-                                                            class="text-xs text-slate-400 mb-1 flex items-center gap-1"
-                                                        >
-                                                            <ng-icon
-                                                                name="fluentPerson"
-                                                                size="12"
-                                                            />
-                                                            Patient
-                                                        </p>
-                                                        <p
-                                                            class="text-sm font-medium text-slate-900"
-                                                        >
-                                                            {{ apt.patientName }}
-                                                        </p>
-                                                    </div>
-                                                    <div>
-                                                        <p
-                                                            class="text-xs text-slate-400 mb-1 flex items-center gap-1"
-                                                        >
-                                                            <ng-icon name="fluentPhone" size="12" />
-                                                            Phone
-                                                        </p>
-                                                        <p class="text-sm text-slate-700">
-                                                            {{ apt.phone }}
-                                                        </p>
-                                                    </div>
-                                                    <div>
-                                                        <p
-                                                            class="text-xs text-slate-400 mb-1 flex items-center gap-1"
-                                                        >
-                                                            <ng-icon
-                                                                name="fluentCalendarClock"
-                                                                size="12"
-                                                            />
-                                                            Appointment
-                                                        </p>
-                                                        <p class="text-sm text-slate-700">
-                                                            {{ apt.date }} at {{ apt.time }}
-                                                        </p>
-                                                    </div>
-                                                    <div>
-                                                        <p
-                                                            class="text-xs text-slate-400 mb-1 flex items-center gap-1"
-                                                        >
-                                                            <ng-icon name="fluentMoney" size="12" />
-                                                            Amount
-                                                        </p>
-                                                        <p
-                                                            class="text-sm font-medium text-slate-900"
-                                                        >
-                                                            300 EGP
-                                                        </p>
-                                                    </div>
-                                                </div>
-
-                                                @if (apt.reason) {
-                                                    <div
-                                                        class="mt-4 pt-3 border-t border-slate-100"
-                                                    >
-                                                        <p class="text-xs text-slate-400 mb-1">
-                                                            Reason
-                                                        </p>
-                                                        <p class="text-sm text-slate-700">
-                                                            {{ apt.reason }}
-                                                        </p>
-                                                    </div>
-                                                }
-
-                                                <div class="mt-4 pt-3 border-t border-slate-100">
-                                                    <div
-                                                        class="bg-slate-100 rounded-lg h-32 flex items-center justify-center border border-dashed border-slate-300"
-                                                    >
-                                                        <div class="text-center">
-                                                            <ng-icon
-                                                                name="fluentSearch"
-                                                                size="24"
-                                                                class="text-slate-400 mx-auto mb-1 block"
-                                                            />
-                                                            <p class="text-sm text-slate-500">
-                                                                Receipt Screenshot Placeholder
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                }
                             }
                         } @else {
                             <tr>
@@ -290,21 +192,76 @@ import {
                 </table>
             </div>
         </div>
+
+        @if (viewApt) {
+            <div
+                class="fixed inset-0 z-50 flex items-center justify-center p-4"
+                (click)="viewApt = null"
+                (keydown.escape)="viewApt = null"
+                tabindex="0"
+            >
+                <div
+                    class="fixed inset-0 bg-black/70"
+                    (click)="viewApt = null"
+                    (keydown.enter)="viewApt = null"
+                    tabindex="0"
+                ></div>
+                <div
+                    class="relative max-w-full max-h-full z-10"
+                    (click)="$event.stopPropagation()"
+                    (keydown.escape)="$event.stopPropagation()"
+                    tabindex="-1"
+                >
+                    <button
+                        type="button"
+                        (click)="viewApt = null"
+                        class="absolute -top-10 right-0 size-8 flex items-center justify-center rounded-lg bg-white/10 text-white/70 hover:bg-white/20 hover:text-white transition cursor-pointer"
+                    >
+                        <ng-icon name="fluentDismiss" size="20" />
+                    </button>
+
+                    @if (viewApt.receiptImageUrl) {
+                        <img
+                            [src]="viewApt.receiptImageUrl"
+                            alt="Payment receipt"
+                            class="max-w-full max-h-[85vh] w-auto h-auto rounded-lg shadow-2xl object-contain"
+                        />
+                    } @else {
+                        <div
+                            class="bg-slate-800 rounded-lg h-64 w-80 flex items-center justify-center border border-slate-600"
+                        >
+                            <div class="text-center">
+                                <ng-icon
+                                    name="fluentImage"
+                                    size="32"
+                                    class="text-slate-500 mx-auto mb-2 block"
+                                />
+                                <p class="text-sm text-slate-400">No receipt uploaded</p>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
     `,
 })
 export class AppointmentsTable {
     @Input() appointments: {
-        id: number;
+        id: string;
         patientName: string;
         date: string;
         time: string;
         phone: string;
         status: string;
         reason?: string;
+        receiptImageUrl?: string;
     }[] = [];
-    @Input() showReceiptFor: number | null = null;
     @Input() selectedFilter = 'all';
-    @Output() toggleReceipt = new EventEmitter<number>();
+    @Input() actionLoading: string | null = null;
+    @Output() approve = new EventEmitter<string>();
+    @Output() reject = new EventEmitter<string>();
+
+    viewApt: (typeof this.appointments)[0] | null = null;
 
     statusBadgeClass(status: string): string {
         const base = 'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium';
