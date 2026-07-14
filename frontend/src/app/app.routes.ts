@@ -1,10 +1,16 @@
 import { Routes } from '@angular/router';
 import { LayoutAdmin } from './core/layout/admin';
 import { LayoutPublic } from './core/layout/public';
-import { Dashboard } from './features/dashboard/dashboard';
-import { Appointments } from './features/appointments/appointments';
-import { Settings } from './features/settings/settings';
-import { Home } from './features/home/home';
+import { Dashboard } from './features/admin/dashboard/dashboard';
+import { Appointments } from './features/admin/appointments/appointments';
+import { Settings } from './features/admin/settings/settings';
+import { Queue } from './features/admin/queue/queue';
+import { Blogs } from './features/admin/blogs/blogs';
+
+import { Article } from './features/public/blog/article';
+import { Blog } from './features/public/blog/blog';
+import { Booking } from './features/public/booking/booking';
+import { Home } from './features/public/home/home';
 
 export const routes: Routes = [
     {
@@ -12,18 +18,9 @@ export const routes: Routes = [
         component: LayoutPublic,
         children: [
             { path: '', component: Home },
-            {
-                path: 'blog',
-                loadComponent: () => import('./features/blog/blog').then((m) => m.Blog),
-            },
-            {
-                path: 'blog/:id',
-                loadComponent: () => import('./features/blog/article').then((m) => m.Article),
-            },
-            {
-                path: 'booking',
-                loadComponent: () => import('./features/booking/booking').then((m) => m.Booking),
-            },
+            { path: 'blog', component: Blog },
+            { path: 'blog/:id', component: Article },
+            { path: 'booking', component: Booking },
         ],
     },
     {
@@ -33,14 +30,8 @@ export const routes: Routes = [
             { path: 'dashboard', component: Dashboard },
             { path: 'appointments', component: Appointments },
             { path: 'settings', component: Settings },
-            {
-                path: 'blog',
-                loadComponent: () => import('./features/blogs/blogs').then((m) => m.Blogs),
-            },
-            {
-                path: 'queue',
-                loadComponent: () => import('./features/queue/queue').then((m) => m.Queue),
-            },
+            { path: 'blog', component: Blogs },
+            { path: 'queue', component: Queue },
             { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
         ],
     },

@@ -1,0 +1,59 @@
+import { Component, inject } from '@angular/core';
+import { ClinicService } from '../../../core/clinic';
+import { Section } from '../../../shared/section';
+import { BlogCard } from './sections/blog-card';
+
+const CATEGORIES = ['All', 'Skin & Beauty', 'General Health', 'Patient Guides', 'Clinic News'];
+
+@Component({
+    selector: 'app-blog',
+    imports: [Section, BlogCard],
+    template: `
+        <app-section
+            title="Our Blog"
+            description="Insights, guides, and updates from our clinic"
+            class="bg-white"
+            id="blog-listing"
+        >
+            <div class="flex gap-2 mb-8 flex-wrap">
+                @for (cat of categories; track cat) {
+                    <button
+                        type="button"
+                        (click)="selectedCategory = cat"
+                        [class]="
+                            'px-4 py-2 rounded-full text-sm font-medium transition cursor-pointer ' +
+                            (selectedCategory === cat
+                                ? 'bg-blue-600 text-white shadow-sm'
+                                : 'bg-slate-100 text-slate-600 hover:bg-slate-200')
+                        "
+                    >
+                        {{ cat }}
+                    </button>
+                }
+            </div>
+
+            @if (filteredPosts.length > 0) {
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    @for (post of filteredPosts; track post.id) {
+                        <app-blog-card [post]="post" />
+                    }
+                </div>
+            } @else {
+                <div class="text-center py-16">
+                    <p class="text-slate-500">No posts found in this category.</p>
+                </div>
+            }
+        </app-section>
+    `,
+})
+export class Blog {
+    private clinic = inject(ClinicService);
+    categories = CATEGORIES;
+    selectedCategory = 'All';
+
+    get filteredPosts() {
+        const published = this.clinic.blogPosts.filter((p) => p.status === 'published');
+        if (this.selectedCategory === 'All') return published;
+        return published.filter((p) => p.category === this.selectedCategory);
+    }
+}
