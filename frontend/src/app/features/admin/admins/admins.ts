@@ -88,9 +88,17 @@ import { UiButton } from '../../../shared/ui/button';
         </div>
 
         @if (dialogOpen()) {
-            <div class="fixed inset-0 z-50 flex items-start justify-center pt-12" (click)="dialogOpen.set(false)">
-                <div class="fixed inset-0 bg-black/40"></div>
-                <div class="relative bg-white rounded-xl shadow-xl w-full max-w-md border border-slate-200 z-10" (click)="$event.stopPropagation()">
+            <div
+                class="fixed inset-0 z-50 flex items-start justify-center pt-12"
+                tabindex="-1"
+            >
+                <div
+                    class="fixed inset-0 bg-black/40"
+                    (click)="dialogOpen.set(false)"
+                    (keydown.enter)="dialogOpen.set(false)"
+                    tabindex="0"
+                ></div>
+                <div class="relative bg-white rounded-xl shadow-xl w-full max-w-md border border-slate-200 z-10">
                     <div class="flex items-center justify-between p-6 border-b border-slate-200">
                         <h2 class="text-lg font-bold text-slate-900">Create Admin</h2>
                         <button

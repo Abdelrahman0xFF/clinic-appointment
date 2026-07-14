@@ -5,6 +5,5 @@ export interface Service {
 }
 
 export interface ResultItem {
-    id: number;
-    image?: string;
+    image: string;
 }

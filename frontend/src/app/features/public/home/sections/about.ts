@@ -23,21 +23,13 @@ import { fluentShield, fluentHeartPulse, fluentPeople, fluentReward } from '@ng-
         >
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
                 <div class="relative">
-                    <div
-                        class="rounded-2xl overflow-hidden bg-linear-to-br from-slate-200 to-slate-100 aspect-4/3 shadow-lg"
-                    >
-                        <div
-                            class="w-full h-full flex items-center justify-center bg-linear-to-br from-blue-50 to-blue-50"
-                        >
-                            <div class="text-center p-8">
-                                <div
-                                    class="size-20 mx-auto rounded-2xl bg-linear-to-br from-blue-500 to-blue-600 flex items-center justify-center mb-4 shadow-lg shadow-blue-200"
-                                >
-                                    <ng-icon name="fluentHeartPulse" size="36" color="white" />
-                                </div>
-                                <p class="text-slate-500 font-medium">Clinic Photo</p>
-                            </div>
-                        </div>
+                    <div class="rounded-2xl overflow-hidden aspect-4/3 shadow-lg">
+                        <img
+                            src="https://images.unsplash.com/photo-1769698678497-c41f0ab47c3e?fm=jpg&q=60&w=3000&auto=format&fit=crop"
+                            alt="Modern medical centre"
+                            class="w-full h-full object-cover"
+                            loading="lazy"
+                        />
                     </div>
                     <div
                         class="absolute -bottom-6 -left-6 w-48 p-4 bg-white rounded-xl shadow-lg border border-slate-100 hidden sm:block"

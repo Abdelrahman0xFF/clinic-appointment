@@ -98,17 +98,13 @@ import { Section } from '../../../../shared/section';
                 </div>
 
                 <div class="relative">
-                    <div
-                        class="bg-slate-200 rounded-2xl aspect-square flex items-center justify-center overflow-hidden"
-                    >
-                        <div
-                            class="w-full h-full bg-linear-to-br from-slate-300 to-slate-200 flex items-center justify-center"
-                        >
-                            <div class="text-center">
-                                <div class="text-6xl mb-2">👨‍⚕️</div>
-                                <p class="text-slate-500 font-medium">Doctor Profile Photo</p>
-                            </div>
-                        </div>
+                    <div class="rounded-2xl aspect-square overflow-hidden">
+                        <img
+                            src="https://images.unsplash.com/photo-1758691463582-11aea602cd4a?fm=jpg&q=60&w=3000&auto=format&fit=crop"
+                            alt="Dr. Ahmed - Consultant Dermatologist"
+                            class="w-full h-full object-cover object-top"
+                            loading="lazy"
+                        />
                     </div>
 
                     <div
