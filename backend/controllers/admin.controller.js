@@ -16,14 +16,6 @@ export const createAdmin = asyncHandler(async (req, res, next) => {
 
     const admin = new Admin({ username, password });
     await admin.save();
-    const token = generateToken({ id: admin._id });
-
-    res.cookie("token", token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
-        maxAge: 24 * 60 * 60 * 1000,
-    });
 
     return res.status(201).json({
         success: true,
@@ -104,6 +96,33 @@ export const logout = asyncHandler(async (req, res, next) => {
     return res.status(200).json({
         success: true,
         message: "Logged out successfully",
+    });
+});
+
+export const getAllAdmins = asyncHandler(async (req, res, next) => {
+    const admins = await Admin.find().select("-password").sort({ createdAt: -1 });
+
+    return res.status(200).json({
+        success: true,
+        data: admins,
+    });
+});
+
+export const deleteAdmin = asyncHandler(async (req, res, next) => {
+    const { id } = req.params;
+
+    if (id === req.adminId) {
+        return next(new AppError("Cannot delete your own account", 400));
+    }
+
+    const admin = await Admin.findByIdAndDelete(id);
+    if (!admin) {
+        return next(new AppError("Admin not found", 404));
+    }
+
+    return res.status(200).json({
+        success: true,
+        message: "Admin deleted successfully",
     });
 });
 

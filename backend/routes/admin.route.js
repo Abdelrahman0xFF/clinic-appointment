@@ -6,6 +6,8 @@ import {
     logout,
     createAdmin,
     edit,
+    getAllAdmins,
+    deleteAdmin,
     getDashboardStats,
 } from "../controllers/admin.controller.js";
 import {
@@ -21,6 +23,7 @@ export const router = Router();
 
 router.get("/", protectAdminRoute, getAdminProfile);
 router.get("/dashboard", protectAdminRoute, getDashboardStats);
+router.get("/all", protectAdminRoute, getAllAdmins);
 router.post(
     "/",
     protectAdminRoute,
@@ -34,6 +37,7 @@ router.put(
     edit,
 );
 router.post("/login", validateRequest(validateAdminLogin), login);
+router.delete("/:id", protectAdminRoute, deleteAdmin);
 router.post("/logout", protectAdminRoute, logout);
 
 export default router;

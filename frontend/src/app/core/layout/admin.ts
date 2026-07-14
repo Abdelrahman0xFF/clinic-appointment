@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import {
     fluentGrid,
@@ -7,8 +7,10 @@ import {
     fluentPeopleQueue,
     fluentNews,
     fluentSettings,
+    fluentPerson,
     fluentArrowExit,
 } from '@ng-icons/fluent-ui';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
     viewProviders: [
@@ -18,6 +20,7 @@ import {
             fluentPeopleQueue,
             fluentNews,
             fluentSettings,
+            fluentPerson,
             fluentArrowExit,
         }),
     ],
@@ -25,9 +28,7 @@ import {
     imports: [RouterLink, RouterLinkActive, RouterOutlet, NgIcon],
     template: `
         <div class="h-screen bg-slate-50 flex overflow-hidden">
-            <aside
-                class="flex flex-col w-64 bg-white border-r border-slate-200 shrink-0"
-            >
+            <aside class="flex flex-col w-64 bg-white border-r border-slate-200 shrink-0">
                 <div class="p-6 border-b border-slate-200">
                     <a routerLink="/" class="flex items-center gap-3">
                         <div
@@ -61,25 +62,24 @@ import {
                 </nav>
 
                 <div class="p-3 border-t border-slate-200">
-                    <div
-                        class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-slate-50 mb-2"
-                    >
+                    <div class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-slate-50 mb-2">
                         <div
                             class="size-9 bg-blue-100 rounded-full flex items-center justify-center shrink-0"
                         >
-                            <span class="text-blue-600 font-bold text-sm">DR</span>
+                            <span class="text-blue-600 font-bold text-sm">{{ adminInitial }}</span>
                         </div>
                         <div class="flex-1 min-w-0">
                             <p class="font-medium text-slate-900 text-sm truncate leading-tight">
-                                Dr. Sarah Ahmed
+                                {{ adminName }}
                             </p>
                             <p class="text-[11px] text-slate-500 truncate leading-tight">
-                                Dermatologist
+                                Administrator
                             </p>
                         </div>
                     </div>
                     <button
                         type="button"
+                        (click)="handleLogout()"
                         class="flex items-center gap-3 w-full px-3 py-2 rounded-lg text-sm font-medium text-slate-500 hover:bg-red-50 hover:text-red-600 transition-colors duration-150 cursor-pointer"
                     >
                         <ng-icon name="fluentArrowExit" size="20" />
@@ -95,11 +95,28 @@ import {
     `,
 })
 export class LayoutAdmin {
+    private auth = inject(AuthService);
+    private router = inject(Router);
+
     navLinks = [
         { href: '/admin/dashboard', label: 'Dashboard', icon: 'fluentGrid' },
         { href: '/admin/appointments', label: 'Appointments', icon: 'fluentCalendarCheckmark' },
         { href: '/admin/queue', label: 'Queue', icon: 'fluentPeopleQueue' },
+        { href: '/admin/admins', label: 'Admins', icon: 'fluentPerson' },
         { href: '/admin/blog', label: 'Blog', icon: 'fluentNews' },
         { href: '/admin/settings', label: 'Settings', icon: 'fluentSettings' },
     ];
+
+    get adminName(): string {
+        return this.auth.admin()?.username || 'Admin';
+    }
+
+    get adminInitial(): string {
+        const name = this.adminName;
+        return name.charAt(0).toUpperCase();
+    }
+
+    handleLogout(): void {
+        this.auth.logout();
+    }
 }
