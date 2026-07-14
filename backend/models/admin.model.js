@@ -11,7 +11,13 @@ const adminSchema = new mongoose.Schema(
         },
         password: { type: String, required: true },
     },
-    { timestamps: true },
+    {
+        timestamps: true,
+        toJSON: {
+            virtuals: true,
+            transform: (_doc, ret) => { delete ret._id; delete ret.__v; return ret; },
+        },
+    },
 );
 
 adminSchema.pre("save", async function () {

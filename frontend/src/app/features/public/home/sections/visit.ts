@@ -1,4 +1,4 @@
-import { Component, inject, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { UiButton } from '../../../../shared/ui/button';
 import { NgIcon, provideIcons } from '@ng-icons/core';
@@ -8,7 +8,6 @@ import {
     heroPhone,
     heroChatBubbleLeftEllipsis,
 } from '@ng-icons/heroicons/outline';
-import { ClinicService } from '../../../../core/clinic';
 import { Section } from '../../../../shared/section';
 
 @Component({
@@ -120,7 +119,6 @@ import { Section } from '../../../../shared/section';
 })
 export class Visit {
     @Input() class = '';
-    private clinic = inject(ClinicService);
-    address = this.clinic.address;
-    phone = this.clinic.phone;
+    @Input() address = '';
+    @Input() phone = '';
 }

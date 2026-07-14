@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import router from "./routes/router.js";
+import cors from "cors";
 import { connectDB } from "./config/db.config.js";
 import { cloudinaryConfig } from "./config/cloudinary.config.js";
 import { twilioConfig } from "./config/twilio.config.js";
@@ -17,6 +18,7 @@ twilioConfig();
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 app.use(morganMiddleware);

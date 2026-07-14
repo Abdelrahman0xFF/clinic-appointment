@@ -11,7 +11,13 @@ const patientSchema = new mongoose.Schema(
             match: [/^01[0125][0-9]{8}$/, "Invalid Egyptian phone number"],
         },
     },
-    { timestamps: true },
+    {
+        timestamps: true,
+        toJSON: {
+            virtuals: true,
+            transform: (_doc, ret) => { delete ret._id; delete ret.__v; return ret; },
+        },
+    },
 );
 
 patientSchema.index({ createdAt: -1 });

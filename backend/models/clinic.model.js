@@ -47,7 +47,13 @@ const clinicSchema = new mongoose.Schema(
         walletNumber: { type: String, required: true, trim: true },
         credentials: [{ type: String }],
     },
-    { timestamps: true },
+    {
+        timestamps: true,
+        toJSON: {
+            virtuals: true,
+            transform: (_doc, ret) => { delete ret._id; delete ret.__v; return ret; },
+        },
+    },
 );
 
 export const Clinic = mongoose.model("Clinic", clinicSchema);

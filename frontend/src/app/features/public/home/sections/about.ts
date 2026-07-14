@@ -1,6 +1,5 @@
-import { Component, inject, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Section } from '../../../../shared/section';
-import { ClinicService } from '../../../../core/clinic';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { fluentShield, fluentHeartPulse, fluentPeople, fluentReward } from '@ng-icons/fluent-ui';
 
@@ -127,5 +126,4 @@ import { fluentShield, fluentHeartPulse, fluentPeople, fluentReward } from '@ng-
 })
 export class About {
     @Input() class = '';
-    private clinic = inject(ClinicService);
 }

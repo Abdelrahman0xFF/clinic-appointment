@@ -14,7 +14,13 @@ const queueEntrySchema = new mongoose.Schema(
             default: "waiting",
         },
     },
-    { timestamps: true },
+    {
+        timestamps: true,
+        toJSON: {
+            virtuals: true,
+            transform: (_doc, ret) => { delete ret._id; delete ret.__v; return ret; },
+        },
+    },
 );
 
 queueEntrySchema.index({ stage: 1, createdAt: 1 });

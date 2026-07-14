@@ -18,7 +18,13 @@ const appointmentSchema = new mongoose.Schema(
         receiptImageUrl: { type: String, required: true },
         checkedIn: { type: Boolean, default: false },
     },
-    { timestamps: true },
+    {
+        timestamps: true,
+        toJSON: {
+            virtuals: true,
+            transform: (_doc, ret) => { delete ret._id; delete ret.__v; return ret; },
+        },
+    },
 );
 
 appointmentSchema.index({ date: 1, status: 1 });

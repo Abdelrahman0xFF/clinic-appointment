@@ -35,7 +35,13 @@ const blogPostSchema = new mongoose.Schema(
             default: "draft",
         },
     },
-    { timestamps: true },
+    {
+        timestamps: true,
+        toJSON: {
+            virtuals: true,
+            transform: (_doc, ret) => { delete ret._id; delete ret.__v; return ret; },
+        },
+    },
 );
 
 blogPostSchema.index({ status: 1, createdAt: -1 });
