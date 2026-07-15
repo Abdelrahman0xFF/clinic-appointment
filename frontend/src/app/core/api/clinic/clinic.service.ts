@@ -1,6 +1,6 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { ApiResponse } from '../shared/api.types';
 import { ClinicDto, WorkingHoursDisplay } from './clinic.types';
 import { DAY_LABELS } from '../../layout/layout.types';
@@ -11,6 +11,10 @@ export class ClinicService {
     private base = '/api/clinic';
 
     clinicData = signal<ClinicDto | null>(null);
+
+    fetchInfo(): Observable<ClinicDto> {
+        return this.http.get<ApiResponse<ClinicDto>>(this.base).pipe(map((res) => res.data!));
+    }
 
     getInfo(): void {
         this.http
@@ -23,15 +27,10 @@ export class ClinicService {
             });
     }
 
-    updateInfo(data: Partial<ClinicDto>): void {
-        this.http
-            .put<ApiResponse<ClinicDto>>(this.base, data)
-            .pipe(map((res) => res.data!))
-            .subscribe({
-                next: (data) => this.clinicData.set(data),
-                error: (err) => console.error('Failed to update clinic info', err),
-                complete: () => console.log('Clinic info updated'),
-            });
+    updateInfo(data: Partial<ClinicDto>): Observable<ClinicDto> {
+        return this.http
+            .put<ApiResponse<ClinicDto>>(this.base, data, { withCredentials: true })
+            .pipe(map((res) => res.data!));
     }
 
     toWorkingHoursList(workingHours: ClinicDto['workingHours']): WorkingHoursDisplay[] {

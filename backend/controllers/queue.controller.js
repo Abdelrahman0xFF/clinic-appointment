@@ -8,10 +8,8 @@ export const getLiveQueue = asyncHandler(async (req, res, next) => {
     const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 20));
     const skip = (page - 1) * limit;
 
-    const filter = { stage: { $ne: "completed" } };
-
     const [queue, total] = await Promise.all([
-        QueueEntry.find(filter)
+        QueueEntry.find()
             .skip(skip)
             .limit(limit)
             .populate({
@@ -20,7 +18,7 @@ export const getLiveQueue = asyncHandler(async (req, res, next) => {
                 populate: { path: "patientId", select: "fullName" },
             })
             .sort({ createdAt: 1 }),
-        QueueEntry.countDocuments(filter),
+        QueueEntry.countDocuments(),
     ]);
 
     return res.status(200).json({

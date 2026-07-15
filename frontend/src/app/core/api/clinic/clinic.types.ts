@@ -1,5 +1,5 @@
 export interface SocialMediaEntry {
-    platform: string;
+    platform?: string;
     link: string;
 }
 

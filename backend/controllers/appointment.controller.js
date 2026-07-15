@@ -26,7 +26,11 @@ export const createAppointment = asyncHandler(async (req, res, next) => {
     }
 
     let patient = await Patient.findOne({ phone });
-    if (!patient) {
+    if (patient) {
+        if (patient.fullName !== fullName.trim()) {
+            return next(new AppError("This phone number is already associated with a different name", 400));
+        }
+    } else {
         patient = await Patient.create({ fullName, phone });
     }
 

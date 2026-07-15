@@ -35,6 +35,11 @@ import { FormsModule } from '@angular/forms';
                                    placeholder="Enter patient name"
                                    class="w-full px-3.5 py-2.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none transition-all" />
                         </div>
+                        @if (error) {
+                            <div class="bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-700">
+                                {{ error }}
+                            </div>
+                        }
                     </div>
 
                     <div class="flex justify-end gap-3 mt-6 pt-4 border-t border-slate-200">
@@ -48,6 +53,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class QueueCheckinDialog implements OnChanges {
     @Input() open = false;
+    @Input() error = '';
     @Output() save = new EventEmitter<string>();
     @Output() dismiss = new EventEmitter<void>();
 

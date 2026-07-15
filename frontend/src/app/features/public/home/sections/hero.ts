@@ -38,26 +38,18 @@ import { Section } from '../../../../shared/section';
                         is our priority.
                     </p>
 
-                    <div class="flex flex-wrap gap-2 mb-10">
-                        <span
-                            class="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-sm rounded-lg border border-slate-200 text-slate-700 bg-white/80"
-                        >
-                            <span class="size-1.5 rounded-full bg-blue-500"></span>
-                            Consultant Dermatologist
-                        </span>
-                        <span
-                            class="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-sm rounded-lg border border-slate-200 text-slate-700 bg-white/80"
-                        >
-                            <span class="size-1.5 rounded-full bg-blue-500"></span>
-                            MD Cairo University
-                        </span>
-                        <span
-                            class="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-sm rounded-lg border border-slate-200 text-slate-700 bg-white/80"
-                        >
-                            <span class="size-1.5 rounded-full bg-blue-500"></span>
-                            Certified Surgery
-                        </span>
-                    </div>
+                    @if (credentials.length > 0) {
+                        <div class="flex flex-wrap gap-2 mb-10">
+                            @for (cred of credentials; track cred) {
+                                <span
+                                    class="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-sm rounded-lg border border-slate-200 text-slate-700 bg-white/80"
+                                >
+                                    <span class="size-1.5 rounded-full bg-blue-500"></span>
+                                    {{ cred }}
+                                </span>
+                            }
+                        </div>
+                    }
 
                     <div class="flex flex-col sm:flex-row gap-4 mb-12">
                         <a routerLink="/booking">
@@ -131,5 +123,6 @@ import { Section } from '../../../../shared/section';
 })
 export class Hero {
     @Input() class = '';
+    @Input() credentials: string[] = [];
     scrollTo = scrollToElement;
 }

@@ -14,7 +14,7 @@ import { Service, ResultItem } from './home.types';
     selector: 'app-home',
     imports: [Hero, About, Services, Results, Testimonials, Blog, Visit],
     template: `
-        <app-hero class="border-y" />
+        <app-hero class="border-y" [credentials]="credentials()" />
         <app-about class="bg-white border-y" />
         <app-services class="border-y" />
         <app-results class="bg-white border-y" [results]="results" />
@@ -29,6 +29,7 @@ export class Home implements OnInit {
 
     address = computed(() => this.clinic.clinicData()?.address ?? '');
     phone = computed(() => this.clinic.clinicData()?.phone ?? '');
+    credentials = computed(() => this.clinic.clinicData()?.credentials ?? []);
     services: Service[] = [
         {
             icon: 'fluentStethoscope',

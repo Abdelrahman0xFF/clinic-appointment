@@ -6,7 +6,7 @@ import {
     fluentPhone,
     fluentCalendarCheckmark,
 } from '@ng-icons/fluent-ui';
-import { Appointment } from '../../../../core/clinic';
+import { CheckInCandidate } from '../queue.types';
 
 @Component({
     selector: 'app-queue-checkin-list',
@@ -69,6 +69,6 @@ import { Appointment } from '../../../../core/clinic';
     `,
 })
 export class QueueCheckinList {
-    @Input() candidates: Appointment[] = [];
-    @Output() checkIn = new EventEmitter<Appointment>();
+    @Input() candidates: CheckInCandidate[] = [];
+    @Output() checkIn = new EventEmitter<CheckInCandidate>();
 }

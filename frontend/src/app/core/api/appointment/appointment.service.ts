@@ -48,4 +48,8 @@ export class AppointmentApi {
     ): Observable<ApiResponse<AppointmentDto>> {
         return this.http.put<ApiResponse<AppointmentDto>>(`${this.base}/${id}/reschedule`, data);
     }
+
+    checkIn(id: string): Observable<ApiResponse<unknown>> {
+        return this.http.put<ApiResponse<unknown>>(`${this.base}/${id}/checkin`, {});
+    }
 }

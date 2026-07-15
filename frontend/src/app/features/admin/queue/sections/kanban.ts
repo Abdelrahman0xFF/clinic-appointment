@@ -7,7 +7,7 @@ import {
     fluentPeopleQueue,
     fluentDocumentBulletList,
 } from '@ng-icons/fluent-ui';
-import { QueueEntry } from '../../../../core/clinic';
+import { QueueCardItem } from '../queue.types';
 
 @Component({
     selector: 'app-queue-kanban',
@@ -257,9 +257,9 @@ import { QueueEntry } from '../../../../core/clinic';
     `,
 })
 export class QueueKanban {
-    @Input() waitingEntries: QueueEntry[] = [];
-    @Input() consultationEntries: QueueEntry[] = [];
-    @Input() completedEntries: QueueEntry[] = [];
-    @Output() moveToConsultation = new EventEmitter<QueueEntry>();
-    @Output() moveToCompleted = new EventEmitter<QueueEntry>();
+    @Input() waitingEntries: QueueCardItem[] = [];
+    @Input() consultationEntries: QueueCardItem[] = [];
+    @Input() completedEntries: QueueCardItem[] = [];
+    @Output() moveToConsultation = new EventEmitter<QueueCardItem>();
+    @Output() moveToCompleted = new EventEmitter<QueueCardItem>();
 }
