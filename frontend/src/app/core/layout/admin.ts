@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import {
@@ -9,6 +9,8 @@ import {
     fluentSettings,
     fluentPerson,
     fluentArrowExit,
+    fluentNavigation,
+    fluentDismiss,
 } from '@ng-icons/fluent-ui';
 import { AuthService } from '../auth/auth.service';
 
@@ -22,14 +24,34 @@ import { AuthService } from '../auth/auth.service';
             fluentSettings,
             fluentPerson,
             fluentArrowExit,
+            fluentNavigation,
+            fluentDismiss,
         }),
     ],
     selector: 'app-layout-admin',
     imports: [RouterLink, RouterLinkActive, RouterOutlet, NgIcon],
     template: `
         <div class="h-screen bg-slate-50 flex overflow-hidden">
-            <aside class="flex flex-col w-64 bg-white border-r border-slate-200 shrink-0">
-                <div class="p-6 border-b border-slate-200">
+            <!-- Mobile Sidebar Overlay -->
+            @if (sidebarOpen()) {
+                <div class="fixed inset-0 z-40 lg:hidden">
+                    <div 
+                        class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm"
+                        (click)="sidebarOpen.set(false)"
+                        (keydown.enter)="sidebarOpen.set(false)"
+                        tabindex="0"
+                    ></div>
+                </div>
+            }
+
+            <!-- Sidebar -->
+            <aside 
+                [class]="
+                    'fixed inset-y-0 left-0 z-50 flex flex-col w-64 bg-white border-r border-slate-200 transition-transform duration-300 lg:static lg:translate-x-0 ' +
+                    (sidebarOpen() ? 'translate-x-0' : '-translate-x-full')
+                "
+            >
+                <div class="p-6 border-b border-slate-200 flex items-center justify-between">
                     <a routerLink="/" class="flex items-center gap-3">
                         <div
                             class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center"
@@ -41,12 +63,19 @@ import { AuthService } from '../auth/auth.service';
                             <p class="text-[11px] text-slate-500 leading-tight">Admin Panel</p>
                         </div>
                     </a>
+                    <button
+                        (click)="sidebarOpen.set(false)"
+                        class="lg:hidden flex items-center justify-center size-8 rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition cursor-pointer"
+                    >
+                        <ng-icon name="fluentDismiss" size="20" />
+                    </button>
                 </div>
 
                 <nav class="flex-1 overflow-y-auto p-3 space-y-1">
                     @for (navLink of navLinks; track navLink.label) {
                         <a
                             [routerLink]="navLink.href"
+                            (click)="sidebarOpen.set(false)"
                             routerLinkActive="bg-blue-50 text-blue-700 shadow-sm"
                             [routerLinkActiveOptions]="{ exact: false }"
                             class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 text-slate-600 hover:bg-slate-100 hover:text-slate-900"
@@ -88,15 +117,35 @@ import { AuthService } from '../auth/auth.service';
                 </div>
             </aside>
 
-            <main class="flex-1 overflow-auto p-6 lg:p-8">
-                <router-outlet />
-            </main>
+            <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+                <!-- Mobile Top Bar -->
+                <header class="lg:hidden bg-white border-b border-slate-200 p-4 flex items-center justify-between shrink-0">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                            <span class="text-white font-bold text-sm">MC</span>
+                        </div>
+                        <span class="font-bold text-slate-900">Admin</span>
+                    </div>
+                    <button
+                        (click)="sidebarOpen.set(true)"
+                        class="flex items-center justify-center size-10 rounded-lg bg-slate-50 text-slate-600 hover:bg-slate-100 transition cursor-pointer"
+                    >
+                        <ng-icon name="fluentNavigation" size="20" />
+                    </button>
+                </header>
+
+                <main class="flex-1 overflow-auto p-4 sm:p-6 lg:p-8">
+                    <router-outlet />
+                </main>
+            </div>
         </div>
     `,
 })
 export class LayoutAdmin {
     private auth = inject(AuthService);
     private router = inject(Router);
+
+    sidebarOpen = signal(false);
 
     navLinks = [
         { href: '/admin/dashboard', label: 'Dashboard', icon: 'fluentGrid' },

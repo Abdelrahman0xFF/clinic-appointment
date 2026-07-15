@@ -24,27 +24,27 @@ import { DAY_LABELS } from '../../../../core/layout/layout.types';
             <div class="space-y-2">
                 @for (day of workingDays; track day.key) {
                     <div
-                        class="flex items-center justify-between px-4 py-3 rounded-lg border border-slate-100 bg-slate-50/50 gap-3"
+                        class="flex flex-col sm:flex-row sm:items-center justify-between px-4 py-3 rounded-lg border border-slate-100 bg-slate-50/50 gap-3"
                     >
-                        <span class="text-sm font-medium text-slate-900 w-24 shrink-0">{{
+                        <span class="text-sm font-medium text-slate-900 sm:w-24 shrink-0">{{
                             day.label
                         }}</span>
                         @if (day.hours) {
-                            <div class="flex items-center gap-2">
+                            <div class="flex flex-wrap sm:flex-nowrap items-center gap-2">
                                 <input
                                     type="time"
                                     [value]="day.hours.start"
                                     (input)="
                                         updateHours(day.key, 'start', $any($event.target).value)
                                     "
-                                    class="px-3 py-1.5 rounded-md border border-slate-200 bg-white text-sm text-slate-700 font-mono focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none transition-all w-28"
+                                    class="px-3 py-1.5 rounded-md border border-slate-200 bg-white text-sm text-slate-700 font-mono focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none transition-all flex-1 sm:flex-none sm:w-28 min-w-[100px]"
                                 />
-                                <span class="text-slate-300 text-xs">to</span>
+                                <span class="text-slate-400 text-xs font-medium">to</span>
                                 <input
                                     type="time"
                                     [value]="day.hours.end"
                                     (input)="updateHours(day.key, 'end', $any($event.target).value)"
-                                    class="px-3 py-1.5 rounded-md border border-slate-200 bg-white text-sm text-slate-700 font-mono focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none transition-all w-28"
+                                    class="px-3 py-1.5 rounded-md border border-slate-200 bg-white text-sm text-slate-700 font-mono focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none transition-all flex-1 sm:flex-none sm:w-28 min-w-[100px]"
                                 />
                                 <button
                                     type="button"

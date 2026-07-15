@@ -1,11 +1,15 @@
 import { HttpErrorResponse, HttpInterceptorFn, HttpResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { ToastService } from '../../shared/ui/toast/toast.service';
-import { catchError, tap, throwError } from 'rxjs';
+import { LoadingService } from '../services/loading.service';
+import { catchError, tap, throwError, finalize } from 'rxjs';
 import { ApiResponse } from './shared/api.types';
 
 export const apiInterceptor: HttpInterceptorFn = (req, next) => {
     const toastService = inject(ToastService);
+    const loadingService = inject(LoadingService);
+
+    loadingService.show();
 
     return next(req).pipe(
         tap((event) => {
@@ -37,5 +41,8 @@ export const apiInterceptor: HttpInterceptorFn = (req, next) => {
 
             return throwError(() => error);
         }),
+        finalize(() => {
+            loadingService.hide();
+        })
     );
 };

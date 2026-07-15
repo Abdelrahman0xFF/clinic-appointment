@@ -9,10 +9,11 @@ import { QueueKanban } from './sections/kanban';
 import { QueueCheckinList } from './sections/checkin-list';
 import { QueueCardItem, CheckInCandidate } from './queue.types';
 import { ScrollAnimateDirective } from '../../../shared/directives/scroll-animate.directive';
+import { SpinnerComponent } from '../../../shared/ui/spinner/spinner';
 
 @Component({
     selector: 'app-queue',
-    imports: [NgIcon, QueueKanban, QueueCheckinList, ScrollAnimateDirective],
+    imports: [NgIcon, QueueKanban, QueueCheckinList, ScrollAnimateDirective, SpinnerComponent],
     viewProviders: [
         provideIcons({
             fluentPeopleQueue,
@@ -50,9 +51,7 @@ import { ScrollAnimateDirective } from '../../../shared/directives/scroll-animat
             </div>
 
             @if (loading()) {
-                <div class="flex items-center justify-center py-20">
-                    <span class="text-slate-500">Loading queue...</span>
-                </div>
+                <app-spinner message="Loading queue..." />
             } @else if (selectedView === 'queue') {
                 <app-queue-kanban
                     [waitingEntries]="waitingCards()"

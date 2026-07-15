@@ -7,11 +7,12 @@ import { QueueApi } from '../../../core/api/queue/queue.service';
 import { QueueEntryDto } from '../../../core/api/queue/queue.types';
 import { DashboardStats } from './sections/stats';
 import { DashboardPending } from './sections/pending';
+import { SpinnerComponent } from '../../../shared/ui/spinner/spinner';
 
 @Component({
     viewProviders: [provideIcons({ fluentClock })],
     selector: 'app-dashboard',
-    imports: [NgIcon, DashboardStats, DashboardPending],
+    imports: [NgIcon, DashboardStats, DashboardPending, SpinnerComponent],
     template: `
         <div>
             <div class="flex items-center justify-between mb-8">
@@ -26,11 +27,7 @@ import { DashboardPending } from './sections/pending';
             </div>
 
             @if (loading()) {
-                <div class="flex items-center justify-center py-16">
-                    <span
-                        class="size-6 border-2 border-blue-600/30 border-t-blue-600 rounded-full animate-spin"
-                    ></span>
-                </div>
+                <app-spinner message="Loading dashboard..." />
             } @else {
                 <app-dashboard-stats
                     [pendingCount]="pendingCount"

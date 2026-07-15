@@ -30,19 +30,19 @@ import { ScrollAnimateDirective } from '../../../../shared/directives/scroll-ani
                     <table class="w-full text-sm">
                         <thead class="bg-slate-50 border-b border-slate-200">
                             <tr>
-                                <th class="px-6 py-3 text-left font-semibold text-slate-900">
+                                <th class="px-6 py-3 text-left font-semibold text-slate-900 whitespace-nowrap">
                                     Title
                                 </th>
-                                <th class="px-6 py-3 text-left font-semibold text-slate-900">
+                                <th class="px-6 py-3 text-left font-semibold text-slate-900 whitespace-nowrap">
                                     Category
                                 </th>
-                                <th class="px-6 py-3 text-left font-semibold text-slate-900">
+                                <th class="px-6 py-3 text-left font-semibold text-slate-900 whitespace-nowrap">
                                     Status
                                 </th>
-                                <th class="px-6 py-3 text-left font-semibold text-slate-900">
+                                <th class="px-6 py-3 text-left font-semibold text-slate-900 whitespace-nowrap">
                                     Date
                                 </th>
-                                <th class="px-6 py-3 text-left font-semibold text-slate-900">
+                                <th class="px-6 py-3 text-left font-semibold text-slate-900 whitespace-nowrap">
                                     Actions
                                 </th>
                             </tr>

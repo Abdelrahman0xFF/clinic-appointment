@@ -9,6 +9,7 @@ import { NgIcon, provideIcons } from '@ng-icons/core';
 import { fluentSave } from '@ng-icons/fluent-ui';
 import { UiButton } from '../../../shared/ui/button';
 import { ScrollAnimateDirective } from '../../../shared/directives/scroll-animate.directive';
+import { SpinnerComponent } from '../../../shared/ui/spinner/spinner';
 
 @Component({
     viewProviders: [provideIcons({ fluentSave })],
@@ -22,6 +23,7 @@ import { ScrollAnimateDirective } from '../../../shared/directives/scroll-animat
         SettingsPayment,
         UiButton,
         ScrollAnimateDirective,
+        SpinnerComponent,
     ],
     template: `
         <div>
@@ -37,16 +39,12 @@ import { ScrollAnimateDirective } from '../../../shared/directives/scroll-animat
             </div>
 
             @if (loading()) {
-                <div class="flex items-center justify-center py-16">
-                    <span
-                        class="size-6 border-2 border-blue-600/30 border-t-blue-600 rounded-full animate-spin"
-                    ></span>
-                </div>
+                <app-spinner message="Loading settings..." />
             } @else {
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <app-settings-general
                         appScrollAnimate animateDirection="up" animateDelay="0ms"
-                        class="col-span-2 block"
+                        class="lg:col-span-2 block"
                         [name]="name"
                         [specialization]="specialization"
                         [address]="address"
@@ -66,7 +64,7 @@ import { ScrollAnimateDirective } from '../../../shared/directives/scroll-animat
                     />
                     <app-settings-hours
                         appScrollAnimate animateDirection="up" animateDelay="200ms"
-                        class="col-span-2 row-span-2 block"
+                        class="lg:col-span-2 lg:row-span-2 block"
                         [workingHours]="workingHours"
                         (workingHoursChange)="workingHours = $event"
                     />

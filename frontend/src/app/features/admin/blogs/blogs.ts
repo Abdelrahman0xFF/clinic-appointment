@@ -8,12 +8,13 @@ import { UiButton } from '../../../shared/ui/button';
 import { BlogsTable } from './sections/table';
 import { BlogsFormDialog, BlogFormData } from './sections/form-dialog';
 import { BlogsDeleteDialog } from './sections/delete-dialog';
+import { SpinnerComponent } from '../../../shared/ui/spinner/spinner';
 
 const CATEGORIES = ['Skin & Beauty', 'General Health', 'Patient Guides', 'Clinic News'];
 
 @Component({
     selector: 'app-blogs',
-    imports: [NgIcon, UiButton, BlogsTable, BlogsFormDialog, BlogsDeleteDialog],
+    imports: [NgIcon, UiButton, BlogsTable, BlogsFormDialog, BlogsDeleteDialog, SpinnerComponent],
     viewProviders: [
         provideIcons({
             fluentAdd,
@@ -30,11 +31,7 @@ const CATEGORIES = ['Skin & Beauty', 'General Health', 'Patient Guides', 'Clinic
             </div>
 
             @if (loading()) {
-                <div class="flex items-center justify-center py-16">
-                    <span
-                        class="size-6 border-2 border-blue-600/30 border-t-blue-600 rounded-full animate-spin"
-                    ></span>
-                </div>
+                <app-spinner message="Loading blogs..." />
             } @else {
                 <app-blogs-table
                     [posts]="posts()"

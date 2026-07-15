@@ -1,8 +1,9 @@
-import { Component, computed, inject, OnInit } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { KeyValuePipe } from '@angular/common';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { UiButton } from '../../shared/ui/button';
 import { NgIcon, provideIcons } from '@ng-icons/core';
+import { fluentNavigation, fluentDismiss } from '@ng-icons/fluent-ui';
 import {
     faBrandWhatsapp,
     faBrandFacebook,
@@ -24,6 +25,8 @@ import { scrollToElement } from '../../utils/scroll';
 @Component({
     viewProviders: [
         provideIcons({
+            fluentNavigation,
+            fluentDismiss,
             faBrandWhatsapp,
             faBrandFacebook,
             faBrandInstagram,
@@ -73,10 +76,56 @@ import { scrollToElement } from '../../utils/scroll';
                             <a routerLink="/booking" class="hidden sm:inline-flex">
                                 <app-button> Book Appointment </app-button>
                             </a>
+                            <button
+                                (click)="mobileMenuOpen.set(true)"
+                                class="md:hidden flex items-center justify-center size-10 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 transition cursor-pointer"
+                            >
+                                <ng-icon name="fluentNavigation" size="20" />
+                            </button>
                         </div>
                     </div>
                 </div>
             </header>
+
+            <!-- Mobile Menu Overlay -->
+            @if (mobileMenuOpen()) {
+                <div class="fixed inset-0 z-50 md:hidden flex justify-end">
+                    <div 
+                        class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm"
+                        (click)="mobileMenuOpen.set(false)"
+                        (keydown.enter)="mobileMenuOpen.set(false)"
+                        tabindex="0"
+                    ></div>
+                    <div class="w-full max-w-sm bg-white h-full shadow-2xl relative flex flex-col">
+                        <div class="p-4 border-b border-slate-100 flex items-center justify-between">
+                            <span class="font-bold text-slate-900 text-lg">Menu</span>
+                            <button
+                                (click)="mobileMenuOpen.set(false)"
+                                class="flex items-center justify-center size-10 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 transition cursor-pointer"
+                            >
+                                <ng-icon name="fluentDismiss" size="20" />
+                            </button>
+                        </div>
+                        <nav class="flex-1 overflow-y-auto p-4 space-y-2">
+                            @for (link of navLinks; track link.label) {
+                                <a
+                                    [routerLink]="link.href"
+                                    [fragment]="link.fragment"
+                                    (click)="mobileMenuOpen.set(false)"
+                                    class="block px-4 py-3 font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition"
+                                >
+                                    {{ link.label }}
+                                </a>
+                            }
+                        </nav>
+                        <div class="p-4 border-t border-slate-100">
+                            <a routerLink="/booking" (click)="mobileMenuOpen.set(false)" class="block w-full">
+                                <app-button class="w-full justify-center">Book Appointment</app-button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
 
             <main class="flex-1">
                 <router-outlet />
@@ -240,6 +289,8 @@ export class LayoutPublic implements OnInit {
         { href: '/', label: 'Visit', fragment: 'visit' },
         { href: '/admin/dashboard', label: 'Admin' },
     ];
+
+    mobileMenuOpen = signal(false);
 
     address = computed(() => this.clinic.clinicData()?.address ?? '');
     phone = computed(() => this.clinic.clinicData()?.phone ?? '');

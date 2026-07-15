@@ -40,15 +40,28 @@ import { fluentCheckmark } from '@ng-icons/fluent-ui';
                     </div>
                 }
             </div>
-            <div class="flex justify-between text-xs font-medium text-slate-600">
+            <div class="hidden sm:flex justify-between text-xs font-medium text-slate-600">
                 <span>Date & Time</span>
                 <span>Your Details</span>
                 <span>Payment</span>
                 <span>Review</span>
+            </div>
+            <div class="sm:hidden text-center mt-2 text-sm font-medium text-blue-600">
+                {{ getStepLabel(current) }}
             </div>
         </div>
     `,
 })
 export class BookingStepper {
     @Input() current = 1;
+
+    getStepLabel(step: number): string {
+        switch (step) {
+            case 1: return 'Date & Time';
+            case 2: return 'Your Details';
+            case 3: return 'Payment';
+            case 4: return 'Review';
+            default: return '';
+        }
+    }
 }

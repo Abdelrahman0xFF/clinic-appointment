@@ -6,11 +6,12 @@ import { AdminDto } from '../../../core/api/admin/admin.types';
 import { AuthService } from '../../../core/auth/auth.service';
 import { UiButton } from '../../../shared/ui/button';
 import { ScrollAnimateDirective } from '../../../shared/directives/scroll-animate.directive';
+import { SpinnerComponent } from '../../../shared/ui/spinner/spinner';
 
 @Component({
     viewProviders: [provideIcons({ fluentAdd, fluentPerson, fluentDelete, fluentDismiss })],
     selector: 'app-admins',
-    imports: [NgIcon, UiButton, ScrollAnimateDirective],
+    imports: [NgIcon, UiButton, ScrollAnimateDirective, SpinnerComponent],
     template: `
         <div>
             <div class="flex items-center justify-between mb-6">
@@ -25,11 +26,7 @@ import { ScrollAnimateDirective } from '../../../shared/directives/scroll-animat
             </div>
 
             @if (loading()) {
-                <div class="flex items-center justify-center py-16">
-                    <span
-                        class="size-6 border-2 border-blue-600/30 border-t-blue-600 rounded-full animate-spin"
-                    ></span>
-                </div>
+                <app-spinner message="Loading admins..." />
             } @else if (admins().length === 0) {
                 <div class="flex flex-col items-center justify-center py-16 text-center">
                     <span
@@ -42,74 +39,76 @@ import { ScrollAnimateDirective } from '../../../shared/directives/scroll-animat
                 </div>
             } @else {
                 <div class="rounded-xl border border-slate-200 bg-white overflow-hidden">
-                    <table class="w-full">
-                        <thead class="bg-slate-50 border-b border-slate-200">
-                            <tr>
-                                <th
-                                    class="px-6 py-3 text-left font-semibold text-slate-900 text-sm"
-                                >
-                                    Username
-                                </th>
-                                <th
-                                    class="px-6 py-3 text-left font-semibold text-slate-900 text-sm"
-                                >
-                                    Created
-                                </th>
-                                <th
-                                    class="px-6 py-3 text-right font-semibold text-slate-900 text-sm"
-                                >
-                                    Actions
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-slate-200">
-                            @for (admin of admins(); track admin.id; let i = $index) {
-                                <tr
-                                    appScrollAnimate
-                                    animateDirection="up"
-                                    animateDelay="{{ i * 50 }}ms"
-                                    class="hover:bg-slate-50 transition"
-                                >
-                                    <td class="px-6 py-4">
-                                        <div class="flex items-center gap-3">
-                                            <div
-                                                class="size-9 bg-blue-100 rounded-full flex items-center justify-center shrink-0"
-                                            >
-                                                <span class="text-blue-600 font-bold text-sm">{{
-                                                    admin.username.charAt(0).toUpperCase()
-                                                }}</span>
-                                            </div>
-                                            <div>
-                                                <p class="text-slate-900 font-medium text-sm">
-                                                    {{ admin.username }}
-                                                </p>
-                                                <p class="text-xs text-slate-400">
-                                                    ID: {{ admin.id }}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4 text-slate-500 text-sm">
-                                        {{ formatDate(admin.createdAt) }}
-                                    </td>
-                                    <td class="px-6 py-4 text-right">
-                                        @if (admin.username !== currentUsername) {
-                                            <button
-                                                type="button"
-                                                (click)="confirmDelete(admin)"
-                                                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition cursor-pointer"
-                                            >
-                                                <ng-icon name="fluentDelete" size="16" />
-                                                Delete
-                                            </button>
-                                        } @else {
-                                            <span class="text-xs text-slate-400 italic">You</span>
-                                        }
-                                    </td>
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="bg-slate-50 border-b border-slate-200">
+                                <tr>
+                                    <th
+                                        class="px-6 py-3 text-left font-semibold text-slate-900 text-sm whitespace-nowrap"
+                                    >
+                                        Username
+                                    </th>
+                                    <th
+                                        class="px-6 py-3 text-left font-semibold text-slate-900 text-sm whitespace-nowrap"
+                                    >
+                                        Created
+                                    </th>
+                                    <th
+                                        class="px-6 py-3 text-right font-semibold text-slate-900 text-sm whitespace-nowrap"
+                                    >
+                                        Actions
+                                    </th>
                                 </tr>
-                            }
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody class="divide-y divide-slate-200">
+                                @for (admin of admins(); track admin.id; let i = $index) {
+                                    <tr
+                                        appScrollAnimate
+                                        animateDirection="up"
+                                        animateDelay="{{ i * 50 }}ms"
+                                        class="hover:bg-slate-50 transition"
+                                    >
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center gap-3">
+                                                <div
+                                                    class="size-9 bg-blue-100 rounded-full flex items-center justify-center shrink-0"
+                                                >
+                                                    <span class="text-blue-600 font-bold text-sm">{{
+                                                        admin.username.charAt(0).toUpperCase()
+                                                    }}</span>
+                                                </div>
+                                                <div>
+                                                    <p class="text-slate-900 font-medium text-sm">
+                                                        {{ admin.username }}
+                                                    </p>
+                                                    <p class="text-xs text-slate-400">
+                                                        ID: {{ admin.id }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 text-slate-500 text-sm whitespace-nowrap">
+                                            {{ formatDate(admin.createdAt) }}
+                                        </td>
+                                        <td class="px-6 py-4 text-right whitespace-nowrap">
+                                            @if (admin.username !== currentUsername) {
+                                                <button
+                                                    type="button"
+                                                    (click)="confirmDelete(admin)"
+                                                    class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition cursor-pointer"
+                                                >
+                                                    <ng-icon name="fluentDelete" size="16" />
+                                                    Delete
+                                                </button>
+                                            } @else {
+                                                <span class="text-xs text-slate-400 italic">You</span>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             }
         </div>

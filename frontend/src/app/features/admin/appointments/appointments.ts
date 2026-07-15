@@ -3,10 +3,11 @@ import { AppointmentApi } from '../../../core/api/appointment/appointment.servic
 import { AppointmentDto } from '../../../core/api/appointment/appointment.types';
 import { AppointmentsToolbar } from './sections/toolbar';
 import { AppointmentsTable } from './sections/table';
+import { SpinnerComponent } from '../../../shared/ui/spinner/spinner';
 
 @Component({
     selector: 'app-appointments',
-    imports: [AppointmentsToolbar, AppointmentsTable],
+    imports: [AppointmentsToolbar, AppointmentsTable, SpinnerComponent],
     template: `
         <div>
             <app-appointments-toolbar
@@ -16,11 +17,7 @@ import { AppointmentsTable } from './sections/table';
             />
 
             @if (loading()) {
-                <div class="flex items-center justify-center py-16">
-                    <span
-                        class="size-6 border-2 border-blue-600/30 border-t-blue-600 rounded-full animate-spin"
-                    ></span>
-                </div>
+                <app-spinner message="Loading appointments..." />
             } @else {
                 <app-appointments-table
                     [appointments]="displayAppointments"

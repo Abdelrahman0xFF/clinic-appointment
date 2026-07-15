@@ -22,7 +22,7 @@ import { CommonModule } from '@angular/common';
         }),
     ],
     template: `
-        <div class="fixed top-4 right-4 z-50 flex flex-col gap-2 pointer-events-none">
+        <div class="fixed bottom-4 right-4 z-50 flex flex-col gap-2 pointer-events-none">
             @for (toast of toastService.toasts(); track toast.id) {
                 <div
                     class="pointer-events-auto flex items-start gap-3 p-4 bg-white rounded-lg shadow-lg border min-w-75 max-w-100 transition-all duration-300"

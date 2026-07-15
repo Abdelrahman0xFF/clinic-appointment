@@ -7,6 +7,8 @@ import {
     fluentCheckmark,
     fluentCloudAdd,
     fluentDismiss,
+    fluentOpen,
+    fluentPhone,
 } from '@ng-icons/fluent-ui';
 import { UiButton } from '../../../../shared/ui/button';
 
@@ -21,6 +23,8 @@ import { UiButton } from '../../../../shared/ui/button';
             fluentCheckmark,
             fluentCloudAdd,
             fluentDismiss,
+            fluentOpen,
+            fluentPhone,
         }),
     ],
     template: `
@@ -28,59 +32,127 @@ import { UiButton } from '../../../../shared/ui/button';
             <h2 class="text-2xl font-bold text-slate-900 mb-6">Payment Verification</h2>
 
             <div class="bg-amber-50 border border-amber-200 rounded-lg p-5 mb-8">
-                <div class="flex gap-3">
-                    <ng-icon name="fluentAlert" size="20" class="text-amber-600 shrink-0 mt-0.5" />
-                    <div class="space-y-3">
-                        <p class="font-semibold text-slate-900">
-                            Please transfer the consultation fee:
-                        </p>
-                        <div>
-                            <p class="text-sm font-medium text-slate-700 mb-1">InstaPay:</p>
-                            <div
-                                class="flex items-center gap-2 bg-white px-3 py-2 rounded border border-amber-200"
-                            >
-                                <code class="text-sm font-mono text-slate-900 flex-1 truncate">{{
-                                    instapayLink
-                                }}</code>
-                                <button
-                                    type="button"
-                                    (click)="copyText(instapayLink, 'instapay')"
-                                    class="text-amber-600 hover:text-amber-700 transition cursor-pointer shrink-0"
-                                >
-                                    <ng-icon
-                                        [name]="
-                                            copiedKey === 'instapay'
-                                                ? 'fluentCheckmark'
-                                                : 'fluentCopy'
-                                        "
-                                        size="16"
-                                    />
-                                </button>
+                <div class="flex justify-center">
+                    <div class="space-y-3 w-full">
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-3">
+                                <ng-icon
+                                    name="fluentAlert"
+                                    size="20"
+                                    class="text-amber-600 shrink-0 mt-0.5"
+                                />
+                                <p class="font-semibold text-slate-900">
+                                    Please transfer the consultation fee:
+                                </p>
                             </div>
-                        </div>
-                        <div>
-                            <p class="text-sm font-medium text-slate-700 mb-1">Wallet Number:</p>
-                            <div
-                                class="flex items-center gap-2 bg-white px-3 py-2 rounded border border-amber-200"
-                            >
-                                <code class="text-sm font-mono text-slate-900 flex-1 truncate">{{
-                                    walletNumber
-                                }}</code>
-                                <button
-                                    type="button"
-                                    (click)="copyText(walletNumber, 'wallet')"
-                                    class="text-amber-600 hover:text-amber-700 transition cursor-pointer shrink-0"
+                            <!-- InstaPay -->
+                            @if (instapayLink) {
+                                @if (isUrl(instapayLink)) {
+                                    <a
+                                        [href]="instapayLink"
+                                        target="_blank"
+                                        class="flex items-center gap-4 bg-white hover:bg-purple-50 border border-slate-200 hover:border-purple-200 p-4 rounded-xl transition-colors cursor-pointer group shadow-sm"
+                                    >
+                                        <div
+                                            class="size-12 rounded-xl bg-purple-100 flex items-center justify-center text-purple-600 shrink-0"
+                                        >
+                                            <span class="font-bold text-sm">IP</span>
+                                        </div>
+                                        <div class="flex-1">
+                                            <p class="font-semibold text-slate-900 text-lg">
+                                                InstaPay
+                                            </p>
+                                            <p class="text-sm text-slate-500">
+                                                Tap to open payment app
+                                            </p>
+                                        </div>
+                                        <div
+                                            class="size-10 rounded-full bg-slate-50 group-hover:bg-purple-100 text-slate-400 group-hover:text-purple-600 flex items-center justify-center transition-colors shrink-0"
+                                        >
+                                            <ng-icon name="fluentOpen" size="20" />
+                                        </div>
+                                    </a>
+                                } @else {
+                                    <div
+                                        class="flex flex-col sm:flex-row sm:items-center gap-4 bg-white border border-slate-200 p-4 rounded-xl shadow-sm"
+                                    >
+                                        <div class="flex items-center gap-4 flex-1">
+                                            <div
+                                                class="size-12 rounded-xl bg-purple-100 flex items-center justify-center text-purple-600 shrink-0"
+                                            >
+                                                <span class="font-bold text-sm">IP</span>
+                                            </div>
+                                            <div class="min-w-0 flex-1">
+                                                <p
+                                                    class="text-sm font-medium text-slate-500 mb-0.5"
+                                                >
+                                                    InstaPay
+                                                </p>
+                                                <p
+                                                    class="text-xl font-bold text-slate-900 truncate"
+                                                >
+                                                    {{ instapayLink }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <app-button
+                                            (click)="copyText(instapayLink, 'instapay')"
+                                            variant="outline"
+                                            class="w-full sm:w-auto shrink-0"
+                                        >
+                                            <ng-icon
+                                                [name]="
+                                                    copiedKey === 'instapay'
+                                                        ? 'fluentCheckmark'
+                                                        : 'fluentCopy'
+                                                "
+                                                size="18"
+                                            />
+                                            {{ copiedKey === 'instapay' ? 'Copied' : 'Copy Name' }}
+                                        </app-button>
+                                    </div>
+                                }
+                            }
+
+                            <!-- Wallet -->
+                            @if (walletNumber) {
+                                <div
+                                    class="flex flex-col sm:flex-row sm:items-center gap-4 bg-white border border-slate-200 p-4 rounded-xl shadow-sm"
                                 >
-                                    <ng-icon
-                                        [name]="
-                                            copiedKey === 'wallet'
-                                                ? 'fluentCheckmark'
-                                                : 'fluentCopy'
-                                        "
-                                        size="16"
-                                    />
-                                </button>
-                            </div>
+                                    <div class="flex items-center gap-4 flex-1">
+                                        <div
+                                            class="size-12 rounded-xl bg-rose-100 flex items-center justify-center text-rose-600 shrink-0"
+                                        >
+                                            <ng-icon name="fluentPhone" size="24" />
+                                        </div>
+                                        <div class="min-w-0 flex-1">
+                                            <p class="text-sm font-medium text-slate-500 mb-0.5">
+                                                Mobile Wallet
+                                            </p>
+                                            <p
+                                                class="text-xl font-bold tracking-wider text-slate-900 truncate"
+                                            >
+                                                {{ walletNumber }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <app-button
+                                        (click)="copyText(walletNumber, 'wallet')"
+                                        variant="outline"
+                                        class="w-full sm:w-auto shrink-0"
+                                    >
+                                        <ng-icon
+                                            [name]="
+                                                copiedKey === 'wallet'
+                                                    ? 'fluentCheckmark'
+                                                    : 'fluentCopy'
+                                            "
+                                            size="18"
+                                        />
+                                        {{ copiedKey === 'wallet' ? 'Copied' : 'Copy Number' }}
+                                    </app-button>
+                                </div>
+                            }
                         </div>
                         <p class="text-sm text-slate-600">
                             <strong>Fee:</strong> {{ consultationFee }} EGP
@@ -174,6 +246,36 @@ export class BookingStepPayment {
         navigator.clipboard.writeText(text);
         this.copiedKey = key;
         setTimeout(() => (this.copiedKey = ''), 2000);
+    }
+
+    isUrl(text: string): boolean {
+        return (
+            text.startsWith('http://') ||
+            text.startsWith('https://') ||
+            text.startsWith('instapay://')
+        );
+    }
+
+    getWalletUssdLink(number: string, amount: number): string | null {
+        if (!number || number.length < 11) return null;
+
+        const prefix = number.substring(0, 3);
+        const encodedHash = '%23';
+
+        // Vodafone Cash
+        if (prefix === '010') {
+            return `tel:*9*7*${number}*${amount}${encodedHash}`;
+        }
+        // Etisalat Cash
+        if (prefix === '011') {
+            return `tel:*777*1*${number}*${amount}${encodedHash}`;
+        }
+        // Orange Cash
+        if (prefix === '012') {
+            return `tel:*115*1*2*${number}*${amount}${encodedHash}`;
+        }
+
+        return null;
     }
 
     onNext() {

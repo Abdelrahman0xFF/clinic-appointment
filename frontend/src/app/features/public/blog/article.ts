@@ -80,6 +80,25 @@ import { ScrollAnimateDirective } from '../../../shared/directives/scroll-animat
                             {{ p.excerpt }}
                         </p>
 
+                        <!-- Mobile Table of Contents -->
+                        @if (p.tableOfContents.length > 0) {
+                            <div appScrollAnimate animateDirection="up" animateDelay="250ms" class="lg:hidden rounded-xl border border-slate-200 bg-white p-5 mb-8">
+                                <div class="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">
+                                    <ng-icon name="fluentBookmarkMultiple" size="18" class="text-slate-400" />
+                                    <h3 class="font-semibold text-slate-900 text-sm">Table of Contents</h3>
+                                </div>
+                                <ul class="space-y-2">
+                                    @for (toc of p.tableOfContents; track toc.id) {
+                                        <li>
+                                            <div [class]="'block text-sm transition ' + (toc.level === 1 ? 'font-medium text-slate-900' : 'text-slate-500 hover:text-blue-600 pl-4')">
+                                                {{ toc.label }}
+                                            </div>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        }
+
                         <div appScrollAnimate animateDirection="up" animateDelay="300ms" class="prose prose-slate max-w-none">
                             @for (paragraph of contentParagraphs(); track $index) {
                                 <p class="text-slate-700 leading-relaxed mb-4">{{ paragraph }}</p>
