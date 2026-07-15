@@ -1,4 +1,5 @@
 import express from "express";
+import { logger } from "./utils/logger.js";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import router from "./routes/router.js";
@@ -36,7 +37,6 @@ app.get("/", (req, res) => {
 app.use("/api", router);
 
 app.use(errorHandler);
-
 app.listen(3000, () => {
-    console.log("running on http://localhost:3000");
+    logger.info("running on http://localhost:3000");
 });

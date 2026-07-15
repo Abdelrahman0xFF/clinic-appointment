@@ -1,5 +1,6 @@
 import { v2 as cloudinary } from "cloudinary";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
+import { logger } from "../utils/logger.js";
 
 export const cloudinaryConfig = () => {
     try {
@@ -9,7 +10,7 @@ export const cloudinaryConfig = () => {
             api_secret: process.env.CLOUDINARY_API_SECRET,
         });
     } catch (error) {
-        console.log(error);
+        logger.error(`Cloudinary config failed: ${error.message}`);
     }
 };
 

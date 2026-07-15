@@ -1,4 +1,5 @@
 import { Appointment } from "../models/appointment.model.js";
+import { logger } from "../utils/logger.js";
 import { Patient } from "../models/patient.model.js";
 import { QueueEntry } from "../models/queue.model.js";
 import { Clinic } from "../models/clinic.model.js";
@@ -200,7 +201,7 @@ export const updateAppointmentStatus = asyncHandler(async (req, res, next) => {
             const publicId = `${folder}/${filename}`;
             await cloudinary.uploader.destroy(publicId);
         } catch (err) {
-            console.error("Failed to delete image from Cloudinary:", err);
+            logger.error(`Failed to delete image from Cloudinary: ${err.message}`);
             responseMessage += " (Warning: receipt image cleanup failed)";
         }
     }
