@@ -7,8 +7,9 @@ import {
     fluentCalendarClock,
     fluentChevronDown,
     fluentBookmarkMultiple,
+    fluentPerson,
 } from '@ng-icons/fluent-ui';
-import { BlogService } from '../../../core/api/blog/blog.service';
+import { BlogApi } from '../../../core/api/blog/blog.service';
 
 @Component({
     selector: 'app-article',
@@ -20,6 +21,7 @@ import { BlogService } from '../../../core/api/blog/blog.service';
             fluentCalendarClock,
             fluentChevronDown,
             fluentBookmarkMultiple,
+            fluentPerson,
         }),
     ],
     template: `
@@ -54,6 +56,10 @@ import { BlogService } from '../../../core/api/blog/blog.service';
                             <span class="text-xs text-slate-400 flex items-center gap-1">
                                 <ng-icon name="fluentClock" size="13" />
                                 {{ p.readTimeMinutes }} min read
+                            </span>
+                            <span class="text-xs text-slate-400 flex items-center gap-1">
+                                <ng-icon name="fluentPerson" size="13" />
+                                {{ p.author }}
                             </span>
                             <span class="text-xs text-slate-400 flex items-center gap-1">
                                 <ng-icon name="fluentCalendarClock" size="13" />
@@ -142,8 +148,7 @@ import { BlogService } from '../../../core/api/blog/blog.service';
                                     <ul class="space-y-2">
                                         @for (toc of p.tableOfContents; track toc.id) {
                                             <li>
-                                                <a
-                                                    [href]="'#' + toc.id"
+                                                <div
                                                     [class]="
                                                         'block text-sm transition ' +
                                                         (toc.level === 1
@@ -152,7 +157,7 @@ import { BlogService } from '../../../core/api/blog/blog.service';
                                                     "
                                                 >
                                                     {{ toc.label }}
-                                                </a>
+                                                </div>
                                             </li>
                                         }
                                     </ul>
@@ -172,7 +177,7 @@ import { BlogService } from '../../../core/api/blog/blog.service';
 })
 export class Article implements OnInit {
     private route = inject(ActivatedRoute);
-    private blog = inject(BlogService);
+    private blog = inject(BlogApi);
 
     openFaqIndex: number | null = null;
 

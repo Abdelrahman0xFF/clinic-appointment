@@ -1,9 +1,9 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import {
-    fluentAdd,
-} from '@ng-icons/fluent-ui';
-import { ClinicService, Blog } from '../../../core/clinic';
+import { fluentAdd } from '@ng-icons/fluent-ui';
+import { BlogApi } from '../../../core/api/blog/blog.service';
+import { BlogDto } from '../../../core/api/blog/blog.types';
+import { AuthService } from '../../../core/auth/auth.service';
 import { UiButton } from '../../../shared/ui/button';
 import { BlogsTable } from './sections/table';
 import { BlogsFormDialog, BlogFormData } from './sections/form-dialog';
@@ -29,18 +29,29 @@ const CATEGORIES = ['Skin & Beauty', 'General Health', 'Patient Guides', 'Clinic
                 </app-button>
             </div>
 
-            <app-blogs-table
-                [posts]="service.blogPosts"
-                (create)="openCreateDialog()"
-                (edit)="openEditDialog($event)"
-                (delete)="openDeleteDialog($event)"
-            />
+            @if (loading()) {
+                <div class="flex items-center justify-center py-16">
+                    <span
+                        class="size-6 border-2 border-blue-600/30 border-t-blue-600 rounded-full animate-spin"
+                    ></span>
+                </div>
+            } @else {
+                <app-blogs-table
+                    [posts]="posts()"
+                    (create)="openCreateDialog()"
+                    (edit)="openEditDialog($event)"
+                    (delete)="openDeleteDialog($event)"
+                />
+            }
         </div>
 
         <app-blogs-form-dialog
             [dialogOpen]="dialogOpen"
             [post]="editingPost"
             [categories]="categories"
+            [defaultAuthor]="defaultAuthor"
+            [saving]="saving()"
+            [error]="formError()"
             (save)="savePost($event)"
             (dismiss)="closeDialog()"
         />
@@ -53,69 +64,98 @@ const CATEGORIES = ['Skin & Beauty', 'General Health', 'Patient Guides', 'Clinic
         />
     `,
 })
-export class Blogs {
-    service = inject(ClinicService);
+export class Blogs implements OnInit {
+    private blogApi = inject(BlogApi);
+    private auth = inject(AuthService);
+
     categories = CATEGORIES;
 
+    posts = signal<BlogDto[]>([]);
+    loading = signal(true);
+    saving = signal(false);
+    formError = signal('');
+
     dialogOpen = false;
-    editingPost: Blog | null = null;
+    editingPost: BlogDto | null = null;
 
     deleteDialogOpen = false;
-    deletingPost: Blog | null = null;
+    deletingPost: BlogDto | null = null;
+
+    ngOnInit() {
+        this.loadPosts();
+    }
+
+    private loadPosts() {
+        this.loading.set(true);
+        this.blogApi.getAll({ limit: 100 }).subscribe({
+            next: (res) => this.posts.set(res.data),
+            error: () => this.loading.set(false),
+            complete: () => this.loading.set(false),
+        });
+    }
+
+    get defaultAuthor(): string {
+        return this.auth.admin()?.username ?? 'Admin';
+    }
 
     openCreateDialog() {
         this.editingPost = null;
+        this.formError.set('');
         this.dialogOpen = true;
     }
 
-    openEditDialog(post: Blog) {
+    openEditDialog(post: BlogDto) {
         this.editingPost = post;
+        this.formError.set('');
         this.dialogOpen = true;
     }
 
     closeDialog() {
         this.dialogOpen = false;
         this.editingPost = null;
+        this.formError.set('');
     }
 
     savePost(data: BlogFormData) {
-        const status = data.isPublished ? ('published' as const) : ('draft' as const);
-        const date = new Date().toISOString().split('T')[0];
-        const readTimeMinutes = Math.max(1, Math.ceil(data.content.split(/\s+/).length / 200));
-
-        if (this.editingPost) {
-            this.service.updateBlogPost(this.editingPost.id, {
-                title: data.title,
-                category: data.category,
-                excerpt: data.excerpt,
-                content: data.content,
-                coverImageUrl: data.coverPreview || this.editingPost.coverImageUrl,
-                date,
-                readTimeMinutes,
-                status,
-            });
-        } else {
-            this.service.addBlogPost({
-                title: data.title,
-                category: data.category,
-                excerpt: data.excerpt,
-                content: data.content,
-                coverImageUrl:
-                    data.coverPreview ||
-                    'https://res.cloudinary.com/dld2gvnf2/image/upload/v1783349784/blog_covers/z1ws7pjtljkr8rhpoltz.png',
-                author: '507f1f77bcf86cd799439011',
-                date,
-                readTimeMinutes,
-                tableOfContents: [{ id: 'intro', label: 'Introduction', level: 1 }],
-                faqs: [],
-                status,
-            });
+        this.saving.set(true);
+        this.formError.set('');
+        const fd = new FormData();
+        fd.append('title', data.title);
+        fd.append('category', data.category);
+        fd.append('excerpt', data.excerpt);
+        fd.append('content', data.content);
+        fd.append('author', data.author);
+        fd.append('date', data.date);
+        fd.append('status', data.isPublished ? 'published' : 'draft');
+        fd.append('readTimeMinutes', String(data.readTimeMinutes));
+        if (data.tableOfContents.length > 0) {
+            fd.append('tableOfContents', JSON.stringify(data.tableOfContents));
+        }
+        if (data.faqs.length > 0) {
+            fd.append('faqs', JSON.stringify(data.faqs));
+        }
+        if (data.coverFile) {
+            fd.append('coverImage', data.coverFile);
         }
 
-        this.closeDialog();
+        const request = this.editingPost
+            ? this.blogApi.update(this.editingPost.id, fd)
+            : this.blogApi.create(fd);
+
+        request.subscribe({
+            next: () => {
+                this.saving.set(false);
+                this.closeDialog();
+                this.loadPosts();
+            },
+            error: (err) => {
+                this.saving.set(false);
+                this.formError.set(err.error?.message || 'Failed to save blog post');
+            },
+        });
     }
 
-    openDeleteDialog(post: Blog) {
+    openDeleteDialog(post: BlogDto) {
         this.deletingPost = post;
         this.deleteDialogOpen = true;
     }
@@ -126,9 +166,16 @@ export class Blogs {
     }
 
     confirmDelete() {
-        if (this.deletingPost) {
-            this.service.deleteBlogPost(this.deletingPost.id);
-        }
-        this.closeDeleteDialog();
+        if (!this.deletingPost) return;
+        this.blogApi.delete(this.deletingPost.id).subscribe({
+            next: () => {
+                this.posts.update((list) => list.filter((p) => p.id !== this.deletingPost!.id));
+                this.closeDeleteDialog();
+            },
+            error: (err) => {
+                console.error('Failed to delete blog post', err);
+                this.closeDeleteDialog();
+            },
+        });
     }
 }

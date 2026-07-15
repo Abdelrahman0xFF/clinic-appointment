@@ -6,8 +6,8 @@ import { Results } from './sections/results';
 import { Testimonials } from './sections/testimonials';
 import { Blog } from './sections/blog';
 import { Visit } from './sections/visit';
-import { ClinicService } from '../../../core/api/clinic/clinic.service';
-import { BlogService } from '../../../core/api/blog/blog.service';
+import { ClinicApi } from '../../../core/api/clinic/clinic.service';
+import { BlogApi } from '../../../core/api/blog/blog.service';
 import { Service, ResultItem } from './home.types';
 
 @Component({
@@ -24,12 +24,12 @@ import { Service, ResultItem } from './home.types';
     `,
 })
 export class Home implements OnInit {
-    private clinic = inject(ClinicService);
-    private blogService = inject(BlogService);
+    private clinicApi = inject(ClinicApi);
+    private blogApi = inject(BlogApi);
 
-    address = computed(() => this.clinic.clinicData()?.address ?? '');
-    phone = computed(() => this.clinic.clinicData()?.phone ?? '');
-    credentials = computed(() => this.clinic.clinicData()?.credentials ?? []);
+    address = computed(() => this.clinicApi.clinicData()?.address ?? '');
+    phone = computed(() => this.clinicApi.clinicData()?.phone ?? '');
+    credentials = computed(() => this.clinicApi.clinicData()?.credentials ?? []);
     services: Service[] = [
         {
             icon: 'fluentStethoscope',
@@ -84,11 +84,11 @@ export class Home implements OnInit {
     ];
 
     get blogPosts() {
-        return this.blogService.posts;
+        return this.blogApi.posts;
     }
 
     ngOnInit() {
-        this.clinic.getInfo();
-        this.blogService.getPosts(1, 3);
+        this.clinicApi.getInfo();
+        this.blogApi.getPosts(1, 3);
     }
 }

@@ -7,7 +7,7 @@ import {
     fluentNews,
     fluentAdd,
 } from '@ng-icons/fluent-ui';
-import { Blog } from '../../../../core/clinic';
+import { BlogDto } from '../../../../core/api/blog/blog.types';
 import { UiButton } from '../../../../shared/ui/button';
 
 @Component({
@@ -84,10 +84,10 @@ import { UiButton } from '../../../../shared/ui/button';
     `,
 })
 export class BlogsTable {
-    @Input() posts: Blog[] = [];
+    @Input() posts: BlogDto[] = [];
     @Output() create = new EventEmitter<void>();
-    @Output() edit = new EventEmitter<Blog>();
-    @Output() delete = new EventEmitter<Blog>();
+    @Output() edit = new EventEmitter<BlogDto>();
+    @Output() delete = new EventEmitter<BlogDto>();
 
     statusBadgeClass(status: string): string {
         if (status === 'published') {

@@ -17,7 +17,7 @@ import {
     heroLink,
     heroBuildingOffice,
 } from '@ng-icons/heroicons/outline';
-import { ClinicService } from '../api/clinic/clinic.service';
+import { ClinicApi } from '../api/clinic/clinic.service';
 import { NavLink, SOCIAL_MEDIA_MAPPER } from './layout.types';
 import { scrollToElement } from '../../utils/scroll';
 
@@ -229,7 +229,7 @@ import { scrollToElement } from '../../utils/scroll';
     `,
 })
 export class LayoutPublic implements OnInit {
-    private clinic = inject(ClinicService);
+    private clinic = inject(ClinicApi);
 
     readonly SOCIAL_MEDIA_MAPPER = SOCIAL_MEDIA_MAPPER;
     readonly navLinks: NavLink[] = [

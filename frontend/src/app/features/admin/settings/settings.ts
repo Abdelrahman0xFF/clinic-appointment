@@ -1,5 +1,5 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { ClinicService } from '../../../core/api/clinic/clinic.service';
+import { ClinicApi } from '../../../core/api/clinic/clinic.service';
 import { SettingsGeneral } from './sections/general';
 import { SettingsHours } from './sections/hours';
 import { SettingsSocial } from './sections/social';
@@ -88,7 +88,7 @@ import { UiButton } from '../../../shared/ui/button';
     `,
 })
 export class Settings implements OnInit {
-    private clinicService = inject(ClinicService);
+    private clinicApi = inject(ClinicApi);
 
     loading = signal(true);
     saving = signal(false);
@@ -106,7 +106,7 @@ export class Settings implements OnInit {
     credentials: string[] = [];
 
     ngOnInit() {
-        this.clinicService.fetchInfo().subscribe({
+        this.clinicApi.fetchInfo().subscribe({
             next: (data) => {
                 this.name = data.name;
                 this.specialization = data.specialization;
@@ -118,7 +118,7 @@ export class Settings implements OnInit {
                 this.socialMedia = { ...data.socialMedia };
                 this.workingHours = { ...data.workingHours };
                 this.credentials = [...(data.credentials || [])];
-                this.clinicService.clinicData.set(data);
+                this.clinicApi.clinicData.set(data);
                 this.loading.set(false);
             },
             error: () => this.loading.set(false),
@@ -128,7 +128,7 @@ export class Settings implements OnInit {
     handleSave() {
         this.saving.set(true);
         this.error.set('');
-        this.clinicService
+        this.clinicApi
             .updateInfo({
                 name: this.name,
                 specialization: this.specialization,
@@ -143,7 +143,7 @@ export class Settings implements OnInit {
             })
             .subscribe({
                 next: (data) => {
-                    this.clinicService.clinicData.set(data);
+                    this.clinicApi.clinicData.set(data);
                     this.saving.set(false);
                 },
                 error: (err) => {

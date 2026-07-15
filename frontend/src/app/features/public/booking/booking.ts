@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { ClinicService } from '../../../core/api/clinic/clinic.service';
+import { ClinicApi } from '../../../core/api/clinic/clinic.service';
 import { AppointmentApi } from '../../../core/api/appointment/appointment.service';
 import { AppointmentDto, TimeSlot } from '../../../core/api/appointment/appointment.types';
 import { BookingStepper } from './sections/stepper';
@@ -89,7 +89,7 @@ import { BookingStepSuccess } from './sections/step-success';
     `,
 })
 export class Booking {
-    private clinicService = inject(ClinicService);
+    private clinicApi = inject(ClinicApi);
     private appointmentApi = inject(AppointmentApi);
 
     step = signal(1);
@@ -107,7 +107,7 @@ export class Booking {
     timeSlots = signal<TimeSlot[]>([]);
 
     get clinicData() {
-        return this.clinicService.clinicData();
+        return this.clinicApi.clinicData();
     }
 
     get todayStr() {

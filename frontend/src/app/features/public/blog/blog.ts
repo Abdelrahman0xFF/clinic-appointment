@@ -1,5 +1,5 @@
 import { Component, computed, inject, OnInit } from '@angular/core';
-import { BlogService } from '../../../core/api/blog/blog.service';
+import { BlogApi } from '../../../core/api/blog/blog.service';
 import { Section } from '../../../shared/section';
 import { BlogCard } from './sections/blog-card';
 
@@ -47,7 +47,7 @@ const CATEGORIES = ['All', 'Skin & Beauty', 'General Health', 'Patient Guides', 
     `,
 })
 export class Blog implements OnInit {
-    private blog = inject(BlogService);
+    private blog = inject(BlogApi);
     categories = CATEGORIES;
     selectedCategory = 'All';
 

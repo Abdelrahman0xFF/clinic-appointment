@@ -1,7 +1,7 @@
-import { Component, inject, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Section } from '../../../../shared/section';
 import { ServiceCard } from '../../../../shared/ui/cards/service-card';
-import { ClinicService } from '../../../../core/clinic';
+import { Service } from '../home.types';
 
 @Component({
     selector: 'app-services',
@@ -27,6 +27,5 @@ import { ClinicService } from '../../../../core/clinic';
 })
 export class Services {
     @Input() class = '';
-    private clinic = inject(ClinicService);
-    services = this.clinic.services;
+    @Input() services: Service[] = [];
 }

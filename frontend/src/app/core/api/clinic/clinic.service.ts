@@ -6,7 +6,7 @@ import { ClinicDto, WorkingHoursDisplay } from './clinic.types';
 import { DAY_LABELS } from '../../layout/layout.types';
 
 @Injectable({ providedIn: 'root' })
-export class ClinicService {
+export class ClinicApi {
     private http = inject(HttpClient);
     private base = '/api/clinic';
 

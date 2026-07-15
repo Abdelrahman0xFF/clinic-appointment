@@ -22,6 +22,9 @@ export const createBlogPost = asyncHandler(async (req, res, next) => {
     if (!req.body.coverImageUrl) {
         return next(new AppError("Cover image is required", 400));
     }
+    if (typeof req.body.readTimeMinutes === "string") {
+        req.body.readTimeMinutes = parseInt(req.body.readTimeMinutes, 10);
+    }
     const newPost = await BlogPost.create(req.body);
     return res.status(201).json({
         success: true,
@@ -81,6 +84,9 @@ export const updateBlogPost = asyncHandler(async (req, res, next) => {
         req.body.coverImageUrl = req.file.path;
     }
     parseJsonFields(req.body);
+    if (typeof req.body.readTimeMinutes === "string") {
+        req.body.readTimeMinutes = parseInt(req.body.readTimeMinutes, 10);
+    }
     Object.assign(post, req.body);
     await post.save();
     return res

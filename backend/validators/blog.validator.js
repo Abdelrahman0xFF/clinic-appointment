@@ -11,7 +11,10 @@ export const validateBlogPost = (data) => {
         date: Joi.string()
             .pattern(/^\d{4}-\d{2}-\d{2}$/)
             .required(),
-        readTimeMinutes: Joi.number().integer().min(1).required(),
+        readTimeMinutes: Joi.alternatives().try(
+            Joi.number().integer().min(1),
+            Joi.string().pattern(/^\d+$/),
+        ).required(),
         tableOfContents: Joi.alternatives().try(
             Joi.array().items(
                 Joi.object({
@@ -45,7 +48,10 @@ export const validateBlogPostUpdate = (data) => {
         content: Joi.string(),
         author: Joi.string(),
         date: Joi.string().pattern(/^\d{4}-\d{2}-\d{2}$/),
-        readTimeMinutes: Joi.number().integer().min(1),
+        readTimeMinutes: Joi.alternatives().try(
+            Joi.number().integer().min(1),
+            Joi.string().pattern(/^\d+$/),
+        ),
         tableOfContents: Joi.alternatives().try(
             Joi.array().items(
                 Joi.object({

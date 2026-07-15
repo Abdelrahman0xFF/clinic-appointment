@@ -1,11 +1,11 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { map } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { ApiResponse, PaginatedResponse } from '../shared/api.types';
 import { BlogDto } from './blog.types';
 
 @Injectable({ providedIn: 'root' })
-export class BlogService {
+export class BlogApi {
     private http = inject(HttpClient);
     private base = '/api/blog';
 
@@ -34,7 +34,6 @@ export class BlogService {
             .subscribe({
                 next: (data) => this.posts.set(data),
                 error: (err) => console.error('Failed to load blog posts', err),
-                complete: () => console.log('Blog posts loaded'),
             });
     }
 
@@ -45,7 +44,6 @@ export class BlogService {
             .subscribe({
                 next: (data) => this.selectedPost.set(data),
                 error: (err) => console.error('Failed to load blog post', err),
-                complete: () => console.log('Blog post loaded'),
             });
     }
 
@@ -59,7 +57,6 @@ export class BlogService {
                     this.total.update((t) => t + 1);
                 },
                 error: (err) => console.error('Failed to create blog post', err),
-                complete: () => console.log('Blog post created'),
             });
     }
 
@@ -69,31 +66,57 @@ export class BlogService {
             .pipe(map((res) => res.data!))
             .subscribe({
                 next: (updated) => {
-                    this.posts.update((list) =>
-                        list.map((p) => (p.id === id ? updated : p)),
-                    );
+                    this.posts.update((list) => list.map((p) => (p.id === id ? updated : p)));
                     if (this.selectedPost()?.id === id) {
                         this.selectedPost.set(updated);
                     }
                 },
                 error: (err) => console.error('Failed to update blog post', err),
-                complete: () => console.log('Blog post updated'),
             });
     }
 
     deletePost(id: string): void {
-        this.http
-            .delete<ApiResponse<void>>(`${this.base}/${id}`)
-            .subscribe({
-                next: () => {
-                    this.posts.update((list) => list.filter((p) => p.id !== id));
-                    this.total.update((t) => t - 1);
-                    if (this.selectedPost()?.id === id) {
-                        this.selectedPost.set(null);
-                    }
-                },
-                error: (err) => console.error('Failed to delete blog post', err),
-                complete: () => console.log('Blog post deleted'),
-            });
+        this.http.delete<ApiResponse<void>>(`${this.base}/${id}`).subscribe({
+            next: () => {
+                this.posts.update((list) => list.filter((p) => p.id !== id));
+                this.total.update((t) => t - 1);
+                if (this.selectedPost()?.id === id) {
+                    this.selectedPost.set(null);
+                }
+            },
+            error: (err) => console.error('Failed to delete blog post', err),
+        });
+    }
+
+    // --- Observable-based methods (used by admin CRUD pages) ---
+
+    getAll(params?: {
+        page?: number;
+        limit?: number;
+        status?: string;
+    }): Observable<PaginatedResponse<BlogDto>> {
+        let p = new HttpParams();
+        if (params) {
+            if (params.page) p = p.set('page', params.page);
+            if (params.limit) p = p.set('limit', params.limit);
+            if (params.status) p = p.set('status', params.status);
+        }
+        return this.http.get<PaginatedResponse<BlogDto>>(this.base, { params: p });
+    }
+
+    getById(id: string): Observable<ApiResponse<BlogDto>> {
+        return this.http.get<ApiResponse<BlogDto>>(`${this.base}/${id}`);
+    }
+
+    create(formData: FormData): Observable<ApiResponse<BlogDto>> {
+        return this.http.post<ApiResponse<BlogDto>>(this.base, formData);
+    }
+
+    update(id: string, formData: FormData): Observable<ApiResponse<BlogDto>> {
+        return this.http.put<ApiResponse<BlogDto>>(`${this.base}/${id}`, formData);
+    }
+
+    delete(id: string): Observable<ApiResponse<void>> {
+        return this.http.delete<ApiResponse<void>>(`${this.base}/${id}`);
     }
 }
