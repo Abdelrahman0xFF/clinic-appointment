@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 import { UiButton } from '../../../../shared/ui/button';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { fluentClock, fluentArrowRight, fluentCheckmarkCircle } from '@ng-icons/fluent-ui';
+import { ScrollAnimateDirective } from '../../../../shared/directives/scroll-animate.directive';
 
 @Component({
     viewProviders: [
@@ -13,7 +14,7 @@ import { fluentClock, fluentArrowRight, fluentCheckmarkCircle } from '@ng-icons/
         }),
     ],
     selector: 'app-dashboard-pending',
-    imports: [RouterLink, UiButton, NgIcon],
+    imports: [RouterLink, UiButton, NgIcon, ScrollAnimateDirective],
     template: `
         @if (recentPending.length > 0) {
             <div class="rounded-xl border border-slate-200 bg-white overflow-hidden">
@@ -31,8 +32,11 @@ import { fluentClock, fluentArrowRight, fluentCheckmarkCircle } from '@ng-icons/
                 </div>
 
                 <div class="divide-y divide-slate-100">
-                    @for (apt of recentPending; track apt.id) {
+                    @for (apt of recentPending; track apt.id; let i = $index) {
                         <div
+                            appScrollAnimate
+                            animateDirection="up"
+                            animateDelay="{{ i * 50 }}ms"
                             class="flex items-center justify-between px-6 py-4 transition-colors hover:bg-slate-50"
                         >
                             <div class="flex items-center gap-4 min-w-0">

@@ -1,20 +1,16 @@
 import { Component, inject, signal } from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import {
-    fluentAdd,
-    fluentPerson,
-    fluentDelete,
-    fluentDismiss,
-} from '@ng-icons/fluent-ui';
+import { fluentAdd, fluentPerson, fluentDelete, fluentDismiss } from '@ng-icons/fluent-ui';
 import { AdminApi } from '../../../core/api/admin/admin.service';
 import { AdminDto } from '../../../core/api/admin/admin.types';
 import { AuthService } from '../../../core/auth/auth.service';
 import { UiButton } from '../../../shared/ui/button';
+import { ScrollAnimateDirective } from '../../../shared/directives/scroll-animate.directive';
 
 @Component({
     viewProviders: [provideIcons({ fluentAdd, fluentPerson, fluentDelete, fluentDismiss })],
     selector: 'app-admins',
-    imports: [NgIcon, UiButton],
+    imports: [NgIcon, UiButton, ScrollAnimateDirective],
     template: `
         <div>
             <div class="flex items-center justify-between mb-6">
@@ -30,11 +26,15 @@ import { UiButton } from '../../../shared/ui/button';
 
             @if (loading()) {
                 <div class="flex items-center justify-center py-16">
-                    <span class="size-6 border-2 border-blue-600/30 border-t-blue-600 rounded-full animate-spin"></span>
+                    <span
+                        class="size-6 border-2 border-blue-600/30 border-t-blue-600 rounded-full animate-spin"
+                    ></span>
                 </div>
             } @else if (admins().length === 0) {
                 <div class="flex flex-col items-center justify-center py-16 text-center">
-                    <span class="size-16 rounded-full bg-slate-100 flex items-center justify-center mb-4">
+                    <span
+                        class="size-16 rounded-full bg-slate-100 flex items-center justify-center mb-4"
+                    >
                         <ng-icon name="fluentPerson" size="24" class="text-slate-400" />
                     </span>
                     <h3 class="text-slate-900 font-semibold mb-1">No admins found</h3>
@@ -45,26 +45,53 @@ import { UiButton } from '../../../shared/ui/button';
                     <table class="w-full">
                         <thead class="bg-slate-50 border-b border-slate-200">
                             <tr>
-                                <th class="px-6 py-3 text-left font-semibold text-slate-900 text-sm">Username</th>
-                                <th class="px-6 py-3 text-left font-semibold text-slate-900 text-sm">Created</th>
-                                <th class="px-6 py-3 text-right font-semibold text-slate-900 text-sm">Actions</th>
+                                <th
+                                    class="px-6 py-3 text-left font-semibold text-slate-900 text-sm"
+                                >
+                                    Username
+                                </th>
+                                <th
+                                    class="px-6 py-3 text-left font-semibold text-slate-900 text-sm"
+                                >
+                                    Created
+                                </th>
+                                <th
+                                    class="px-6 py-3 text-right font-semibold text-slate-900 text-sm"
+                                >
+                                    Actions
+                                </th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-200">
-                            @for (admin of admins(); track admin.id) {
-                                <tr class="hover:bg-slate-50 transition">
+                            @for (admin of admins(); track admin.id; let i = $index) {
+                                <tr
+                                    appScrollAnimate
+                                    animateDirection="up"
+                                    animateDelay="{{ i * 50 }}ms"
+                                    class="hover:bg-slate-50 transition"
+                                >
                                     <td class="px-6 py-4">
                                         <div class="flex items-center gap-3">
-                                            <div class="size-9 bg-blue-100 rounded-full flex items-center justify-center shrink-0">
-                                                <span class="text-blue-600 font-bold text-sm">{{ admin.username.charAt(0).toUpperCase() }}</span>
+                                            <div
+                                                class="size-9 bg-blue-100 rounded-full flex items-center justify-center shrink-0"
+                                            >
+                                                <span class="text-blue-600 font-bold text-sm">{{
+                                                    admin.username.charAt(0).toUpperCase()
+                                                }}</span>
                                             </div>
                                             <div>
-                                                <p class="text-slate-900 font-medium text-sm">{{ admin.username }}</p>
-                                                <p class="text-xs text-slate-400">ID: {{ admin.id }}</p>
+                                                <p class="text-slate-900 font-medium text-sm">
+                                                    {{ admin.username }}
+                                                </p>
+                                                <p class="text-xs text-slate-400">
+                                                    ID: {{ admin.id }}
+                                                </p>
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4 text-slate-500 text-sm">{{ formatDate(admin.createdAt) }}</td>
+                                    <td class="px-6 py-4 text-slate-500 text-sm">
+                                        {{ formatDate(admin.createdAt) }}
+                                    </td>
                                     <td class="px-6 py-4 text-right">
                                         @if (admin.username !== currentUsername) {
                                             <button
@@ -88,17 +115,16 @@ import { UiButton } from '../../../shared/ui/button';
         </div>
 
         @if (dialogOpen()) {
-            <div
-                class="fixed inset-0 z-50 flex items-start justify-center pt-12"
-                tabindex="-1"
-            >
+            <div class="fixed inset-0 z-50 flex items-start justify-center pt-12" tabindex="-1">
                 <div
                     class="fixed inset-0 bg-black/40"
                     (click)="dialogOpen.set(false)"
                     (keydown.enter)="dialogOpen.set(false)"
                     tabindex="0"
                 ></div>
-                <div class="relative bg-white rounded-xl shadow-xl w-full max-w-md border border-slate-200 z-10">
+                <div
+                    class="relative bg-white rounded-xl shadow-xl w-full max-w-md border border-slate-200 z-10"
+                >
                     <div class="flex items-center justify-between p-6 border-b border-slate-200">
                         <h2 class="text-lg font-bold text-slate-900">Create Admin</h2>
                         <button
@@ -111,7 +137,11 @@ import { UiButton } from '../../../shared/ui/button';
                     </div>
                     <div class="p-6 space-y-4">
                         <div>
-                            <label for="new-username" class="block text-sm font-medium text-slate-900 mb-1.5">Username</label>
+                            <label
+                                for="new-username"
+                                class="block text-sm font-medium text-slate-900 mb-1.5"
+                                >Username</label
+                            >
                             <input
                                 id="new-username"
                                 type="text"
@@ -122,7 +152,11 @@ import { UiButton } from '../../../shared/ui/button';
                             />
                         </div>
                         <div>
-                            <label for="new-password" class="block text-sm font-medium text-slate-900 mb-1.5">Password</label>
+                            <label
+                                for="new-password"
+                                class="block text-sm font-medium text-slate-900 mb-1.5"
+                                >Password</label
+                            >
                             <input
                                 id="new-password"
                                 type="password"
@@ -134,7 +168,9 @@ import { UiButton } from '../../../shared/ui/button';
                         </div>
                     </div>
                     <div class="flex justify-end gap-3 p-6 border-t border-slate-200">
-                        <app-button variant="outline" (click)="dialogOpen.set(false)">Cancel</app-button>
+                        <app-button variant="outline" (click)="dialogOpen.set(false)"
+                            >Cancel</app-button
+                        >
                         <app-button (click)="handleCreate()" [loading]="creating()">
                             Create Admin
                         </app-button>

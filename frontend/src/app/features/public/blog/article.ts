@@ -10,10 +10,11 @@ import {
     fluentPerson,
 } from '@ng-icons/fluent-ui';
 import { BlogApi } from '../../../core/api/blog/blog.service';
+import { ScrollAnimateDirective } from '../../../shared/directives/scroll-animate.directive';
 
 @Component({
     selector: 'app-article',
-    imports: [NgIcon, RouterLink],
+    imports: [NgIcon, RouterLink, ScrollAnimateDirective],
     viewProviders: [
         provideIcons({
             fluentArrowLeft,
@@ -28,6 +29,7 @@ import { BlogApi } from '../../../core/api/blog/blog.service';
         @if (post(); as p) {
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
                 <a
+                    appScrollAnimate animateDirection="right" animateDelay="0ms"
                     routerLink="/blog"
                     class="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-blue-600 transition mb-6"
                 >
@@ -37,7 +39,7 @@ import { BlogApi } from '../../../core/api/blog/blog.service';
 
                 <div class="lg:grid lg:grid-cols-[1fr_280px] lg:gap-10">
                     <article>
-                        <div class="rounded-xl overflow-hidden mb-8 aspect-2/1 bg-slate-100">
+                        <div appScrollAnimate animateDirection="fade" animateDelay="100ms" class="rounded-xl overflow-hidden mb-8 aspect-2/1 bg-slate-100">
                             @if (p.coverImageUrl) {
                                 <img
                                     [src]="p.coverImageUrl"
@@ -47,7 +49,7 @@ import { BlogApi } from '../../../core/api/blog/blog.service';
                             }
                         </div>
 
-                        <div class="flex items-center gap-3 mb-4">
+                        <div appScrollAnimate animateDirection="up" animateDelay="150ms" class="flex items-center gap-3 mb-4">
                             <span
                                 class="text-xs font-medium text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full"
                             >
@@ -68,16 +70,17 @@ import { BlogApi } from '../../../core/api/blog/blog.service';
                         </div>
 
                         <h1
+                            appScrollAnimate animateDirection="up" animateDelay="200ms"
                             class="text-2xl lg:text-4xl font-bold text-slate-900 mb-6 leading-tight"
                         >
                             {{ p.title }}
                         </h1>
 
-                        <p class="text-lg text-slate-600 mb-8 leading-relaxed">
+                        <p appScrollAnimate animateDirection="up" animateDelay="250ms" class="text-lg text-slate-600 mb-8 leading-relaxed">
                             {{ p.excerpt }}
                         </p>
 
-                        <div class="prose prose-slate max-w-none">
+                        <div appScrollAnimate animateDirection="up" animateDelay="300ms" class="prose prose-slate max-w-none">
                             @for (paragraph of contentParagraphs(); track $index) {
                                 <p class="text-slate-700 leading-relaxed mb-4">{{ paragraph }}</p>
                             }
@@ -129,7 +132,7 @@ import { BlogApi } from '../../../core/api/blog/blog.service';
                         }
                     </article>
 
-                    <aside class="hidden lg:block">
+                    <aside appScrollAnimate animateDirection="left" animateDelay="350ms" class="hidden lg:block">
                         <div class="sticky top-24">
                             @if (p.tableOfContents.length > 0) {
                                 <div class="rounded-xl border border-slate-200 bg-white p-5">

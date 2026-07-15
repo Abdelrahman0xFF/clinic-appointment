@@ -4,11 +4,12 @@ import { NgIcon, provideIcons } from '@ng-icons/core';
 import { fluentEye, fluentEyeOff, fluentLockClosed, fluentPerson } from '@ng-icons/fluent-ui';
 import { AuthService } from '../../../core/auth/auth.service';
 import { UiButton } from '../../../shared/ui/button';
+import { ScrollAnimateDirective } from '../../../shared/directives/scroll-animate.directive';
 
 @Component({
     viewProviders: [provideIcons({ fluentLockClosed, fluentPerson, fluentEye, fluentEyeOff })],
     selector: 'app-login',
-    imports: [NgIcon, RouterLink, UiButton],
+    imports: [NgIcon, RouterLink, UiButton, ScrollAnimateDirective],
     template: `
         <div class="min-h-screen bg-slate-50 flex items-center justify-center p-4">
             <div class="w-full max-w-md">
@@ -22,13 +23,13 @@ import { UiButton } from '../../../shared/ui/button';
                             <p class="text-xs text-slate-500 leading-tight">Admin Panel</p>
                         </div>
                     </a>
-                    <h1 class="text-2xl font-bold text-slate-900">Welcome back</h1>
-                    <p class="text-slate-500 mt-1">Sign in to manage your clinic</p>
+                    <h1 appScrollAnimate animateDirection="up" animateDelay="0ms" class="text-2xl font-bold text-slate-900">Welcome back</h1>
+                    <p appScrollAnimate animateDirection="up" animateDelay="100ms" class="text-slate-500 mt-1">Sign in to manage your clinic</p>
                 </div>
 
                 <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
                     <div class="space-y-4">
-                        <div>
+                        <div appScrollAnimate animateDirection="up" animateDelay="0ms">
                             <label for="username" class="block text-sm font-medium text-slate-900 mb-1.5">
                                 Username
                             </label>
@@ -49,7 +50,7 @@ import { UiButton } from '../../../shared/ui/button';
                             </div>
                         </div>
 
-                        <div>
+                        <div appScrollAnimate animateDirection="up" animateDelay="100ms">
                             <label for="password" class="block text-sm font-medium text-slate-900 mb-1.5">
                                 Password
                             </label>
@@ -78,9 +79,11 @@ import { UiButton } from '../../../shared/ui/button';
                         </div>
 
 
-                        <app-button (click)="handleLogin()" [loading]="loading()" class="w-full">
-                            Sign in
-                        </app-button>
+                        <div appScrollAnimate animateDirection="up" animateDelay="200ms">
+                            <app-button (click)="handleLogin()" [loading]="loading()" class="w-full justify-center">
+                                Sign in
+                            </app-button>
+                        </div>
                     </div>
                 </div>
 

@@ -8,10 +8,11 @@ import { QueueEntryDto } from '../../../core/api/queue/queue.types';
 import { QueueKanban } from './sections/kanban';
 import { QueueCheckinList } from './sections/checkin-list';
 import { QueueCardItem, CheckInCandidate } from './queue.types';
+import { ScrollAnimateDirective } from '../../../shared/directives/scroll-animate.directive';
 
 @Component({
     selector: 'app-queue',
-    imports: [NgIcon, QueueKanban, QueueCheckinList],
+    imports: [NgIcon, QueueKanban, QueueCheckinList, ScrollAnimateDirective],
     viewProviders: [
         provideIcons({
             fluentPeopleQueue,
@@ -20,7 +21,7 @@ import { QueueCardItem, CheckInCandidate } from './queue.types';
     ],
     template: `
         <div>
-            <div class="flex items-center justify-between mb-6">
+            <div appScrollAnimate animateDirection="fade" class="flex items-center justify-between mb-6">
                 <div>
                     <h1 class="text-2xl lg:text-3xl font-bold text-slate-900">Queue</h1>
                     <p class="text-slate-500 mt-1">
@@ -30,8 +31,9 @@ import { QueueCardItem, CheckInCandidate } from './queue.types';
             </div>
 
             <div class="flex gap-2 mb-8 flex-wrap">
-                @for (tab of viewTabs; track tab.key) {
+                @for (tab of viewTabs; track tab.key; let i = $index) {
                     <button
+                        appScrollAnimate animateDirection="right" animateDelay="{{ i * 50 }}ms"
                         type="button"
                         (click)="selectedView = tab.key"
                         [class]="

@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { Section } from '../../../../shared/section';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { fluentShield, fluentHeartPulse, fluentPeople, fluentReward } from '@ng-icons/fluent-ui';
+import { ScrollAnimateDirective } from '../../../../shared/directives/scroll-animate.directive';
 
 @Component({
     viewProviders: [
@@ -13,7 +14,7 @@ import { fluentShield, fluentHeartPulse, fluentPeople, fluentReward } from '@ng-
         }),
     ],
     selector: 'app-about',
-    imports: [Section, NgIcon],
+    imports: [Section, NgIcon, ScrollAnimateDirective],
     template: `
         <app-section
             id="about"
@@ -22,7 +23,7 @@ import { fluentShield, fluentHeartPulse, fluentPeople, fluentReward } from '@ng-
             [class]="class"
         >
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-                <div class="relative">
+                <div appScrollAnimate animateDirection="left" animateDelay="0ms" class="relative">
                     <div class="rounded-2xl overflow-hidden aspect-4/3 shadow-lg">
                         <img
                             src="https://images.unsplash.com/photo-1769698678497-c41f0ab47c3e?fm=jpg&q=60&w=3000&auto=format&fit=crop"
@@ -41,16 +42,16 @@ import { fluentShield, fluentHeartPulse, fluentPeople, fluentReward } from '@ng-
 
                 <div class="space-y-6">
                     <div class="space-y-4">
-                        <h3 class="text-2xl font-bold text-slate-900">
+                        <h3 appScrollAnimate animateDirection="right" animateDelay="100ms" class="text-2xl font-bold text-slate-900">
                             Your Trusted Partner in Dermatological Health
                         </h3>
-                        <p class="text-slate-600 leading-relaxed">
+                        <p appScrollAnimate animateDirection="right" animateDelay="150ms" class="text-slate-600 leading-relaxed">
                             At MediCare Clinic, we believe that everyone deserves access to
                             exceptional dermatological care. Our state-of-the-art facility combines
                             cutting-edge technology with compassionate, patient-centered treatment
                             approaches.
                         </p>
-                        <p class="text-slate-600 leading-relaxed">
+                        <p appScrollAnimate animateDirection="right" animateDelay="200ms" class="text-slate-600 leading-relaxed">
                             Led by Dr. Ahmed, a consultant dermatologist with over 15 years of
                             experience, our team is dedicated to helping you achieve and maintain
                             healthy, radiant skin through personalized treatment plans.
@@ -58,9 +59,7 @@ import { fluentShield, fluentHeartPulse, fluentPeople, fluentReward } from '@ng-
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-                        <div
-                            class="flex items-start gap-3 p-4 rounded-xl bg-blue-50 border border-blue-100"
-                        >
+                        <div appScrollAnimate animateDirection="up" animateDelay="250ms" class="flex items-start gap-3 p-4 rounded-xl bg-blue-50 border border-blue-100">
                             <span
                                 class="size-10 rounded-lg bg-blue-100 flex items-center justify-center shrink-0"
                             >
@@ -72,6 +71,7 @@ import { fluentShield, fluentHeartPulse, fluentPeople, fluentReward } from '@ng-
                             </div>
                         </div>
                         <div
+                            appScrollAnimate animateDirection="up" animateDelay="300ms"
                             class="flex items-start gap-3 p-4 rounded-xl bg-blue-50 border border-blue-100"
                         >
                             <span
@@ -85,6 +85,7 @@ import { fluentShield, fluentHeartPulse, fluentPeople, fluentReward } from '@ng-
                             </div>
                         </div>
                         <div
+                            appScrollAnimate animateDirection="up" animateDelay="350ms"
                             class="flex items-start gap-3 p-4 rounded-xl bg-blue-50 border border-blue-100"
                         >
                             <span
@@ -98,6 +99,7 @@ import { fluentShield, fluentHeartPulse, fluentPeople, fluentReward } from '@ng-
                             </div>
                         </div>
                         <div
+                            appScrollAnimate animateDirection="up" animateDelay="400ms"
                             class="flex items-start gap-3 p-4 rounded-xl bg-blue-50 border border-blue-100"
                         >
                             <span

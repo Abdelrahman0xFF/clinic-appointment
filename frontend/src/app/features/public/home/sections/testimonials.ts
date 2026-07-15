@@ -3,6 +3,7 @@ import { NgIcon, provideIcons } from '@ng-icons/core';
 import { fluentStar } from '@ng-icons/fluent-ui';
 import { Section } from '../../../../shared/section';
 import { Video } from '../../../../shared/ui/video';
+import { ScrollAnimateDirective } from '../../../../shared/directives/scroll-animate.directive';
 
 const PATIENT_REVIEWS = [
     {
@@ -22,7 +23,7 @@ const PATIENT_REVIEWS = [
 @Component({
     viewProviders: [provideIcons({ fluentStar })],
     selector: 'app-testimonials',
-    imports: [Section, Video, NgIcon],
+    imports: [Section, Video, NgIcon, ScrollAnimateDirective],
     template: `
         <app-section
             id="testimonials"
@@ -32,8 +33,9 @@ const PATIENT_REVIEWS = [
         >
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
                 <div class="space-y-5">
-                    @for (review of reviews; track review.name) {
+                    @for (review of reviews; track review.name; let i = $index) {
                         <div
+                            appScrollAnimate animateDirection="right" animateDelay="{{ i * 150 }}ms"
                             class="relative p-5 sm:p-6 rounded-xl border border-slate-200 bg-white shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300"
                         >
                             <div class="flex items-center gap-1 mb-3">
@@ -49,7 +51,7 @@ const PATIENT_REVIEWS = [
                     }
                 </div>
 
-                <div class="lg:sticky lg:top-24">
+                <div appScrollAnimate animateDirection="left" animateDelay="200ms" class="lg:sticky lg:top-24">
                     <app-video
                         src="https://assets.mixkit.co/videos/7632/7632-720.mp4"
                         class="block"

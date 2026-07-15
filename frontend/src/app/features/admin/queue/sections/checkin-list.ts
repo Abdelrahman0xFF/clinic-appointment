@@ -7,10 +7,11 @@ import {
     fluentCalendarCheckmark,
 } from '@ng-icons/fluent-ui';
 import { CheckInCandidate } from '../queue.types';
+import { ScrollAnimateDirective } from '../../../../shared/directives/scroll-animate.directive';
 
 @Component({
     selector: 'app-queue-checkin-list',
-    imports: [NgIcon],
+    imports: [NgIcon, ScrollAnimateDirective],
     viewProviders: [
         provideIcons({
             fluentClock,
@@ -27,8 +28,8 @@ import { CheckInCandidate } from '../queue.types';
             </div>
             <div class="divide-y divide-slate-100">
                 @if (candidates.length > 0) {
-                    @for (apt of candidates; track apt.id) {
-                        <div class="flex items-center gap-4 px-6 py-4 hover:bg-slate-50 transition">
+                    @for (apt of candidates; track apt.id; let i = $index) {
+                        <div appScrollAnimate animateDirection="fade" animateDelay="{{ i * 50 }}ms" class="flex items-center gap-4 px-6 py-4 hover:bg-slate-50 transition">
                             <div class="size-10 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
                                 <span class="text-blue-700 font-semibold text-sm">{{ apt.patientName.charAt(0) }}</span>
                             </div>

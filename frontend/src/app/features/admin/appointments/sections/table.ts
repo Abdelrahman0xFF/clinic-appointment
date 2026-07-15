@@ -11,6 +11,7 @@ import {
     fluentMoney,
     fluentImage,
 } from '@ng-icons/fluent-ui';
+import { ScrollAnimateDirective } from '../../../../shared/directives/scroll-animate.directive';
 
 @Component({
     viewProviders: [
@@ -27,7 +28,7 @@ import {
         }),
     ],
     selector: 'app-appointments-table',
-    imports: [NgIcon],
+    imports: [NgIcon, ScrollAnimateDirective],
     template: `
         <div class="rounded-xl border border-slate-200 bg-white overflow-hidden">
             <div class="overflow-x-auto">
@@ -63,8 +64,13 @@ import {
                     </thead>
                     <tbody class="divide-y divide-slate-100">
                         @if (appointments.length > 0) {
-                            @for (apt of appointments; track apt.id) {
-                                <tr class="transition-colors hover:bg-slate-50">
+                            @for (apt of appointments; track apt.id; let i = $index) {
+                                <tr
+                                    appScrollAnimate
+                                    animateDirection="fade"
+                                    animateDelay="{{ i * 50 }}ms"
+                                    class="transition-colors hover:bg-slate-50"
+                                >
                                     <td class="px-6 py-4">
                                         <div class="flex items-center gap-3">
                                             <div

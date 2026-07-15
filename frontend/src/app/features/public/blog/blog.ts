@@ -2,12 +2,13 @@ import { Component, computed, inject, OnInit } from '@angular/core';
 import { BlogApi } from '../../../core/api/blog/blog.service';
 import { Section } from '../../../shared/section';
 import { BlogCard } from './sections/blog-card';
+import { ScrollAnimateDirective } from '../../../shared/directives/scroll-animate.directive';
 
 const CATEGORIES = ['All', 'Skin & Beauty', 'General Health', 'Patient Guides', 'Clinic News'];
 
 @Component({
     selector: 'app-blog',
-    imports: [Section, BlogCard],
+    imports: [Section, BlogCard, ScrollAnimateDirective],
     template: `
         <app-section
             title="Our Blog"
@@ -16,8 +17,9 @@ const CATEGORIES = ['All', 'Skin & Beauty', 'General Health', 'Patient Guides', 
             id="blog-listing"
         >
             <div class="flex gap-2 mb-8 flex-wrap">
-                @for (cat of categories; track cat) {
+                @for (cat of categories; track cat; let i = $index) {
                     <button
+                        appScrollAnimate animateDirection="right" animateDelay="{{ i * 50 }}ms"
                         type="button"
                         (click)="selectedCategory = cat"
                         [class]="
@@ -34,8 +36,10 @@ const CATEGORIES = ['All', 'Skin & Beauty', 'General Health', 'Patient Guides', 
 
             @if (filteredPosts().length > 0) {
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    @for (post of filteredPosts(); track post.id) {
-                        <app-blog-card [post]="post" />
+                    @for (post of filteredPosts(); track post.id; let j = $index) {
+                        <div appScrollAnimate animateDirection="up" animateDelay="{{ j * 100 }}ms">
+                            <app-blog-card [post]="post" />
+                        </div>
                     }
                 </div>
             } @else {

@@ -8,10 +8,11 @@ import {
     fluentDocumentBulletList,
 } from '@ng-icons/fluent-ui';
 import { QueueCardItem } from '../queue.types';
+import { ScrollAnimateDirective } from '../../../../shared/directives/scroll-animate.directive';
 
 @Component({
     selector: 'app-queue-kanban',
-    imports: [NgIcon],
+    imports: [NgIcon, ScrollAnimateDirective],
     viewProviders: [
         provideIcons({
             fluentClock,
@@ -24,6 +25,7 @@ import { QueueCardItem } from '../queue.types';
     template: `
         <div class="flex flex-col lg:flex-row gap-4 lg:gap-6 items-stretch">
             <div
+                appScrollAnimate animateDirection="up" animateDelay="0ms"
                 class="flex-1 flex flex-col rounded-xl border border-amber-200 bg-amber-50/40 overflow-hidden"
             >
                 <div
@@ -41,9 +43,10 @@ import { QueueCardItem } from '../queue.types';
                 </div>
                 <div class="flex-1 p-4 space-y-3 min-h-50">
                     @if (waitingEntries.length > 0) {
-                        @for (entry of waitingEntries; track entry.id) {
+                        @for (entry of waitingEntries; track entry.id; let i = $index) {
                             <div
-                                class="bg-white rounded-lg border border-amber-200 p-4 shadow-xs hover:shadow-sm transition-shadow"
+                                appScrollAnimate animateDirection="zoom" animateDelay="{{ i * 50 }}ms"
+                                class="bg-white rounded-lg border border-amber-200 p-4 shadow-xs hover:shadow-md transition-all duration-200 hover:-translate-y-0.5"
                             >
                                 <div class="flex items-start justify-between gap-3">
                                     <div class="flex items-center gap-3 min-w-0">
@@ -103,6 +106,7 @@ import { QueueCardItem } from '../queue.types';
             </div>
 
             <div
+                appScrollAnimate animateDirection="up" animateDelay="100ms"
                 class="flex-1 flex flex-col rounded-xl border border-blue-200 bg-blue-50/40 overflow-hidden"
             >
                 <div
@@ -124,9 +128,10 @@ import { QueueCardItem } from '../queue.types';
                 </div>
                 <div class="flex-1 p-4 space-y-3 min-h-50">
                     @if (consultationEntries.length > 0) {
-                        @for (entry of consultationEntries; track entry.id) {
+                        @for (entry of consultationEntries; track entry.id; let i = $index) {
                             <div
-                                class="bg-white rounded-lg border border-blue-200 p-4 shadow-xs hover:shadow-sm transition-shadow"
+                                appScrollAnimate animateDirection="zoom" animateDelay="{{ i * 50 }}ms"
+                                class="bg-white rounded-lg border border-blue-200 p-4 shadow-xs hover:shadow-md transition-all duration-200 hover:-translate-y-0.5"
                             >
                                 <div class="flex items-start justify-between gap-3">
                                     <div class="flex items-center gap-3 min-w-0">
@@ -186,6 +191,7 @@ import { QueueCardItem } from '../queue.types';
             </div>
 
             <div
+                appScrollAnimate animateDirection="up" animateDelay="200ms"
                 class="flex-1 flex flex-col rounded-xl border border-emerald-200 bg-emerald-50/40 overflow-hidden"
             >
                 <div
@@ -207,9 +213,10 @@ import { QueueCardItem } from '../queue.types';
                 </div>
                 <div class="flex-1 p-4 space-y-3 min-h-50">
                     @if (completedEntries.length > 0) {
-                        @for (entry of completedEntries; track entry.id) {
+                        @for (entry of completedEntries; track entry.id; let i = $index) {
                             <div
-                                class="bg-white rounded-lg border border-emerald-200 p-4 shadow-xs opacity-75"
+                                appScrollAnimate animateDirection="zoom" animateDelay="{{ i * 50 }}ms"
+                                class="bg-white rounded-lg border border-emerald-200 p-4 shadow-xs opacity-75 hover:shadow-md transition-all duration-200 hover:-translate-y-0.5 hover:opacity-100"
                             >
                                 <div class="flex items-center gap-3">
                                     <div

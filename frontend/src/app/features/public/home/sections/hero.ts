@@ -5,16 +5,20 @@ import { NgIcon, provideIcons } from '@ng-icons/core';
 import { heroStar } from '@ng-icons/heroicons/outline';
 import { scrollToElement } from '../../../../utils/scroll';
 import { Section } from '../../../../shared/section';
+import { ScrollAnimateDirective } from '../../../../shared/directives/scroll-animate.directive';
 
 @Component({
     viewProviders: [provideIcons({ heroStar })],
     selector: 'app-hero',
-    imports: [RouterLink, UiButton, NgIcon, Section],
+    imports: [RouterLink, UiButton, NgIcon, Section, ScrollAnimateDirective],
     template: `
         <app-section id="hero" [class]="class">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
                 <div>
                     <span
+                        appScrollAnimate
+                        animateDirection="up"
+                        animateDelay="0ms"
                         class="inline-flex items-center gap-2 mb-5 px-4 py-1.5 bg-blue-100 text-blue-700 text-sm font-medium rounded-full"
                     >
                         <span class="size-2 rounded-full bg-blue-500 animate-pulse"></span>
@@ -22,6 +26,9 @@ import { Section } from '../../../../shared/section';
                     </span>
 
                     <h1
+                        appScrollAnimate
+                        animateDirection="up"
+                        animateDelay="100ms"
                         class="text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-900 mb-6 leading-[1.1] tracking-tight"
                     >
                         Expert Dermatology Care
@@ -32,7 +39,12 @@ import { Section } from '../../../../shared/section';
                         </span>
                     </h1>
 
-                    <p class="text-lg text-slate-600 mb-8 leading-relaxed max-w-xl">
+                    <p
+                        appScrollAnimate
+                        animateDirection="up"
+                        animateDelay="200ms"
+                        class="text-lg text-slate-600 mb-8 leading-relaxed max-w-xl"
+                    >
                         With over a decade of experience, Dr. Ahmed provides comprehensive
                         dermatological care using the latest medical advancements. Your skin health
                         is our priority.
@@ -40,8 +52,11 @@ import { Section } from '../../../../shared/section';
 
                     @if (credentials.length > 0) {
                         <div class="flex flex-wrap gap-2 mb-10">
-                            @for (cred of credentials; track cred) {
+                            @for (cred of credentials; track cred; let i = $index) {
                                 <span
+                                    appScrollAnimate
+                                    animateDirection="zoom"
+                                    animateDelay="{{ 300 + i * 50 }}ms"
                                     class="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-sm rounded-lg border border-slate-200 text-slate-700 bg-white/80"
                                 >
                                     <span class="size-1.5 rounded-full bg-blue-500"></span>
@@ -51,7 +66,12 @@ import { Section } from '../../../../shared/section';
                         </div>
                     }
 
-                    <div class="flex flex-col sm:flex-row gap-4 mb-12">
+                    <div
+                        appScrollAnimate
+                        animateDirection="up"
+                        animateDelay="400ms"
+                        class="flex flex-col sm:flex-row gap-4 mb-12"
+                    >
                         <a routerLink="/booking">
                             <app-button
                                 size="lg"
@@ -90,7 +110,12 @@ import { Section } from '../../../../shared/section';
                 </div>
 
                 <div class="relative">
-                    <div class="rounded-2xl aspect-square overflow-hidden">
+                    <div
+                        class="rounded-2xl aspect-square overflow-hidden"
+                        appScrollAnimate
+                        animateDirection="right"
+                        animateDelay="100ms"
+                    >
                         <img
                             src="https://images.unsplash.com/photo-1758691463582-11aea602cd4a?fm=jpg&q=60&w=3000&auto=format&fit=crop"
                             alt="Dr. Ahmed - Consultant Dermatologist"

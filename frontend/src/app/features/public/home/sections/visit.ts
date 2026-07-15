@@ -9,21 +9,23 @@ import {
     heroChatBubbleLeftEllipsis,
 } from '@ng-icons/heroicons/outline';
 import { Section } from '../../../../shared/section';
+import { ScrollAnimateDirective } from '../../../../shared/directives/scroll-animate.directive';
 
 @Component({
     viewProviders: [provideIcons({ heroMapPin, heroClock, heroPhone, heroChatBubbleLeftEllipsis })],
     selector: 'app-visit',
-    imports: [UiButton, NgIcon, RouterLink, Section],
+    imports: [UiButton, NgIcon, RouterLink, Section, ScrollAnimateDirective],
     template: `
         <app-section id="visit" title="Visit Our Clinic" [class]="class">
             <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
                 <div
+                    appScrollAnimate animateDirection="left" animateDelay="0ms"
                     class="lg:col-span-3 p-6 lg:p-8 rounded-2xl border border-slate-200 bg-white shadow-sm"
                 >
                     <h3 class="text-xl font-bold text-slate-900 mb-7">Clinic Information</h3>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                        <div class="flex gap-4 sm:col-span-2">
+                        <div appScrollAnimate animateDirection="up" animateDelay="100ms" class="flex gap-4 sm:col-span-2">
                             <span
                                 class="size-12 rounded-xl bg-blue-100 flex items-center justify-center shrink-0"
                             >
@@ -36,7 +38,7 @@ import { Section } from '../../../../shared/section';
                                 </p>
                             </div>
                         </div>
-                        <div class="flex gap-4 sm:col-span-2">
+                        <div appScrollAnimate animateDirection="up" animateDelay="150ms" class="flex gap-4 sm:col-span-2">
                             <span
                                 class="size-12 rounded-xl bg-blue-100 flex items-center justify-center shrink-0"
                             >
@@ -62,7 +64,7 @@ import { Section } from '../../../../shared/section';
                             </div>
                         </div>
 
-                        <div class="flex gap-4">
+                        <div appScrollAnimate animateDirection="up" animateDelay="200ms" class="flex gap-4">
                             <span
                                 class="size-12 rounded-xl bg-blue-100 flex items-center justify-center shrink-0"
                             >
@@ -81,7 +83,7 @@ import { Section } from '../../../../shared/section';
                         </div>
                     </div>
 
-                    <a routerLink="/booking" class="block mt-8">
+                    <a appScrollAnimate animateDirection="up" animateDelay="300ms" routerLink="/booking" class="block mt-8">
                         <app-button class="w-full justify-center shadow-md shadow-blue-200">
                             Book an Appointment
                         </app-button>
@@ -89,6 +91,7 @@ import { Section } from '../../../../shared/section';
                 </div>
 
                 <div
+                    appScrollAnimate animateDirection="right" animateDelay="200ms"
                     class="lg:col-span-2 rounded-2xl bg-linear-to-br from-slate-100 to-slate-200 flex items-center justify-center border border-slate-200 h-80 lg:h-auto"
                 >
                     <div class="text-center p-6">

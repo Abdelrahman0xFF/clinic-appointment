@@ -8,6 +8,7 @@ import { SettingsPayment } from './sections/payment';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { fluentSave } from '@ng-icons/fluent-ui';
 import { UiButton } from '../../../shared/ui/button';
+import { ScrollAnimateDirective } from '../../../shared/directives/scroll-animate.directive';
 
 @Component({
     viewProviders: [provideIcons({ fluentSave })],
@@ -20,6 +21,7 @@ import { UiButton } from '../../../shared/ui/button';
         SettingsCredentials,
         SettingsPayment,
         UiButton,
+        ScrollAnimateDirective,
     ],
     template: `
         <div>
@@ -43,7 +45,8 @@ import { UiButton } from '../../../shared/ui/button';
             } @else {
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <app-settings-general
-                        class="col-span-2"
+                        appScrollAnimate animateDirection="up" animateDelay="0ms"
+                        class="col-span-2 block"
                         [name]="name"
                         [specialization]="specialization"
                         [address]="address"
@@ -56,19 +59,26 @@ import { UiButton } from '../../../shared/ui/button';
                         (consultationFeeChange)="consultationFee = $event"
                     />
                     <app-settings-social
+                        appScrollAnimate animateDirection="up" animateDelay="100ms"
+                        class="block"
                         [socialMedia]="socialMedia"
                         (socialMediaChange)="socialMedia = $event"
                     />
                     <app-settings-hours
-                        class="col-span-2 row-span-2"
+                        appScrollAnimate animateDirection="up" animateDelay="200ms"
+                        class="col-span-2 row-span-2 block"
                         [workingHours]="workingHours"
                         (workingHoursChange)="workingHours = $event"
                     />
                     <app-settings-credentials
+                        appScrollAnimate animateDirection="up" animateDelay="300ms"
+                        class="block"
                         [credentials]="credentials"
                         (credentialsChange)="credentials = $event"
                     />
                     <app-settings-payment
+                        appScrollAnimate animateDirection="up" animateDelay="400ms"
+                        class="block"
                         [walletNumber]="walletNumber"
                         [instapayLink]="instapayLink"
                         (walletNumberChange)="walletNumber = $event"

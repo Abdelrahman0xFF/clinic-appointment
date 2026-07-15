@@ -8,6 +8,7 @@ import { BookingStepDetails } from './sections/step-details';
 import { BookingStepPayment } from './sections/step-payment';
 import { BookingStepReview } from './sections/step-review';
 import { BookingStepSuccess } from './sections/step-success';
+import { ScrollAnimateDirective } from '../../../shared/directives/scroll-animate.directive';
 
 @Component({
     selector: 'app-booking',
@@ -18,15 +19,17 @@ import { BookingStepSuccess } from './sections/step-success';
         BookingStepPayment,
         BookingStepReview,
         BookingStepSuccess,
+        ScrollAnimateDirective,
     ],
     template: `
         <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             @if (step() < 5) {
-                <app-booking-stepper [current]="step()" />
+                <app-booking-stepper appScrollAnimate animateDirection="fade" [current]="step()" />
             }
 
             @if (step() === 1) {
                 <app-booking-step-date-time
+                    appScrollAnimate animateDirection="up" animateDelay="100ms"
                     [selectedDate]="selectedDate"
                     [selectedTime]="selectedTime"
                     [timeSlots]="timeSlots()"
@@ -39,6 +42,7 @@ import { BookingStepSuccess } from './sections/step-success';
 
             @if (step() === 2) {
                 <app-booking-step-details
+                    appScrollAnimate animateDirection="up" animateDelay="100ms"
                     [fullName]="fullName"
                     [phone]="phone"
                     [reason]="reason"
@@ -52,6 +56,7 @@ import { BookingStepSuccess } from './sections/step-success';
 
             @if (step() === 3) {
                 <app-booking-step-payment
+                    appScrollAnimate animateDirection="up" animateDelay="100ms"
                     [instapayLink]="clinicData?.instapayLink ?? ''"
                     [walletNumber]="clinicData?.walletNumber ?? ''"
                     [consultationFee]="clinicData?.consultationFee ?? 0"
@@ -66,6 +71,7 @@ import { BookingStepSuccess } from './sections/step-success';
 
             @if (step() === 4) {
                 <app-booking-step-review
+                    appScrollAnimate animateDirection="up" animateDelay="100ms"
                     [selectedDate]="selectedDate"
                     [selectedTime]="selectedTime"
                     [fullName]="fullName"
@@ -80,6 +86,7 @@ import { BookingStepSuccess } from './sections/step-success';
 
             @if (step() === 5) {
                 <app-booking-step-success
+                    appScrollAnimate animateDirection="zoom" animateDelay="100ms"
                     [appointment]="confirmedAppointment"
                     [address]="clinicData?.address ?? ''"
                 />

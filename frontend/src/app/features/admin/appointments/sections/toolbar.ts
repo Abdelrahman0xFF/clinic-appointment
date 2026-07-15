@@ -1,13 +1,18 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { fluentCalendarClock } from '@ng-icons/fluent-ui';
+import { ScrollAnimateDirective } from '../../../../shared/directives/scroll-animate.directive';
 
 @Component({
     viewProviders: [provideIcons({ fluentCalendarClock })],
     selector: 'app-appointments-toolbar',
-    imports: [NgIcon],
+    imports: [NgIcon, ScrollAnimateDirective],
     template: `
-        <div class="flex items-center justify-between mb-6">
+        <div
+            appScrollAnimate
+            animateDirection="fade"
+            class="flex items-center justify-between mb-6"
+        >
             <div>
                 <h1 class="text-2xl lg:text-3xl font-bold text-slate-900">Appointments</h1>
                 <p class="text-slate-500 mt-1">Manage patient appointment requests</p>
@@ -16,8 +21,11 @@ import { fluentCalendarClock } from '@ng-icons/fluent-ui';
         </div>
 
         <div class="flex gap-2 mb-8 flex-wrap">
-            @for (tab of filterTabs; track tab.key) {
+            @for (tab of filterTabs; track tab.key; let i = $index) {
                 <button
+                    appScrollAnimate
+                    animateDirection="right"
+                    animateDelay="{{ i * 50 }}ms"
                     type="button"
                     (click)="filterChange.emit(tab.key)"
                     [class]="

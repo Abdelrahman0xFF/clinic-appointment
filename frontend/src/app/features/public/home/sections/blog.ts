@@ -4,6 +4,7 @@ import { Section } from '../../../../shared/section';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { fluentArrowRight, fluentClock, fluentBookOpen } from '@ng-icons/fluent-ui';
 import { BlogDto } from '../../../../core/api/blog/blog.types';
+import { ScrollAnimateDirective } from '../../../../shared/directives/scroll-animate.directive';
 
 @Component({
     viewProviders: [
@@ -14,7 +15,7 @@ import { BlogDto } from '../../../../core/api/blog/blog.types';
         }),
     ],
     selector: 'app-blog',
-    imports: [RouterLink, Section, NgIcon],
+    imports: [RouterLink, Section, NgIcon, ScrollAnimateDirective],
     template: `
         <app-section
             id="blog"
@@ -38,8 +39,11 @@ import { BlogDto } from '../../../../core/api/blog/blog.types';
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-                @for (post of posts; track post.id) {
+                @for (post of posts; track post.id; let i = $index) {
                     <a
+                        appScrollAnimate
+                        animateDirection="up"
+                        animateDelay="{{ i * 150 }}ms"
                         [routerLink]="['/blog', post.id]"
                         class="group rounded-2xl border border-slate-200 overflow-hidden bg-white hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col cursor-pointer"
                     >
