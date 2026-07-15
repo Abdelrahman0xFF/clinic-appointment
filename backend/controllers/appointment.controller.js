@@ -157,11 +157,25 @@ export const getPatientAppointments = asyncHandler(async (req, res, next) => {
         return next(new AppError("Patient not found", 404));
     }
 
-    const appointments = await Appointment.find({
-        patientId: patient._id,
-    }).sort({ date: 1, time: 1 });
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 20));
+    const skip = (page - 1) * limit;
 
-    return res.status(200).json({ success: true, data: appointments });
+    const [appointments, total] = await Promise.all([
+        Appointment.find({ patientId: patient._id })
+            .skip(skip)
+            .limit(limit)
+            .sort({ date: -1, time: -1 }),
+        Appointment.countDocuments({ patientId: patient._id }),
+    ]);
+
+    return res.status(200).json({ 
+        success: true, 
+        data: appointments,
+        total,
+        page,
+        totalPages: Math.ceil(total / limit)
+    });
 });
 
 export const updateAppointmentStatus = asyncHandler(async (req, res, next) => {
@@ -175,6 +189,8 @@ export const updateAppointmentStatus = asyncHandler(async (req, res, next) => {
         return next(new AppError("Appointment not found", 404));
     }
 
+    let responseMessage = `Appointment ${req.body.status}`;
+
     if (req.body.status === "rejected" && appointment.receiptImageUrl) {
         try {
             const parts = appointment.receiptImageUrl.split("/");
@@ -185,6 +201,7 @@ export const updateAppointmentStatus = asyncHandler(async (req, res, next) => {
             await cloudinary.uploader.destroy(publicId);
         } catch (err) {
             console.error("Failed to delete image from Cloudinary:", err);
+            responseMessage += " (Warning: receipt image cleanup failed)";
         }
     }
 
@@ -198,7 +215,7 @@ export const updateAppointmentStatus = asyncHandler(async (req, res, next) => {
 
     return res.status(200).json({
         success: true,
-        message: `Appointment ${req.body.status}`,
+        message: responseMessage,
         data: appointment,
     });
 });
@@ -271,11 +288,7 @@ export const checkInAppointment = asyncHandler(async (req, res, next) => {
 
     const queueEntry = await QueueEntry.create({
         appointmentId: appointment._id,
-        time: new Date().toLocaleTimeString("en-US", {
-            hour12: false,
-            hour: "numeric",
-            minute: "numeric",
-        }),
+        time: new Date().toISOString(),
         stage: "waiting",
     });
 

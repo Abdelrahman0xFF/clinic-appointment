@@ -77,13 +77,6 @@ import { UiButton } from '../../../shared/ui/button';
                 </div>
             }
 
-            @if (error()) {
-                <div
-                    class="mt-6 p-4 rounded-lg bg-red-50 border border-red-200 text-sm text-red-600"
-                >
-                    {{ error() }}
-                </div>
-            }
         </div>
     `,
 })
@@ -92,7 +85,6 @@ export class Settings implements OnInit {
 
     loading = signal(true);
     saving = signal(false);
-    error = signal('');
 
     name = '';
     specialization = '';
@@ -127,7 +119,6 @@ export class Settings implements OnInit {
 
     handleSave() {
         this.saving.set(true);
-        this.error.set('');
         this.clinicApi
             .updateInfo({
                 name: this.name,
@@ -146,9 +137,8 @@ export class Settings implements OnInit {
                     this.clinicApi.clinicData.set(data);
                     this.saving.set(false);
                 },
-                error: (err) => {
+                error: () => {
                     this.saving.set(false);
-                    this.error.set(err.error?.message || 'Failed to save settings');
                 },
             });
     }

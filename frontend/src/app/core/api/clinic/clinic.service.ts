@@ -27,7 +27,7 @@ export class ClinicApi {
             });
     }
 
-    updateInfo(data: Partial<ClinicDto>): Observable<ClinicDto> {
+    updateInfo(data: Omit<ClinicDto, 'id' | 'createdAt' | 'updatedAt'>): Observable<ClinicDto> {
         return this.http
             .put<ApiResponse<ClinicDto>>(this.base, data, { withCredentials: true })
             .pipe(map((res) => res.data!));

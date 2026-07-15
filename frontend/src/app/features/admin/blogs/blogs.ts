@@ -51,7 +51,6 @@ const CATEGORIES = ['Skin & Beauty', 'General Health', 'Patient Guides', 'Clinic
             [categories]="categories"
             [defaultAuthor]="defaultAuthor"
             [saving]="saving()"
-            [error]="formError()"
             (save)="savePost($event)"
             (dismiss)="closeDialog()"
         />
@@ -73,7 +72,6 @@ export class Blogs implements OnInit {
     posts = signal<BlogDto[]>([]);
     loading = signal(true);
     saving = signal(false);
-    formError = signal('');
 
     dialogOpen = false;
     editingPost: BlogDto | null = null;
@@ -100,25 +98,21 @@ export class Blogs implements OnInit {
 
     openCreateDialog() {
         this.editingPost = null;
-        this.formError.set('');
         this.dialogOpen = true;
     }
 
     openEditDialog(post: BlogDto) {
         this.editingPost = post;
-        this.formError.set('');
         this.dialogOpen = true;
     }
 
     closeDialog() {
         this.dialogOpen = false;
         this.editingPost = null;
-        this.formError.set('');
     }
 
     savePost(data: BlogFormData) {
         this.saving.set(true);
-        this.formError.set('');
         const fd = new FormData();
         fd.append('title', data.title);
         fd.append('category', data.category);
@@ -148,9 +142,8 @@ export class Blogs implements OnInit {
                 this.closeDialog();
                 this.loadPosts();
             },
-            error: (err) => {
+            error: () => {
                 this.saving.set(false);
-                this.formError.set(err.error?.message || 'Failed to save blog post');
             },
         });
     }

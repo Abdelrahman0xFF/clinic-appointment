@@ -73,7 +73,6 @@ import { BookingStepSuccess } from './sections/step-success';
                     [reason]="reason"
                     [hasReceipt]="!!receiptFile"
                     [submitting]="submitting()"
-                    [errorMessage]="errorMessage()"
                     (confirm)="submitBooking()"
                     (back)="onBackFromReview()"
                 />
@@ -94,7 +93,6 @@ export class Booking {
 
     step = signal(1);
     submitting = signal(false);
-    errorMessage = signal('');
 
     selectedDate = '';
     selectedTime = '';
@@ -133,7 +131,6 @@ export class Booking {
     }
 
     onBackFromReview() {
-        this.errorMessage.set('');
         this.submitting.set(false);
         this.step.set(3);
     }
@@ -141,7 +138,6 @@ export class Booking {
     submitBooking() {
         if (this.submitting()) return;
         this.submitting.set(true);
-        this.errorMessage.set('');
 
         const formData = new FormData();
         formData.append('fullName', this.fullName);
@@ -161,9 +157,8 @@ export class Booking {
                 this.submitting.set(false);
                 this.step.set(5);
             },
-            error: (err) => {
+            error: () => {
                 this.submitting.set(false);
-                this.errorMessage.set(err.error?.message ?? 'Booking failed. Please try again.');
             },
         });
     }

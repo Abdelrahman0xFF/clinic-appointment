@@ -16,7 +16,7 @@ import { Service, ResultItem } from './home.types';
     template: `
         <app-hero class="border-y" [credentials]="credentials()" />
         <app-about class="bg-white border-y" />
-        <app-services class="border-y" />
+        <app-services class="border-y" [services]="services" />
         <app-results class="bg-white border-y" [results]="results" />
         <app-testimonials class="border-y" />
         <app-blog class="bg-white border-y" [posts]="blogPosts()" />

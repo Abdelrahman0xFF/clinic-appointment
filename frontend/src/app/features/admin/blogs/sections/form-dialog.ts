@@ -215,11 +215,6 @@ export interface BlogFormData {
                             }
                         </div>
 
-                        @if (error) {
-                            <div class="bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-700">
-                                {{ error }}
-                            </div>
-                        }
 
                         <label class="flex items-center gap-2 cursor-pointer">
                             <input type="checkbox" [(ngModel)]="formIsPublished"
@@ -245,7 +240,6 @@ export class BlogsFormDialog implements OnChanges {
     @Input() categories: string[] = [];
     @Input() defaultAuthor = '';
     @Input() saving = false;
-    @Input() error = '';
     @Output() save = new EventEmitter<BlogFormData>();
     @Output() dismiss = new EventEmitter<void>();
 

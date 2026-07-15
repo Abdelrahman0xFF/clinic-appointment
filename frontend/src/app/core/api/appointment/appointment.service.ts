@@ -29,10 +29,9 @@ export class AppointmentApi {
             .pipe(timeout(30000));
     }
 
-    getPatientAppointments(phone: string, fullName: string): Observable<AppointmentDto[]> {
+    getPatientAppointments(phone: string, fullName: string, params?: { page?: number; limit?: number }): Observable<PaginatedResponse<AppointmentDto>> {
         return this.http
-            .get<ApiResponse<AppointmentDto[]>>(`${this.base}/${phone}/${fullName}`)
-            .pipe(map((res) => res.data!));
+            .get<PaginatedResponse<AppointmentDto>>(`${this.base}/${phone}/${fullName}`, { params });
     }
 
     updateStatus(

@@ -131,9 +131,6 @@ import { UiButton } from '../../../shared/ui/button';
                                 placeholder="Min 8 chars, letter + number"
                                 class="w-full px-3.5 py-2.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none transition-all"
                             />
-                            @if (formError()) {
-                                <p class="text-xs text-red-500 mt-1">{{ formError() }}</p>
-                            }
                         </div>
                     </div>
                     <div class="flex justify-end gap-3 p-6 border-t border-slate-200">
@@ -155,7 +152,6 @@ export class Admins {
     loading = signal(true);
     dialogOpen = signal(false);
     creating = signal(false);
-    formError = signal('');
     newUsername = signal('');
     newPassword = signal('');
 
@@ -186,17 +182,14 @@ export class Admins {
         const password = this.newPassword();
 
         if (!username || username.length < 3) {
-            this.formError.set('Username must be at least 3 characters');
             return;
         }
 
         if (!password || password.length < 8) {
-            this.formError.set('Password must be at least 8 characters');
             return;
         }
 
         this.creating.set(true);
-        this.formError.set('');
 
         this.adminApi.createAdmin({ username, password }).subscribe({
             next: (res) => {
@@ -208,9 +201,8 @@ export class Admins {
                     this.loadAdmins();
                 }
             },
-            error: (err) => {
+            error: () => {
                 this.creating.set(false);
-                this.formError.set(err.error?.message || 'Failed to create admin');
             },
         });
     }
@@ -221,8 +213,8 @@ export class Admins {
                 next: () => {
                     this.admins.update((list) => list.filter((a) => a.id !== admin.id));
                 },
-                error: (err) => {
-                    alert(err.error?.message || 'Failed to delete admin');
+                error: () => {
+                    // Handled by global interceptor
                 },
             });
         }

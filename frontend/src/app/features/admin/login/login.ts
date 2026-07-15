@@ -77,11 +77,6 @@ import { UiButton } from '../../../shared/ui/button';
                             </div>
                         </div>
 
-                        @if (error()) {
-                            <div class="p-3 rounded-lg bg-red-50 border border-red-200 text-sm text-red-600">
-                                {{ error() }}
-                            </div>
-                        }
 
                         <app-button (click)="handleLogin()" [loading]="loading()" class="w-full">
                             Sign in
@@ -104,26 +99,22 @@ export class LoginPage {
     password = signal('');
     showPassword = signal(false);
     loading = signal(false);
-    error = signal('');
     currentYear = new Date().getFullYear();
 
     handleLogin(): void {
         if (!this.username() || !this.password()) {
-            this.error.set('Please enter both username and password');
             return;
         }
 
         this.loading.set(true);
-        this.error.set('');
 
         this.auth.login(this.username(), this.password()).subscribe({
             next: () => {
                 this.loading.set(false);
                 this.router.navigate(['/admin/dashboard']);
             },
-            error: (err) => {
+            error: () => {
                 this.loading.set(false);
-                this.error.set(err.error?.message || 'Invalid credentials. Please try again.');
             },
         });
     }
