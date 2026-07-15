@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { BlogApi } from '../../../core/api/blog/blog.service';
 import { Section } from '../../../shared/section';
 import { BlogCard } from './sections/blog-card';
@@ -21,10 +21,10 @@ const CATEGORIES = ['All', 'Skin & Beauty', 'General Health', 'Patient Guides', 
                     <button
                         appScrollAnimate animateDirection="right" animateDelay="{{ i * 50 }}ms"
                         type="button"
-                        (click)="selectedCategory = cat"
+                        (click)="selectedCategory.set(cat)"
                         [class]="
                             'px-4 py-2 rounded-full text-sm font-medium transition cursor-pointer ' +
-                            (selectedCategory === cat
+                            (selectedCategory() === cat
                                 ? 'bg-blue-600 text-white shadow-sm'
                                 : 'bg-slate-100 text-slate-600 hover:bg-slate-200')
                         "
@@ -53,13 +53,14 @@ const CATEGORIES = ['All', 'Skin & Beauty', 'General Health', 'Patient Guides', 
 export class Blog implements OnInit {
     private blog = inject(BlogApi);
     categories = CATEGORIES;
-    selectedCategory = 'All';
+    selectedCategory = signal('All');
 
     filteredPosts = computed(() => {
         const posts = this.blog.posts();
-        return this.selectedCategory === 'All'
+        const category = this.selectedCategory();
+        return category === 'All'
             ? posts
-            : posts.filter((p) => p.category === this.selectedCategory);
+            : posts.filter((p) => p.category === category);
     });
 
     ngOnInit() {
