@@ -37,6 +37,10 @@ app.get("/", (req, res) => {
 app.use("/api", router);
 
 app.use(errorHandler);
-app.listen(3000, () => {
-    logger.info("running on http://localhost:3000");
-});
+if (process.env.NODE_ENV !== "production") {
+    app.listen(3000, () => {
+        logger.info("running on http://localhost:3000");
+    });
+}
+
+export default app;
