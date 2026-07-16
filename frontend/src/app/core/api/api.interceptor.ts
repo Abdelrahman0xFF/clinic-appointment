@@ -4,6 +4,7 @@ import { ToastService } from '../../shared/ui/toast/toast.service';
 import { LoadingService } from '../services/loading.service';
 import { catchError, tap, throwError, finalize } from 'rxjs';
 import { ApiResponse } from './shared/api.types';
+import { environment } from '../../../environments/environment';
 
 export const apiInterceptor: HttpInterceptorFn = (req, next) => {
     const toastService = inject(ToastService);
@@ -11,7 +12,17 @@ export const apiInterceptor: HttpInterceptorFn = (req, next) => {
 
     loadingService.show();
 
-    return next(req).pipe(
+    let url = req.url;
+    if (url.startsWith('/api')) {
+        url = `${environment.apiUrl}${url}`;
+    }
+
+    const authReq = req.clone({
+        url: url,
+        withCredentials: true
+    });
+
+    return next(authReq).pipe(
         tap((event) => {
             if (event instanceof HttpResponse && event.body) {
                 const body = event.body as ApiResponse<unknown>;
