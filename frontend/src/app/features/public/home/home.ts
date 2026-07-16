@@ -59,7 +59,7 @@ export class Home implements OnInit {
         {
             icon: 'fluentPeople',
             title: 'Consultations',
-            description: 'Personalized consultation services for skin care needs',
+            description: 'Personalized services for skin care needs',
         },
     ];
     results: ResultItem[] = [

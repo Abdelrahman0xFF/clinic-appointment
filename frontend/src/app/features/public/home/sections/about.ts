@@ -21,8 +21,10 @@ import { ScrollAnimateDirective } from '../../../../shared/directives/scroll-ani
             title="About Our Clinic"
             description="We are a leading healthcare provider committed to delivering exceptional medical services and patient care."
             [class]="class"
+            sectionClass="py-8 lg:py-12"
+            [fullHeight]="true"
         >
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
                 <div appScrollAnimate animateDirection="left" animateDelay="0ms" class="relative">
                     <div class="rounded-2xl overflow-hidden aspect-4/3 shadow-lg">
                         <img
@@ -33,14 +35,14 @@ import { ScrollAnimateDirective } from '../../../../shared/directives/scroll-ani
                         />
                     </div>
                     <div
-                        class="absolute -bottom-6 -left-6 w-48 p-4 bg-white rounded-xl shadow-lg border border-slate-100 hidden sm:block"
+                        class="absolute -bottom-5 -left-5 w-44 p-3.5 bg-white rounded-xl shadow-lg border border-slate-100 hidden sm:block"
                     >
                         <p class="text-2xl font-bold text-blue-600">15+</p>
                         <p class="text-sm text-slate-600">Years of Medical Excellence</p>
                     </div>
                 </div>
 
-                <div class="space-y-6">
+                <div class="space-y-5">
                     <div class="space-y-4">
                         <h3 appScrollAnimate animateDirection="right" animateDelay="100ms" class="text-2xl font-bold text-slate-900">
                             Your Trusted Partner in Dermatological Health

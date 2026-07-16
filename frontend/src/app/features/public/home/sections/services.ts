@@ -13,8 +13,10 @@ import { ScrollAnimateDirective } from '../../../../shared/directives/scroll-ani
             title="Our Services"
             description="Comprehensive dermatological services for all skin types and concerns."
             [class]="class"
+            sectionClass="py-8 lg:py-12"
+            [fullHeight]="true"
         >
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
                 @for (service of services; track service.title; let i = $index) {
                     <app-service-card
                         appScrollAnimate

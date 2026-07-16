@@ -31,7 +31,7 @@ import { AuthService } from '../auth/auth.service';
     selector: 'app-layout-admin',
     imports: [RouterLink, RouterLinkActive, RouterOutlet, NgIcon],
     template: `
-        <div class="h-screen bg-slate-50 flex overflow-hidden">
+        <div class="h-dvh bg-slate-50 flex overflow-hidden">
             <!-- Mobile Sidebar Overlay -->
             @if (sidebarOpen()) {
                 <div class="fixed inset-0 z-40 lg:hidden">

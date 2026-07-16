@@ -42,10 +42,10 @@ import { scrollToElement } from '../../utils/scroll';
     selector: 'app-layout-public',
     imports: [NgIcon, UiButton, KeyValuePipe, RouterLink, RouterOutlet],
     template: `
-        <div class="min-h-screen bg-slate-50 flex flex-col">
+        <div class="min-h-dvh bg-slate-50 flex flex-col">
             <header class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-slate-200">
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-                    <div class="flex items-center justify-between">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-[var(--public-nav-height)]">
+                    <div class="h-full flex items-center justify-between">
                         <button
                             (click)="scrollTo('hero')"
                             class="flex items-center gap-2 cursor-pointer"
@@ -90,14 +90,16 @@ import { scrollToElement } from '../../utils/scroll';
             <!-- Mobile Menu Overlay -->
             @if (mobileMenuOpen()) {
                 <div class="fixed inset-0 z-50 md:hidden flex justify-end">
-                    <div 
+                    <div
                         class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm"
                         (click)="mobileMenuOpen.set(false)"
                         (keydown.enter)="mobileMenuOpen.set(false)"
                         tabindex="0"
                     ></div>
                     <div class="w-full max-w-sm bg-white h-full shadow-2xl relative flex flex-col">
-                        <div class="p-4 border-b border-slate-100 flex items-center justify-between">
+                        <div
+                            class="p-4 border-b border-slate-100 flex items-center justify-between"
+                        >
                             <span class="font-bold text-slate-900 text-lg">Menu</span>
                             <button
                                 (click)="mobileMenuOpen.set(false)"
@@ -119,15 +121,21 @@ import { scrollToElement } from '../../utils/scroll';
                             }
                         </nav>
                         <div class="p-4 border-t border-slate-100">
-                            <a routerLink="/booking" (click)="mobileMenuOpen.set(false)" class="block w-full">
-                                <app-button class="w-full justify-center">Book Appointment</app-button>
+                            <a
+                                routerLink="/booking"
+                                (click)="mobileMenuOpen.set(false)"
+                                class="block w-full"
+                            >
+                                <app-button class="w-full justify-center"
+                                    >Book Appointment</app-button
+                                >
                             </a>
                         </div>
                     </div>
                 </div>
             }
 
-            <main class="flex-1">
+            <main class="flex-1 min-h-[calc(100dvh-var(--public-nav-height))]">
                 <router-outlet />
             </main>
 

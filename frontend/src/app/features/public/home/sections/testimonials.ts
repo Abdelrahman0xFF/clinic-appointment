@@ -30,9 +30,11 @@ const PATIENT_REVIEWS = [
             title="What Our Patients Say"
             description="Hear from those who have experienced our care."
             [class]="class"
+            sectionClass="py-8 lg:py-12"
+            [fullHeight]="true"
         >
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
-                <div class="space-y-5">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-7 lg:gap-10 items-start">
+                <div class="space-y-4">
                     @for (review of reviews; track review.name; let i = $index) {
                         <div
                             appScrollAnimate animateDirection="right" animateDelay="{{ i * 150 }}ms"

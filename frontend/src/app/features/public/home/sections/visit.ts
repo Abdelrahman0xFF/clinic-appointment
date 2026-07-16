@@ -16,15 +16,21 @@ import { ScrollAnimateDirective } from '../../../../shared/directives/scroll-ani
     selector: 'app-visit',
     imports: [UiButton, NgIcon, RouterLink, Section, ScrollAnimateDirective],
     template: `
-        <app-section id="visit" title="Visit Our Clinic" [class]="class">
-            <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+        <app-section
+            id="visit"
+            title="Visit Our Clinic"
+            [class]="class"
+            sectionClass="py-8 lg:py-12"
+            [fullHeight]="true"
+        >
+            <div class="grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-7">
                 <div
                     appScrollAnimate animateDirection="left" animateDelay="0ms"
-                    class="lg:col-span-3 p-6 lg:p-8 rounded-2xl border border-slate-200 bg-white shadow-sm"
+                    class="lg:col-span-3 p-5 lg:p-7 rounded-2xl border border-slate-200 bg-white shadow-sm"
                 >
-                    <h3 class="text-xl font-bold text-slate-900 mb-7">Clinic Information</h3>
+                    <h3 class="text-xl font-bold text-slate-900 mb-6">Clinic Information</h3>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                         <div appScrollAnimate animateDirection="up" animateDelay="100ms" class="flex gap-4 sm:col-span-2">
                             <span
                                 class="size-12 rounded-xl bg-blue-100 flex items-center justify-center shrink-0"
@@ -83,7 +89,7 @@ import { ScrollAnimateDirective } from '../../../../shared/directives/scroll-ani
                         </div>
                     </div>
 
-                    <a appScrollAnimate animateDirection="up" animateDelay="300ms" routerLink="/booking" class="block mt-8">
+                    <a appScrollAnimate animateDirection="up" animateDelay="300ms" routerLink="/booking" class="block mt-6">
                         <app-button class="w-full justify-center shadow-md shadow-blue-200">
                             Book an Appointment
                         </app-button>
@@ -92,7 +98,7 @@ import { ScrollAnimateDirective } from '../../../../shared/directives/scroll-ani
 
                 <div
                     appScrollAnimate animateDirection="right" animateDelay="200ms"
-                    class="lg:col-span-2 rounded-2xl bg-linear-to-br from-slate-100 to-slate-200 flex items-center justify-center border border-slate-200 h-80 lg:h-auto"
+                    class="lg:col-span-2 rounded-2xl bg-linear-to-br from-slate-100 to-slate-200 flex items-center justify-center border border-slate-200 h-72 lg:h-auto"
                 >
                     <div class="text-center p-6">
                         <div

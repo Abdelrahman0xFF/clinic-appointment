@@ -22,8 +22,10 @@ import { ScrollAnimateDirective } from '../../../../shared/directives/scroll-ani
             title="Latest Insights"
             description="Expert advice and updates from our clinic."
             [class]="class"
+            sectionClass="py-8 lg:py-12"
+            [fullHeight]="true"
         >
-            <div class="flex items-center justify-between mb-10">
+            <div class="flex items-center justify-between mb-7">
                 <p class="text-sm text-slate-500">Stay informed with the latest in dermatology</p>
                 <a
                     routerLink="/blog"
@@ -38,7 +40,7 @@ import { ScrollAnimateDirective } from '../../../../shared/directives/scroll-ani
                 </a>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6">
                 @for (post of posts; track post.id; let i = $index) {
                     <a
                         appScrollAnimate
