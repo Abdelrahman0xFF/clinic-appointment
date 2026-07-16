@@ -16,13 +16,7 @@ export class BlogApi {
     totalPages = signal(0);
 
     getPosts(page = 1, limit = 20, status?: string): void {
-        let params = new HttpParams().set('page', page).set('limit', limit);
-        if (status) {
-            params = params.set('status', status);
-        }
-
-        this.http
-            .get<PaginatedResponse<BlogDto>>(this.base, { params })
+        this.getAll({ page, limit, status })
             .pipe(
                 map((res) => {
                     this.total.set(res.total);
@@ -38,8 +32,7 @@ export class BlogApi {
     }
 
     getPostById(id: string): void {
-        this.http
-            .get<ApiResponse<BlogDto>>(`${this.base}/${id}`)
+        this.getById(id)
             .pipe(map((res) => res.data!))
             .subscribe({
                 next: (data) => this.selectedPost.set(data),
@@ -48,8 +41,7 @@ export class BlogApi {
     }
 
     createPost(formData: FormData): void {
-        this.http
-            .post<ApiResponse<BlogDto>>(this.base, formData)
+        this.create(formData)
             .pipe(map((res) => res.data!))
             .subscribe({
                 next: (newPost) => {
@@ -61,8 +53,7 @@ export class BlogApi {
     }
 
     updatePost(id: string, formData: FormData): void {
-        this.http
-            .put<ApiResponse<BlogDto>>(`${this.base}/${id}`, formData)
+        this.update(id, formData)
             .pipe(map((res) => res.data!))
             .subscribe({
                 next: (updated) => {
@@ -76,7 +67,7 @@ export class BlogApi {
     }
 
     deletePost(id: string): void {
-        this.http.delete<ApiResponse<void>>(`${this.base}/${id}`).subscribe({
+        this.delete(id).subscribe({
             next: () => {
                 this.posts.update((list) => list.filter((p) => p.id !== id));
                 this.total.update((t) => t - 1);
@@ -87,8 +78,6 @@ export class BlogApi {
             error: (err) => console.error('Failed to delete blog post', err),
         });
     }
-
-    // --- Observable-based methods (used by admin CRUD pages) ---
 
     getAll(params?: {
         page?: number;

@@ -29,7 +29,7 @@ export class ClinicApi {
 
     updateInfo(data: Omit<ClinicDto, 'id' | 'createdAt' | 'updatedAt'>): Observable<ClinicDto> {
         return this.http
-            .put<ApiResponse<ClinicDto>>(this.base, data, { withCredentials: true })
+            .put<ApiResponse<ClinicDto>>(this.base, data)
             .pipe(map((res) => res.data!));
     }
 
