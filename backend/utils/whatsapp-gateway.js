@@ -8,6 +8,8 @@ const sendWhatsAppMessage = async (to, message) => {
 
     const cleanNumber = to ? to.toString().replace(/^\+/, "").trim() : "";
 
+    logger.info(`Dispatching WhatsApp message to ${cleanNumber}...`);
+
     const response = await fetch(apiUrl, {
       method: "POST",
       headers: {
@@ -21,6 +23,11 @@ const sendWhatsAppMessage = async (to, message) => {
     });
 
     const data = await response.json();
+    if (!response.ok) {
+      logger.warn(`WhatsApp Gateway returned status ${response.status}: ${JSON.stringify(data)}`);
+    } else {
+      logger.info(`WhatsApp Gateway dispatched successfully: ${JSON.stringify(data)}`);
+    }
     return data;
   } catch (error) {
     logger.error("Error sending WhatsApp message:", error);

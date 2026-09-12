@@ -6,6 +6,7 @@ export const limiter = rateLimit({
     skip: (req) => req.method === "GET",
     standardHeaders: true,
     legacyHeaders: false,
+    validate: { xForwardedForHeader: false },
     message: {
         success: false,
         message:
