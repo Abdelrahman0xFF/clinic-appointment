@@ -8,7 +8,10 @@ const patientSchema = new mongoose.Schema(
             required: true,
             trim: true,
             unique: true,
-            match: [/^01[0125][0-9]{8}$/, "Invalid Egyptian phone number"],
+            match: [
+                /^\+?201[0125][0-9]{8}$/,
+                "Invalid Egyptian phone number (must start with location code 20, e.g. 201123123123)",
+            ],
         },
     },
     {

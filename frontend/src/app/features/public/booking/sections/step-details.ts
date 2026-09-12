@@ -36,19 +36,28 @@ import { UiButton } from '../../../../shared/ui/button';
                         class="block text-sm font-semibold text-slate-900 mb-2"
                         >Phone Number *</label
                     >
-                    <input
-                        id="booking-phone"
-                        type="tel"
-                        [value]="phone"
-                        (input)="phoneChange.emit($any($event.target).value); showErrors = false"
-                        placeholder="01012345678"
-                        maxlength="11"
-                        [class]="'w-full px-3.5 py-2.5 rounded-lg border bg-white text-sm text-slate-900 font-mono placeholder:text-slate-400 focus:ring-2 outline-none transition-all ' + ((showErrors && !phone) ? 'border-red-300 focus:border-red-400 focus:ring-red-100' : (showErrors && !isValidPhone ? 'border-red-300 focus:border-red-400 focus:ring-red-100' : 'border-slate-200 focus:border-blue-400 focus:ring-blue-100'))"
-                    />
+                    <div
+                        [class]="'flex items-center rounded-lg border bg-white overflow-hidden transition-all focus-within:ring-2 ' + ((showErrors && !phone) ? 'border-red-300 focus-within:border-red-400 focus-within:ring-red-100' : (showErrors && !isValidPhone ? 'border-red-300 focus-within:border-red-400 focus-within:ring-red-100' : 'border-slate-200 focus-within:border-blue-400 focus-within:ring-blue-100'))"
+                    >
+                        <div
+                            class="flex items-center justify-center px-3.5 py-2.5 bg-slate-50 border-r border-slate-200 text-slate-600 font-mono text-sm font-semibold select-none"
+                        >
+                            <span>+20</span>
+                        </div>
+                        <input
+                            id="booking-phone"
+                            type="tel"
+                            [value]="restPhone"
+                            (input)="onPhoneInput($any($event.target).value)"
+                            placeholder="1123123123"
+                            maxlength="11"
+                            class="w-full px-3.5 py-2.5 bg-transparent text-sm text-slate-900 font-mono placeholder:text-slate-400 outline-none"
+                        />
+                    </div>
                     @if (showErrors && !phone) {
                         <p class="text-xs text-red-500 mt-1.5">Phone number is required</p>
                     } @else if (showErrors && !isValidPhone) {
-                        <p class="text-xs text-red-500 mt-1.5">Enter a valid Egyptian mobile number (e.g. 01012345678)</p>
+                        <p class="text-xs text-red-500 mt-1.5">Enter a valid mobile number (e.g. 10xxxxxxxx, 11xxxxxxxx, 12xxxxxxxx, 15xxxxxxxx)</p>
                     }
                 </div>
                 <div>
@@ -89,8 +98,29 @@ export class BookingStepDetails {
 
     showErrors = false;
 
+    get restPhone(): string {
+        if (!this.phone) return '';
+        let num = this.phone.replace(/^\+?20/, '');
+        if (num.startsWith('0')) num = num.substring(1);
+        return num;
+    }
+
+    onPhoneInput(value: string) {
+        this.showErrors = false;
+        let digits = value.replace(/\D/g, '');
+        if (digits.startsWith('20')) {
+            digits = digits.substring(2);
+        }
+        if (digits.startsWith('0')) {
+            digits = digits.substring(1);
+        }
+        digits = digits.slice(0, 10);
+        const fullPhone = digits ? `+20${digits}` : '';
+        this.phoneChange.emit(fullPhone);
+    }
+
     get isValidPhone(): boolean {
-        return /^01[0125][0-9]{8}$/.test(this.phone);
+        return /^\+?201[0125][0-9]{8}$/.test(this.phone);
     }
 
     onNext() {

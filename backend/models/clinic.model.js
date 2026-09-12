@@ -10,7 +10,7 @@ const workingHoursSchema = new mongoose.Schema(
 
 const socialMediaSchema = new mongoose.Schema(
     {
-        platform: { type: String, required: true },
+        platform: { type: String, required: false },
         link: { type: String, required: true },
     },
     { _id: false },

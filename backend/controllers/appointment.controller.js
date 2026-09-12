@@ -7,6 +7,7 @@ import { v2 as cloudinary } from "cloudinary";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { AppError } from "../utils/AppError.js";
 import { sendSMS } from "../utils/sms.js";
+import { sendWhatsAppMessage } from "../utils/whatsapp-gateway.js";
 
 export const createAppointment = asyncHandler(async (req, res, next) => {
     const { fullName, phone, reason, date, time } = req.body;
@@ -210,7 +211,9 @@ export const updateAppointmentStatus = asyncHandler(async (req, res, next) => {
         const patient = await Patient.findById(appointment.patientId);
         if (patient && patient.phone) {
             const message = `Hello ${patient.fullName}, your appointment at MediCare Clinic for ${appointment.date} at ${appointment.time} is confirmed!`;
-            sendSMS(patient.phone, message);
+            // sendSMS(patient.phone, message);
+            sendWhatsAppMessage(patient.phone, message);
+            
         }
     }
 

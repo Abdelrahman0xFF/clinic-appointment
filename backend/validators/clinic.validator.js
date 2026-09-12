@@ -6,9 +6,13 @@ export const validateClinicUpdate = (data) => {
         specialization: Joi.string().required(),
         address: Joi.string().required(),
         phone: Joi.string()
-            .pattern(/^01[0125][0-9]{8}$/)
+            .pattern(/^(?:01|\+?201)[0125][0-9]{8}$/)
             .trim()
-            .required(),
+            .required()
+            .messages({
+                "string.pattern.base":
+                    "Phone number must be a valid Egyptian phone number (e.g. 01012345678).",
+            }),
 
         socialMedia: Joi.object()
             .pattern(
@@ -50,9 +54,13 @@ export const validateClinicUpdate = (data) => {
         consultationFee: Joi.number().min(0).required(),
         instapayLink: Joi.string().required(),
         walletNumber: Joi.string()
-            .pattern(/^01[0125][0-9]{8}$/)
+            .pattern(/^(?:01|\+?201)[0125][0-9]{8}$/)
             .trim()
-            .required(),
+            .required()
+            .messages({
+                "string.pattern.base":
+                    "Wallet number must be a valid Egyptian phone number (e.g. 01012345678).",
+            }),
         credentials: Joi.array().items(Joi.string().max(200)).optional(),
     });
 

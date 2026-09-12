@@ -4,8 +4,12 @@ export const validateAppointmentForm = (data) => {
     const schema = Joi.object({
         fullName: Joi.string().min(3).max(100).required(),
         phone: Joi.string()
-            .pattern(/^01[0125][0-9]{8}$/)
-            .required(),
+            .pattern(/^\+?201[0125][0-9]{8}$/)
+            .required()
+            .messages({
+                "string.pattern.base":
+                    "Phone number must be a valid Egyptian mobile number starting with location code 20 (e.g. 201123123123).",
+            }),
         reason: Joi.string().min(0).max(500).optional().allow(""),
         date: Joi.string()
             .pattern(/^\d{4}-\d{2}-\d{2}$/)
@@ -33,8 +37,12 @@ export const validateRescheduleAppointment = (data) => {
     const schema = Joi.object({
         fullName: Joi.string().min(3).max(100).required(),
         phone: Joi.string()
-            .pattern(/^01[0125][0-9]{8}$/)
-            .required(),
+            .pattern(/^\+?201[0125][0-9]{8}$/)
+            .required()
+            .messages({
+                "string.pattern.base":
+                    "Phone number must be a valid Egyptian mobile number starting with location code 20 (e.g. 201123123123).",
+            }),
         date: Joi.string()
             .pattern(/^\d{4}-\d{2}-\d{2}$/)
             .custom((value, helpers) => {
